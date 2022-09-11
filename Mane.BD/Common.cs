@@ -1,0 +1,93 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Mane.BD
+{
+    public static class Common
+    {
+     
+        /// <summary>
+        /// Obtiene arreglo con las columnas del modelo
+        /// </summary>
+        /// <typeparam name="Tmodelo">Tipo de modelo</typeparam>
+        /// <returns>Arreglo con las columnas del Tmodelo</returns>
+
+
+        /// <summary>
+        /// Convierte objeto a Clave valor
+        /// </summary>
+        /// <param name="obj">ovjeto</param>
+        /// <returns></returns>
+        public static Dictionary<string, object> ObjectToKeyValue(object obj)
+        {
+            if (obj == null) throw new Exception("El objeto es nulo");
+            var dic = new Dictionary<string, object>();
+            var props = obj.GetType().GetProperties();
+            foreach (var prop in props)
+            {
+                dic.Add(prop.Name, prop.GetValue(obj));
+            }
+            return dic;
+
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="dic"></param>
+        /// <returns></returns>
+        public static T KeyValueToObject<T>(Dictionary<string, object> dic) where T : new()
+        {
+            T obj = new T();
+            var props = obj.GetType().GetProperties();
+            foreach (var prop in props)
+            {
+                if (prop.CanWrite)
+                    prop.SetValue(obj, ConvertirATipo(prop.PropertyType, dic[prop.Name]));
+            }
+            return obj;
+        }
+        /// <summary>
+        /// Obtiene el valor de una propiedad En base al nombre
+        /// </summary>
+        /// <param name="src">Objeto del cual se requiere una propiedad</param>
+        /// <param name="propName">Nombre de la propiedad</param>
+        /// <returns></returns>
+        public static object GetPropValueByName(object src, string propName)
+        {
+            return src.GetType().GetProperty(propName).GetValue(src, null);
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="t"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static dynamic ConvertirATipo(Type t, object value)
+        {
+            if (value == null) return value;
+            try
+            {
+                switch (t.Name)
+                {
+                    case "String": return value == DBNull.Value ? "" : value.ToString();
+                    case "Boolean": return value == DBNull.Value ? false : (value.ToString() == "1" ? true : false);
+                    case "DateTime": return value == DBNull.Value ? DateTime.MinValue : DateTime.Parse(value.ToString());
+                    case "Double": return value == DBNull.Value ? 0 : double.Parse(value.ToString());
+                    case "Int32": return value == DBNull.Value ? 0 : int.Parse(value.ToString());
+                    case "Decimal": return value == DBNull.Value ? 0 : decimal.Parse(value.ToString());
+                }
+                if (t.BaseType == typeof(Enum)) return int.Parse(value.ToString());
+
+            }
+            catch (Exception)
+            {
+
+            }
+            return value;
+        }
+    }
+}

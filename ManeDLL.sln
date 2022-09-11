@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32526.322
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mane.BD", "Mane.BD\Mane.BD.csproj", "{1698B67F-99AC-4A51-A19C-000C170B54B5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mane.Helpers", "Mane.Helpers\Mane.Helpers.csproj", "{6344B9E2-F825-4165-B506-AB3E2F822A49}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1698B67F-99AC-4A51-A19C-000C170B54B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1698B67F-99AC-4A51-A19C-000C170B54B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1698B67F-99AC-4A51-A19C-000C170B54B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1698B67F-99AC-4A51-A19C-000C170B54B5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6344B9E2-F825-4165-B506-AB3E2F822A49}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6344B9E2-F825-4165-B506-AB3E2F822A49}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6344B9E2-F825-4165-B506-AB3E2F822A49}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6344B9E2-F825-4165-B506-AB3E2F822A49}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {61809B32-57AA-480E-9598-7E967364102A}
+	EndGlobalSection
+EndGlobal
