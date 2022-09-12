@@ -519,8 +519,8 @@ namespace Mane.BD
         /// <param name="valor1"></param>
         /// <param name="valor2"></param>
         /// <returns></returns>
-        public QueryBuilder whereBetween(string col1, string valor1, string valor2)
-                    => commonWhere(col1, "BETWEEN", new string[] { valor1, valor2 }, "AND", TipoWhere.WhereBetween);
+        public QueryBuilder whereBetween(string col1, object valor1, object valor2)
+                    => commonWhere(col1, "BETWEEN", new object[] { valor1, valor2 }, "AND", TipoWhere.WhereBetween);
 
         /// <summary>
         /// 
@@ -529,8 +529,8 @@ namespace Mane.BD
         /// <param name="valor1"></param>
         /// <param name="valor2"></param>
         /// <returns></returns>
-        public QueryBuilder orWhereBetween(string col1, string valor1, string valor2)
-            => commonWhere(col1, "BETWEEN", new string[] { valor1, valor2 }, "OR", TipoWhere.WhereBetween);
+        public QueryBuilder orWhereBetween(string col1, object valor1, object valor2)
+            => commonWhere(col1, "BETWEEN", new object[] { valor1, valor2 }, "OR", TipoWhere.WhereBetween);
 
         /// <summary>
         /// 

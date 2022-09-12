@@ -30,7 +30,7 @@ namespace Mane.BD
             /// Ejecuta un delete para los modelos de la coleccion que estan registrados en la bd
             /// </summary>
             /// <param name="clearCollection">Indica si despues de elminarlos de la BD, hay que limpiar la coleccion</param>
-            public void Delete(bool clearCollection = true)
+            public void Delete(bool clearCollection = false)
             {
                 if (Count == 0) return;
                 var ids = new List<string>();
@@ -45,16 +45,7 @@ namespace Mane.BD
                 if (clearCollection)
                     Clear();
             }
-            /// <summary>
-            /// Actualiza todos los modelos de la coleccion
-            /// </summary>
-            public void Update()
-            {
-                foreach (Tmodelo m in this)
-                {
-                    m.Update();
-                }
-            }
+
             /// <summary>
             /// 
             /// </summary>
@@ -66,16 +57,7 @@ namespace Mane.BD
                 NotyfyChange();
                 updateBind();
             }
-            /// <summary>
-            /// 
-            /// </summary>
-            public void Add()
-            {
-                foreach (Tmodelo m in this)
-                {
-                    m.Add();
-                }
-            }
+
             /// <summary>
             /// 
             /// </summary>
@@ -89,7 +71,27 @@ namespace Mane.BD
                 base.AddRange(modelos);
                 NotyfyChange();
                 updateBind();
-
+            }
+            public bool IsDirty()
+            {
+                foreach (var m in this)
+                    if (m.IsDirty()) return true;
+                return false;
+            }
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="modelo"></param>
+            /// <param name="withDelete"></param>
+            /// <returns></returns>
+             public bool Remove(Tmodelo modelo,bool withDelete = false)
+            {
+                if (modelo == null) return false;
+                var res = base.Remove(modelo);
+                if (withDelete) modelo.Delete();
+                NotyfyChange();
+                updateBind();
+                return res;
             }
             /// <summary>
             /// 
@@ -121,7 +123,7 @@ namespace Mane.BD
             /// <returns></returns>
             public Tmodelo Find(string id)
             {
-                return Find(m => m.idValue == id);
+                return Find(m => m.idValue?.ToString() == id);
             }
             /// <summary>
             /// 
@@ -132,31 +134,36 @@ namespace Mane.BD
                 NotyfyChange();
                 updateBind();
             }
-            private void updateBind()
-            {
-                if (bindedGrid != null)
-                {
-                    if (!bindedGrid.IsDisposed)
-                    {
-                        tmodeloArray = ToArray();
-                        bindedGrid.DataSource = tmodeloArray;
-                    }
-                }
 
-            }
 
             #region Compatibilidad con forms
-            DataGridView bindedGrid;
-            Tmodelo[] tmodeloArray;
+            private void updateBind()
+            {
+                if (bindedGrid == null) return;
+                if (bindedGrid.IsDisposed) return;
+                bindedGrid.DataSource = ToArray();
+                if (!mostrarSoloColumnasControladas) return;
+                Tmodelo m;
+                if (Count == 0) m = new Tmodelo();
+                else m = this[0];
+                var cols = ColumnasDelModelo(m);
+                foreach (var item in cols)
+                    if (bindedGrid.Columns.Contains(item))
+                        bindedGrid.Columns[item].Visible = false;
+            }
+
+            private DataGridView bindedGrid;
+            private bool mostrarSoloColumnasControladas;
             /// <summary>
             /// Vincula la coleccion a un datagrid
             /// </summary>
             /// <param name="grid"></param>
-            public void bindToGrid(DataGridView grid)
+            public void BindToGrid(DataGridView grid,bool soloColumnasControladas = false)
             {
+                mostrarSoloColumnasControladas = soloColumnasControladas;
                 bindedGrid = grid;
                 bindedGrid.DataBindings.Clear();
-                bindedGrid.DataSource = ToArray();
+                updateBind();
             }
             private void NotifyChangeSubscription(object sender, PropertyChangedEventArgs e)
             {

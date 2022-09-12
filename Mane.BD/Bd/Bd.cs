@@ -157,7 +157,7 @@ namespace Mane.BD
         }
         private static void bdExceptionHandler(SqlException e,string query = "")
         {
-         //   Log.Add($"Consulta: \"{query}\" \n Excepcion: \"{e}\"");
+        
             LastErrorCode = e.ErrorCode;
             LastErrorDescription = e.Message;
             var ex = new BdException("Error de base de datos: " + e.Message,query);

@@ -61,7 +61,7 @@ namespace Mane.BD
                             Array valores = (Array)w.Valor;
                             foreach (var item in valores)
                             {
-                                val += $"'{item}',";
+                                val += $"{formatValueForSQL(item)},";
                             }
                             val = val.Trim(',');
                             val = $"({val})";
@@ -82,11 +82,11 @@ namespace Mane.BD
                         else where += $"({q1.getQuery(TipoDeBd.SqlServer)})";
                         break;
                     case TipoWhere.WhereBetween:
-                        string[] vals = (string[])w.Valor;
-                        where += $"'{vals[0]}' AND '{vals[1]}'";
+                        var vals = (object[])w.Valor;
+                        where += $"{formatValueForSQL(vals[0])} AND {formatValueForSQL(vals[1])}";
                         break;
                     default:
-                        where += $"'{w.Valor}'";
+                        where += formatValueForSQL(w.Valor);
                         break;
                 }
             }

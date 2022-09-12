@@ -95,6 +95,8 @@ namespace Mane.BD
         /// </summary>
         protected string currRelName;
         private Dictionary<string, object> OriginalModel;
+
+        private object originalIdValue;
         private BindingSource bindingSource;
         #endregion
 
@@ -167,7 +169,7 @@ namespace Mane.BD
         /// <summary>
         /// Inserta un nuevo registro y devuelve su ID
         /// </summary>
-        public object Add()
+        private object Add()
         {
             var q = new QueryBuilder(NombreTabla);
             try
@@ -211,8 +213,9 @@ namespace Mane.BD
         /// <summary>
         /// Actualiza en base de datos
         /// </summary>
-        public void Update()
+        private void Update()
         {
+            if (!IsDirty()) return;
             var q = new QueryBuilder(NombreTabla);
             q.where(idName, idValue);
             var CurrModel = Common.ObjectToKeyValue(this);
@@ -225,6 +228,8 @@ namespace Mane.BD
                     if (OriginalModel[key] != CurrModel[key])
                         propsActualizadas.Add(key, CurrModel[key]);
                 }
+                if (id().ToString() != originalIdValue.ToString())
+                    propsActualizadas.Add(getIdName(), id());
                 if (propsActualizadas.Count > 0)
                 {
                     try
@@ -236,6 +241,7 @@ namespace Mane.BD
                         ModeloExceptionHandler(e);
                     }
                     OriginalModel = CurrModel;
+                    originalIdValue = id();
                 }
 
             }
@@ -331,9 +337,8 @@ namespace Mane.BD
                 if (idRelacionado == "") return new ModeloCollection<Tmodelo>();
                 Tmodelo m = new Tmodelo();
                 DataTable dt = Bd.Query(m.getNombreTabla()).select(ColumnasDelModelo<Tmodelo>())
-                    .where(ColumnaIdForaneo, idRelacionado)
+                    .where($"{m.NombreTabla}.{ColumnaIdForaneo}", idRelacionado)
                     .get(this.ConnName);
-
                 string nombreRel = (currRelName == "" || currRelName == null) ? typeof(Tmodelo).Name : currRelName;
                 ModeloCollection<Tmodelo> relacion = DataTableToModeloCollection<Tmodelo>(dt);
                 return relacion;
@@ -343,6 +348,14 @@ namespace Mane.BD
                 ModeloExceptionHandler(e);
             }
             return new ModeloCollection<Tmodelo>();
+        }
+
+        public bool IsDirty()
+        {
+            if (!exists()) return false;
+            if (originalIdValue != null && id() != null)
+                if (originalIdValue.ToString() != id().ToString()) return true;
+            return  OriginalModel != Common.ObjectToKeyValue(this);
         }
         /// <summary>
         /// Tiene uno a traves de...
@@ -505,6 +518,7 @@ namespace Mane.BD
                     mAux.idValue = r[mAux.idName];
                     mAux.OriginalModel = dic;
                     mAux.RegistredOnDataBase = true;
+                    mAux.originalIdValue = r[mAux.idName];
                     mc.Add(mAux);
                 }
             }
@@ -600,8 +614,20 @@ namespace Mane.BD
                 var pInfo = this.GetType().GetProperty(aux.PropiedadDeModelo);
                 if (pInfo != null)
                 {
+                    var bind = new Binding(aux.PropiedadDelObjeto, bindingSource, aux.PropiedadDeModelo);
+                    if (aux.NegarProp)
+                    {
+                        bind.FormattingEnabled = true;
+                        bind.Format += new ConvertEventHandler((s, e) => {
+                            try
+                            {
+                                e.Value = !Convert.ToBoolean(e.Value);
+                            }
+                            catch (Exception){}
+                            });
+                    }
                     c.DataBindings.Clear();
-                    c.DataBindings.Add(aux.PropiedadDelObjeto, bindingSource, aux.PropiedadDeModelo);
+                    c.DataBindings.Add(bind);
                 }
 
             }
@@ -633,7 +659,12 @@ namespace Mane.BD
                         bandera++;
                         break;
                     case 1:
-                        binding.PropiedadDeModelo = datos[i];
+                        if (datos[i][0] == '!')
+                        {
+                            binding.NegarProp = true;
+                            datos[i] = datos[i].Remove(0, 1);
+                        }
+                        binding.PropiedadDeModelo = datos[i];   
                         bindings.Add(binding);
                         binding = new ContextoBinding();
                         bandera--;
@@ -669,6 +700,11 @@ namespace Mane.BD
             /// Nombre de la propiedad del objeto al que se vinculara el modelo
             /// </summary>
             public string PropiedadDelObjeto { get; set; }
+
+            /// <summary>
+            /// Indica si la propiedad se niega (Solo aplica para valores bool)
+            /// </summary>
+            public bool NegarProp { get; set; }
 
             /// <summary>
             /// Constructor del Contexto de vinculo
