@@ -44,7 +44,7 @@ namespace Mane.BD
         /// Nombre de la conexión que utilizará la tabla
         /// </summary>
         protected virtual string ConnName { get => ""; }
-      
+
 
         /// <summary>
         /// Tipo de modelo
@@ -155,6 +155,7 @@ namespace Mane.BD
 
             return null;
         }
+        
         /// <summary>
         /// Genera una nueva instancia de consulta de modelos
         /// </summary>
@@ -172,14 +173,7 @@ namespace Mane.BD
         private object Add()
         {
             var q = new QueryBuilder(NombreTabla);
-            try
-            {
-                idValue = q.insert(Common.ObjectToKeyValue(this), ConnName);
-            }
-            catch (Exception e)
-            {
-                ModeloExceptionHandler(e);
-            }
+            idValue = q.insert(Common.ObjectToKeyValue(this), ConnName);
             RegistredOnDataBase = true;
             return idValue;
         }
@@ -189,9 +183,16 @@ namespace Mane.BD
         /// </summary>
         public void Save()
         {
-            if (RegistredOnDataBase)
-                Update();
-            else Add();
+            try
+            {
+                if (RegistredOnDataBase)
+                    Update();
+                else Add();
+            }
+            catch (Exception e)
+            {
+                ModeloExceptionHandler(e);
+            }
         }
 
         /// <summary>
@@ -232,31 +233,15 @@ namespace Mane.BD
                     propsActualizadas.Add(getIdName(), id());
                 if (propsActualizadas.Count > 0)
                 {
-                    try
-                    {
-                        q.update(propsActualizadas, ConnName);
-                    }
-                    catch (Exception e)
-                    {
-                        ModeloExceptionHandler(e);
-                    }
+                    q.update(propsActualizadas, ConnName);
                     OriginalModel = CurrModel;
                     originalIdValue = id();
                 }
 
             }
             else
-            {
-                try
-                {
-                    q.update(CurrModel, ConnName);
-                }
-                catch (Exception e)
-                {
-                    ModeloExceptionHandler(e);
-                }
-                
-            }
+                q.update(CurrModel, ConnName);
+
         }
 
         /// <summary>
@@ -289,7 +274,7 @@ namespace Mane.BD
         /// <returns></returns>
         public bool exists() => RegistredOnDataBase;
 
-        
+
         /// <summary>
         /// Obtiene el nombre de la conexión del objeto
         /// </summary>
@@ -355,7 +340,7 @@ namespace Mane.BD
             if (!exists()) return false;
             if (originalIdValue != null && id() != null)
                 if (originalIdValue.ToString() != id().ToString()) return true;
-            return  OriginalModel != Common.ObjectToKeyValue(this);
+            return OriginalModel != Common.ObjectToKeyValue(this);
         }
         /// <summary>
         /// Tiene uno a traves de...
@@ -407,7 +392,7 @@ namespace Mane.BD
         /// <returns>Arreglo con las columnas del modelo incluyendo ID</returns>
         public static string[] ColumnasDelModelo<Tmodelo>(bool incluirNombreTabla = false) where Tmodelo : Modelo, new()
         {
-            return ColumnasDelModelo(new Tmodelo(),incluirNombreTabla);
+            return ColumnasDelModelo(new Tmodelo(), incluirNombreTabla);
         }
         /// <summary>
         /// Obtiene las columnas del modelo
@@ -468,7 +453,7 @@ namespace Mane.BD
         /// <param name="manyToManyToForeginKey">Nombre de la columna de la tabla muchos a muchos que se relaciona con la tabla del modelo resultante</param>
         /// <param name="foreginKey">Nombre de la columna del modelo resultante que se relaciona con la tabla muchos a muchos</param>
         /// <returns></returns>
-        protected ModeloCollection<Tmodelo> manyToMany<Tmodelo>(string localKey,string manyToManyTable, string manyToManyToLocalKey,string manyToManyToForeginKey,string foreginKey) where Tmodelo : Modelo, new()
+        protected ModeloCollection<Tmodelo> manyToMany<Tmodelo>(string localKey, string manyToManyTable, string manyToManyToLocalKey, string manyToManyToForeginKey, string foreginKey) where Tmodelo : Modelo, new()
         {
             try
             {
@@ -478,7 +463,7 @@ namespace Mane.BD
                     .join(manyToManyTable, $"{manyToManyTable}.{manyToManyToLocalKey}", $"{NombreTabla}.{localKey}")
                     .join(m.NombreTabla, $"{m.NombreTabla}.{foreginKey}", $"{manyToManyTable}.{manyToManyToForeginKey}")
                     .where($"{NombreTabla}.{localKey}", localKey == idName ? idValue : Common.GetPropValueByName(this, localKey))
-                    .select(ColumnasDelModelo(m,true))
+                    .select(ColumnasDelModelo(m, true))
                     .get(ConnName)
                     );
             }
@@ -548,7 +533,7 @@ namespace Mane.BD
             BindToControls(form.Controls.Cast<Control>());
 
         }
-       
+
         /// <summary>
         /// Vincula las propiedades del modelo a los controles
         /// </summary>
@@ -565,17 +550,13 @@ namespace Mane.BD
                 bindingSource = new BindingSource();
                 bindingSource.Add(this);
             }
-            
-
             foreach (Control c in controles)
             {
-                
                 SetBindingToControl(c);
                 if (c.Controls.Count > 0)
                 {
                     BindToControls(c.Controls.Cast<Control>());
                 }
-
             }
         }
         /// <summary>
@@ -604,10 +585,9 @@ namespace Mane.BD
         {
             object tag = c.Tag;
             if (tag == null) return;
-            object contexto = toContextoBinding(tag);
+            object contexto = toContextoBinding(tag);//Convertir el tag a contextobinding
             if (contexto == null) return;
             Type tipoContexto = contexto.GetType();
-
             if (tipoContexto == typeof(ContextoBinding))
             {
                 var aux = (ContextoBinding)contexto;
@@ -618,13 +598,32 @@ namespace Mane.BD
                     if (aux.NegarProp)
                     {
                         bind.FormattingEnabled = true;
-                        bind.Format += new ConvertEventHandler((s, e) => {
+                        bind.DataSourceUpdateMode = DataSourceUpdateMode.Never;
+                        bind.Format += new ConvertEventHandler((s, e) =>
+                        {
                             try
                             {
                                 e.Value = !Convert.ToBoolean(e.Value);
                             }
-                            catch (Exception){}
-                            });
+                            catch (Exception) { }
+                        });
+                    }
+                    if (!string.IsNullOrEmpty(aux.Format))
+                    {
+                        bind.FormattingEnabled = true;
+                        bind.FormatString = aux.Format;
+                        bind.Format += new ConvertEventHandler((s, e) =>
+                        {
+                            try
+                            {
+                                if (e.DesiredType == typeof(string))
+                                    e.Value = Convert.ToDouble(e.Value).ToString((s as Binding).FormatString);
+                            }
+                            catch (Exception ex)
+                            {
+
+                            }
+                        });
                     }
                     c.DataBindings.Clear();
                     c.DataBindings.Add(bind);
@@ -642,40 +641,34 @@ namespace Mane.BD
         }
         private dynamic toContextoBinding(object tag)
         {
+            if (tag == null) return null;
             var aux = tag.ToString();
-            if (!aux.Contains("{")) return null;
-            aux = aux.Replace("{", "").Replace("}", "");
-            var datos = aux.Split(',');
-            if (datos.Length != 2) return null;
+            if (!aux.Contains("}")) return null;
+            aux = aux.Replace("{", "");
+            var strBinds = aux.Split('}');
             var bindings = new List<ContextoBinding>();
-            int bandera = 0;
-            var binding = new ContextoBinding();
-            for (int i = 0; i < datos.Length; i++)
+            foreach (var strBind in strBinds)
             {
-                switch (bandera)
+                if (string.IsNullOrEmpty(strBind)) continue;
+                var properties = strBind.Split(',');
+                if (properties.Length < 2) continue;
+                if (properties[1].Contains("."))//especifica clase
                 {
-                    case 0:
-                        binding.PropiedadDelObjeto = datos[i];
-                        bandera++;
-                        break;
-                    case 1:
-                        if (datos[i][0] == '!')
-                        {
-                            binding.NegarProp = true;
-                            datos[i] = datos[i].Remove(0, 1);
-                        }
-                        binding.PropiedadDeModelo = datos[i];   
-                        bindings.Add(binding);
-                        binding = new ContextoBinding();
-                        bandera--;
-                        break;
-                    default:
-                        break;
+                    var clase_propName = properties[1].Split('.');
+                    if (GetType().Name != clase_propName[0])//Verificar que la clase correspoda a esta clase
+                        continue;
+                    if (clase_propName.Length != 2) continue;
+                    if (string.IsNullOrEmpty(clase_propName[1])) continue;
+                    properties[1] = clase_propName[1];
                 }
+                var bind = new ContextoBinding(properties[0], properties[1]);
+                if (properties.Length == 3)//especifica el formato
+                    bind.Format = properties[2];
+                bindings.Add(bind);
             }
             if (bindings.Count == 0) return null;
             if (bindings.Count == 1) return bindings[0];
-            return bindings;
+            return bindings.ToArray();
 
         }
         /// <summary>
@@ -692,10 +685,24 @@ namespace Mane.BD
         /// </summary>
         public class ContextoBinding
         {
+            private string propiedadDeModelo;
+
             /// <summary>
             /// Nombre del atributo del modelo a vincular
             /// </summary>
-            public string PropiedadDeModelo { get; set; }
+            public string PropiedadDeModelo
+            {
+                get => propiedadDeModelo; set
+                {
+                    if (value.Contains("!"))
+                    {
+                        NegarProp = true;
+                        propiedadDeModelo = value.Remove(0, 1);
+                    }
+                    else
+                        propiedadDeModelo = value;
+                }
+            }
             /// <summary>
             /// Nombre de la propiedad del objeto al que se vinculara el modelo
             /// </summary>
@@ -705,6 +712,10 @@ namespace Mane.BD
             /// Indica si la propiedad se niega (Solo aplica para valores bool)
             /// </summary>
             public bool NegarProp { get; set; }
+            /// <summary>
+            /// Indica si la propiedad se niega (Solo aplica para valores bool)
+            /// </summary>
+            public string Format { get; set; }
 
             /// <summary>
             /// Constructor del Contexto de vinculo
@@ -713,13 +724,14 @@ namespace Mane.BD
             {
                 PropiedadDelObjeto = "";
                 PropiedadDeModelo = "";
+                Format = "";
             }
             /// <summary>
             /// 
             /// </summary>
             /// <param name="propiedadDeModelo">Nombre del atributo del modelo a vincular</param>
             /// <param name="propiedadDelObjeto">Nombre de la propiedad del objeto al que se vinculara el modelo</param>
-            public ContextoBinding(string propiedadDeModelo, string propiedadDelObjeto)
+            public ContextoBinding(string propiedadDelObjeto, string propiedadDeModelo)
             {
                 PropiedadDeModelo = propiedadDeModelo;
                 PropiedadDelObjeto = propiedadDelObjeto;
@@ -767,7 +779,7 @@ namespace Mane.BD
             if (OnException == null)
                 throw ex;
             else OnException.Invoke(this, new ModeloExceptionEventArgs(ex));
-            
+
         }
 
         public override int GetHashCode()

@@ -89,5 +89,23 @@ namespace Mane.BD
             }
             return value;
         }
+
+        /// <summary>
+        /// Convierte una notacion de camello en una frase con espacios
+        /// </summary>
+        /// <param name="camelNotation">cadena en notacion de camello "EsteEsUnEjemplo"</param>
+        /// <returns>"EsteEsUnEjemplo" => "Este Es Un Ejemplo"</returns>
+        public static string SpaceCamelNotation(string camelNotation)
+        {
+            return System.Text.RegularExpressions.Regex.Replace(
+        System.Text.RegularExpressions.Regex.Replace(
+            camelNotation,
+            @"(\P{Ll})(\P{Ll}\p{Ll})",
+            "$1 $2"
+        ),
+        @"(\p{Ll})(\P{Ll})",
+        "$1 $2"
+    );
+        }
     }
 }

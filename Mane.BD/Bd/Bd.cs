@@ -161,7 +161,8 @@ namespace Mane.BD
             LastErrorCode = e.ErrorCode;
             LastErrorDescription = e.Message;
             var ex = new BdException("Error de base de datos: " + e.Message,query);
-            
+            var EvID = e.Data["HelpLink.EvtID"]?.ToString();//2 significa error de conexion 17142 significa servidor pausado
+            if(EvID == "2" || EvID == "17142") ex.IsConnectionError = true;
             if (OnException == null)
                 throw ex;
             else OnException.Invoke(null, new BdExeptionEventArgs(ex));

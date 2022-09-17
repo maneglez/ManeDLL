@@ -7,19 +7,26 @@ using System.Threading.Tasks;
 
 namespace Mane.BD
 {
+    
     public partial class QueryBuilder
     {
         private static string formatValueForSQL(object value)
         {
             if (value == null) return "''";
-            var t = value.GetType();
-            switch (t.Name)
+            if(value is string)
             {
-                case "Boolean": return (bool)value ? "'1'" : "'0'";
-                case "DateTime": return $"'{Bd.toDateTimeSqlFormat((DateTime)value)}'";
+                var val = (string)value;
+                if (val.Contains("'")) val = val.Replace("'", "''");
+                return $"'{val}'";
             }
-            if (t.BaseType == typeof(Enum)) return $"'{(int)value}'";            
-            return $"'{value}'";
+            if(value is bool)
+                return (bool)value ? "'1'" : "'0'";
+            if(value is DateTime)
+                return $"'{Bd.toDateTimeSqlFormat((DateTime)value)}'";
+            if (value.GetType().BaseType == typeof(Enum))
+                return $"'{(int)value}'";
+            return $"'{value}'";        
+            
 
         }
         private string insertSQL(Dictionary<string,object> diccionario)
@@ -78,7 +85,7 @@ namespace Mane.BD
                         break;
                     case TipoWhere.WhereGroup:
                         QueryBuilder q1 = (QueryBuilder)w.Valor;
-                        if (q1.Columnas.Count == 0) where += $"({q1.buildWhereSQL()})";
+                        if (q1.Columnas.Length == 0) where += $"({q1.buildWhereSQL()})";
                         else where += $"({q1.getQuery(TipoDeBd.SqlServer)})";
                         break;
                     case TipoWhere.WhereBetween:
@@ -111,17 +118,38 @@ namespace Mane.BD
             if (columna == "") return columna;
             string colFormateada = "";
 
+
             if (columna.ToLower().Contains(" as ")) // Columna as otraCosa
             {
-                columna = columna.Replace(" As ", " as ").Replace(" AS "," as ").Replace(" aS "," as ");
-                string[] aux2 = columna.Replace(" as ",";").Split(';');
+                string funcion = "";
+                if (columna.Contains(")"))//Funcion()
+                {
+                    var splitFunc = columna.Split(')');
+                    if (splitFunc.Length == 1)//funcion( as )
+                        return columna;
+                    funcion = splitFunc[0] + ")";
+
+                    if (funcion.ToLower().Contains(" as "))//funcion( as ) as columna
+                    {
+                        var colTmp = splitFunc[1];
+                        colTmp = colTmp.Trim();
+                        colTmp = colTmp.Replace("As ", "as ").Replace("AS ", "as ").Replace("aS ", "as ").Replace("as ", "");
+                        return $"{funcion} AS {formatearColumnaSQL(colTmp)}";
+
+                    }
+
+                }
+                columna = columna.Replace(" As ", " as ").Replace(" AS ", " as ").Replace(" aS ", " as ");
+                string[] aux2 = columna.Replace(" as ", ";").Split(';');
                 if (aux2.Length == 2)
                 {
-                    if(aux2[0].Contains("'") || aux2[0].Contains("("))// 'Algo' as Columna || funcion() as Columna
+                    if (aux2[0].Contains("'"))// 'Algo' as Columna
                         return $"{aux2[0]} AS {formatearColumnaSQL(aux2[1])}";
                     return $"{formatearColumnaSQL(aux2[0])} AS {formatearColumnaSQL(aux2[1])}";
                 }
-                    
+                else if (aux2.Length == 1) // as columna
+                    return formatearColumnaSQL(aux2[0]);
+
             }
             if (columna.Contains("("))//Funcion()
             {
@@ -135,14 +163,14 @@ namespace Mane.BD
                 {
                     if (item == "*") colFormateada += item; //Columna.*
                     else
-                    colFormateada += $"[{item}].";
+                        colFormateada += $"[{item}].";
                 }
-               colFormateada = colFormateada.Trim('.');
+                colFormateada = colFormateada.Trim('.');
             }
             else colFormateada = $"[{columna}]";
             return colFormateada;
         }
-        private string buildLimitSQL() =>
+            private string buildLimitSQL() =>
          this.Limit > 0 ? $"TOP({Limit})" : "";
         private string buildSelectSQL()
         {
@@ -202,6 +230,7 @@ namespace Mane.BD
             set = set.Trim(',');
             return $"UPDATE {formatearColumnaSQL(Tabla)} SET {set} WHERE {buildWhereSQL()}";
         }
+        
         private string deleteSQL()
            => $"DELETE FROM {formatearColumnaSQL(Tabla)} WHERE {buildWhereSQL()}";
 

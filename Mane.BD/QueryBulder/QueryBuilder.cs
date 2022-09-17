@@ -15,10 +15,11 @@ namespace Mane.BD
     /// <item>SQL Server</item>
     /// </list>
     /// </remarks>
+    [Serializable]
     public partial class QueryBuilder
     {
         #region Atributos de la clase
-        private List<string> Columnas;
+        private string[] Columnas;
         private List<Join> Joins;
         private List<Where> Wheres;
         private string Tabla;
@@ -51,9 +52,9 @@ namespace Mane.BD
         /// </summary>
         private void construct()
         {
-            Columnas = new List<string>();
             Wheres = new List<Where>();
             Joins = new List<Join>();
+            Columnas = new string[] { };
             Tabla = "";
             Limit = 0;
 
@@ -61,6 +62,11 @@ namespace Mane.BD
         #endregion
 
         #region Acciones Finales (No retornan un Objeto de la misma clase)
+        /// <summary>
+        /// Obtiene las columnas del QueryBuilder Actual
+        /// </summary>
+        /// <returns></returns>
+        public string[] getCurrentColumns() => Columnas;
 
         /// <summary>
         /// Eliminar uno o varios registros
@@ -127,20 +133,21 @@ namespace Mane.BD
         /// <param name="dic">Clave valor que hace referencia a las columnas y valores que se insertaran</param>
         /// <param name="connName">Nombre de la conexion</param>
         /// <returns></returns>
-        public string insert(Dictionary<string, object> dic, string connName)
+        public object insert(Dictionary<string, object> dic, string connName)
         {
             if (Tabla == "") throw new QueryBuilderExeption("No se eligió una tabla");
             switch (Bd.getTipoBd(connName))
             {
                 case TipoDeBd.SqlServer:
                     object result = Bd.getFirstValue(insertSQL(dic), connName);
-                    if (result == DBNull.Value)
-                        return "";
-                    else return result.ToString();
+                    if (result == DBNull.Value || result == null)
+                        return null;
+                    else 
+                        return result;
                 default:
                     break;
             }
-            return "";
+            return null;
         }
         /// <summary>
         /// Ejecuta un update en la tabla actual
@@ -171,6 +178,24 @@ namespace Mane.BD
                     break;
             }
             return 0;
+        }
+        
+        /// <summary>
+        /// Crea una copia del query actual;
+        /// </summary>
+        /// <returns></returns>
+        public QueryBuilder copy()
+        {
+            QueryBuilder q;
+            using (var ms = new System.IO.MemoryStream())
+            {
+                System.Runtime.Serialization.IFormatter formatter = 
+                    new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+                formatter.Serialize(ms, this);
+                ms.Seek(0, System.IO.SeekOrigin.Begin);
+                q = (QueryBuilder)formatter.Deserialize(ms);
+            }
+            return q;
         }
 
         /// <summary>
@@ -245,8 +270,7 @@ namespace Mane.BD
         /// <returns></returns>
         public QueryBuilder select(params string[] columnas)
         {
-            Columnas.Clear();
-            Columnas.AddRange(columnas);
+            Columnas = columnas;
             return this;
         }
 
@@ -575,17 +599,18 @@ namespace Mane.BD
         /// <param name="func"></param>
         /// <returns></returns>
         public QueryBuilder orWhere(Func<QueryBuilder, QueryBuilder> func)
-        {
-            QueryBuilder q = func.Invoke(new QueryBuilder());
-            Where w = new Where()
-            {
-                Valor = q,
-                Boleano = "OR",
-                Tipo = TipoWhere.WhereGroup
-            };
-            this.Wheres.Add(w);
-            return this;
-        }
+            => commonWhere("","","OR",func);
+        //{
+        //    QueryBuilder q = func.Invoke(new QueryBuilder());
+        //    Where w = new Where()
+        //    {
+        //        Valor = q,
+        //        Boleano = "OR",
+        //        Tipo = TipoWhere.WhereGroup
+        //    };
+        //    this.Wheres.Add(w);
+        //    return this;
+        //}
 
         /// <summary>
         /// 
@@ -682,6 +707,7 @@ namespace Mane.BD
         #endregion
 
         #region SubClases y Enums
+        [Serializable]
         private class Where
         {
             public string Columna, Operador, Boleano;
@@ -694,6 +720,7 @@ namespace Mane.BD
             }
             
         }
+        [Serializable]
         private class OrderBy
         {
             public string Columna;
@@ -723,6 +750,7 @@ namespace Mane.BD
             WhereColumn,
             WhereBetween
         }
+        [Serializable]
         private class Join
         {
             public string Tabla, Columna1, Columna2, Operador, Tipo,AliasDeConsulta;
