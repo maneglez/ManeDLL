@@ -28,6 +28,7 @@ namespace Mane.BD
             var props = obj.GetType().GetProperties();
             foreach (var prop in props)
             {
+                if(!prop.IsDefined(typeof(IgnorarPropAttribute), false))
                 dic.Add(prop.Name, prop.GetValue(obj));
             }
             return dic;
@@ -45,7 +46,7 @@ namespace Mane.BD
             var props = obj.GetType().GetProperties();
             foreach (var prop in props)
             {
-                if (prop.CanWrite)
+                if (prop.CanWrite && !prop.IsDefined(typeof(IgnorarPropAttribute),false))
                     prop.SetValue(obj, ConvertirATipo(prop.PropertyType, dic[prop.Name]));
             }
             return obj;
@@ -74,7 +75,9 @@ namespace Mane.BD
                 switch (t.Name)
                 {
                     case "String": return value == DBNull.Value ? "" : value.ToString();
-                    case "Boolean": return value == DBNull.Value ? false : (value.ToString() == "1" ? true : false);
+                    case "Boolean":
+                        if (value is bool) return (bool)value;
+                        return value == DBNull.Value ? false : (value.ToString() == "1" ? true : false);
                     case "DateTime": return value == DBNull.Value ? DateTime.MinValue : DateTime.Parse(value.ToString());
                     case "Double": return value == DBNull.Value ? 0 : double.Parse(value.ToString());
                     case "Int32": return value == DBNull.Value ? 0 : int.Parse(value.ToString());

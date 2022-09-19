@@ -47,9 +47,11 @@
     <Compile Include="Bd\BdException.cs" />
     <Compile Include="Bd\Conexion.cs" />
     <Compile Include="Common.cs" />
+    <Compile Include="IgnorarPropAttribute.cs" />
     <Compile Include="Modelo\Modelo.cs" />
     <Compile Include="Modelo\ModeloException.cs" />
     <Compile Include="Modelo\ModeloExceptionEventArgs.cs" />
+    <Compile Include="Modelo\ModeloGeneric.cs" />
     <Compile Include="Modelo\ModeloQuery.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueryBulder\QueryBuilderExeption.cs" />
@@ -57,7 +59,7 @@
     <Compile Include="QueryBulder\QueryBuilder.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Modelo\Modelo.ModeloCollection.cs" />
+    <Compile Include="Modelo\ModeloGeneric.ModeloCollection.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -66,7 +66,50 @@ namespace Mane.BD
         /// Obtiene las columnas del QueryBuilder Actual
         /// </summary>
         /// <returns></returns>
-        public string[] getCurrentColumns() => Columnas;
+        public string[] getCurrentColumnsNames()
+        {
+            var cols = new List<string>();
+            foreach (var item in Columnas)
+            {
+                if (item.ToLower().Contains(" as "))
+                {
+                    var aux = item.Replace(" AS ", " as ")
+                        .Replace(" As ", " as ")
+                        .Replace(" aS ", " as ")
+                        .Replace(" as ", ";")
+                        .Split(';');
+                    if (aux.Length > 0)
+                        cols.Add(aux[0]);
+                }
+                else cols.Add(item);
+            }
+            return cols.ToArray();
+        }
+        public string[] getCurrentColumnsAlias()
+        {
+            var cols = new List<string>();
+            foreach(var item in Columnas)
+            {
+
+                if (item.ToLower().Contains(" as "))
+                {
+                    var aux = item.Replace(" AS ", " as ")
+                        .Replace(" As ", " as ")
+                        .Replace(" aS ", " as ")
+                        .Replace(" as ", ";")
+                        .Split(';');
+                    if (aux.Length > 0)
+                        cols.Add(aux[aux.Length - 1]);
+                }
+                else if (item.Contains("."))
+                {
+                    var aux = item.Split('.');
+                    cols.Add(aux[aux.Length - 1]);
+                }
+                else cols.Add(item);
+            }
+            return cols.ToArray();
+        }
 
         /// <summary>
         /// Eliminar uno o varios registros
@@ -168,6 +211,7 @@ namespace Mane.BD
         /// <exception cref="QueryBuilderExeption"></exception>
         public int update(Dictionary<string, object> dic, string connName = "")
         {
+            if (dic == null) return 0;
             if (Wheres.Count == 0) throw new QueryBuilderExeption("No puede ejecutar un update sin condición");
             if (Tabla == "") throw new QueryBuilderExeption("No se eligió una tabla");
             switch (Bd.getTipoBd(connName))
@@ -203,7 +247,7 @@ namespace Mane.BD
         /// </summary>
         /// <param name="connName">Nombre de la conexion</param>
         /// <returns>Retorna nulo si no encuentra nada</returns>
-        public object firstValue(string connName = "") => Bd.getFirstValue(
+        public object getScalar(string connName = "") => Bd.getFirstValue(
             getQuery(Bd.getTipoBd(connName)),
             connName);
 

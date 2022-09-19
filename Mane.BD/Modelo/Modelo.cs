@@ -14,7 +14,7 @@ namespace Mane.BD
     /// <summary>
     /// Modelo
     /// </summary>
-    public partial class Modelo : INotifyPropertyChanged
+    public  class Modelo : INotifyPropertyChanged
     {
 
         #region Constructores
@@ -94,7 +94,7 @@ namespace Mane.BD
         /// (Helper) nombre actual de la relacion
         /// </summary>
         protected string currRelName;
-        private Dictionary<string, object> OriginalModel;
+        protected Dictionary<string, object> OriginalModel;
 
         private object originalIdValue;
         private BindingSource bindingSource;
@@ -110,62 +110,6 @@ namespace Mane.BD
         #endregion
 
         #region Metodos Publicos
-
-        #region Metodos Estaticos 
-        /// <summary>
-        /// Obtiene todos los modelos del tipo T (Maximo 1000)
-        /// </summary>
-        /// <typeparam name="Tmodelo"></typeparam>
-        /// <returns></returns>
-        public static ModeloCollection<Tmodelo> All<Tmodelo>(int limit = 1000) where Tmodelo : Modelo, new()
-            => Query<Tmodelo>().limit(limit).get();
-
-        /// <summary>
-        /// Obtiene el pirmer modelo que encuentre en la tabla
-        /// </summary>
-        /// <typeparam name="Tmodelo">Tipo de modelo</typeparam>
-        /// <returns>Primer modelo de la tabla, o nulo si no hay registros</returns>
-        public static Tmodelo First<Tmodelo>() where Tmodelo : Modelo, new()
-        {
-            var m = new Tmodelo();
-            var dt = Bd.Query(m.NombreTabla)
-                .select(ColumnasDelModelo(m))
-                .limit(1).get(m.ConnName);
-            if (dt.Rows.Count == 0) return null;
-            return DataTableToModeloCollection<Tmodelo>(dt)[0];
-        }
-
-        /// <summary>
-        /// Encuentra un registro
-        /// </summary>
-        /// <typeparam name="TModelo">Tipo de modelo que se desea encontrar</typeparam>
-        /// <param name="id">Valor de la clave primaria que desea encontrar</param>
-        /// <returns>Una nueva instancia del modelo que coincidio con el ID proporcionado, o nulo si no hubo coincidencias</returns>
-        public static TModelo Find<TModelo>(object id) where TModelo : Modelo, new()
-        {
-            TModelo m = new TModelo();
-            string[] columnas = ColumnasDelModelo(m);
-            DataTable dt = Bd.Query(m.NombreTabla).select(columnas)
-                .where(m.idName, id.ToString()).limit(1).get(m.ConnName);
-            if (dt.Rows.Count == 0)
-                return null;
-            var mdls = DataTableToModeloCollection<TModelo>(dt);
-            if (mdls.Count > 0)
-                return mdls[0];
-
-            return null;
-        }
-        
-        /// <summary>
-        /// Genera una nueva instancia de consulta de modelos
-        /// </summary>
-        /// <typeparam name="Tmodelo">Tipo de modelo</typeparam>
-        /// <returns>Modelo query</returns>
-        public static ModeloQuery<Tmodelo> Query<Tmodelo>() where Tmodelo : Modelo, new()
-        {
-            return new ModeloQuery<Tmodelo>();
-        }
-        #endregion
 
         /// <summary>
         /// Inserta un nuevo registro y devuelve su ID
@@ -194,6 +138,7 @@ namespace Mane.BD
                 ModeloExceptionHandler(e);
             }
         }
+       
 
         /// <summary>
         /// Elimina un registro
@@ -267,12 +212,16 @@ namespace Mane.BD
         /// Establece el valor del id
         /// </summary>
         /// <param name="value">valor de id</param>
-        public void setId(string value) => idValue = value;
+        public void setId(object value) => idValue = value;
+
         /// <summary>
         /// Indica se el modelo ya se registró en la base de datos
         /// </summary>
         /// <returns></returns>
         public bool exists() => RegistredOnDataBase;
+
+        internal void setExists(bool exists) => RegistredOnDataBase = exists;
+        internal void setOriginalIdValue(object val) => originalIdValue = val;
 
 
         /// <summary>
@@ -281,32 +230,12 @@ namespace Mane.BD
         /// <returns>Nombre de la conexión</returns>
         public string getConnName() => this.ConnName;
 
+        internal void setOriginalModel(Dictionary<string, object> dic) => OriginalModel = dic;
+        internal Dictionary<string, object> getOriginalModel() => OriginalModel;
+
         #endregion
 
         #region Metodos relacionales
-        // /// <summary>
-        // /// Carga las relaciones especificadas
-        // /// </summary>
-        // /// <param name="relaciones"></param>
-        //public void with(params string[] relaciones)
-        // {
-
-        //     try
-        //     {
-        //         Type tipo = this.GetType();
-        //         foreach (var rel in relaciones)
-        //         {
-        //             currRelName = rel;
-        //           tipo.GetMethod(rel).Invoke(this,null);
-        //         }
-        //     }
-        //     catch (Exception)
-        //     {
-
-
-        //     }
-        // }
-
         /// <summary>
         /// Obtiene colección de objetos relacionados
         /// </summary>
@@ -314,32 +243,32 @@ namespace Mane.BD
         /// <param name="ColumnaIdLocal">Columna local de relación</param>
         /// <param name="ColumnaIdForaneo">Columna de la tabla foranea que se relaciona con la tabla actual</param>
         /// <returns>Collección de Modelos relacionados</returns>
-        protected ModeloCollection<Tmodelo> oneToMany<Tmodelo>(string ColumnaIdLocal, string ColumnaIdForaneo) where Tmodelo : Modelo, new()
+        protected Modelo<Tmodelo>.ModeloCollection oneToMany<Tmodelo>(string ColumnaIdLocal, string ColumnaIdForaneo) where Tmodelo : Modelo, new()
         {
             try
             {
                 string idRelacionado = ColumnaIdLocal == idName ? id()?.ToString() : Common.GetPropValueByName(this, ColumnaIdLocal).ToString();
-                if (idRelacionado == "") return new ModeloCollection<Tmodelo>();
+                if (idRelacionado == "") return new Modelo<Tmodelo>.ModeloCollection();
                 Tmodelo m = new Tmodelo();
                 DataTable dt = Bd.Query(m.getNombreTabla()).select(ColumnasDelModelo<Tmodelo>())
                     .where($"{m.NombreTabla}.{ColumnaIdForaneo}", idRelacionado)
                     .get(this.ConnName);
                 string nombreRel = (currRelName == "" || currRelName == null) ? typeof(Tmodelo).Name : currRelName;
-                ModeloCollection<Tmodelo> relacion = DataTableToModeloCollection<Tmodelo>(dt);
+                var relacion = Modelo<Tmodelo>.DataTableToModeloCollection(dt);
                 return relacion;
             }
             catch (Exception e)
             {
                 ModeloExceptionHandler(e);
             }
-            return new ModeloCollection<Tmodelo>();
+            return new Modelo<Tmodelo>.ModeloCollection();
         }
 
         public bool IsDirty()
         {
             if (!exists()) return false;
             if (originalIdValue != null && id() != null)
-                if (originalIdValue.ToString() != id().ToString()) return true;
+                if (originalIdValue?.ToString() != id()?.ToString()) return true;
             return OriginalModel != Common.ObjectToKeyValue(this);
         }
         /// <summary>
@@ -351,7 +280,7 @@ namespace Mane.BD
         /// <param name="middleKey">Nombre de la columna del modelo intermedio que se relaciona con el modelo actual</param>
         /// <param name="foreginKey">Nombre de la columna del modelo resultante que se relaciona con la tabla intermedia</param>
         /// <returns>Modelo de tipo TmodeloResultante o nulo si no existe</returns>
-        protected TmodeloResultante hasOneThrough<TmodeloResultante, TmodeloIntermedio>(string localKey = "", string middleKey = "", string foreginKey = "") where TmodeloResultante : Modelo, new() where TmodeloIntermedio : Modelo, new()
+        public TmodeloResultante hasOneThrough<TmodeloResultante, TmodeloIntermedio>(string localKey = "", string middleKey = "", string foreginKey = "") where TmodeloResultante : Modelo, new() where TmodeloIntermedio : Modelo, new()
         {
 
             var modelo = new TmodeloResultante();
@@ -369,7 +298,7 @@ namespace Mane.BD
                     localKeyValue = Common.GetPropValueByName(this, localKey).ToString();
                 else localKeyValue = id()?.ToString();
 
-                return Query<TmodeloResultante>().where($"{modelo.NombreTabla}.{foreginKey}", q =>
+                return Modelo<TmodeloResultante>.Query().where($"{modelo.NombreTabla}.{foreginKey}", q =>
                   q.from(modeloIntermedio.NombreTabla)
                   .select(middleKey)
                   .limit(1)
@@ -428,12 +357,13 @@ namespace Mane.BD
             try
             {
                 Tmodelo m = new Tmodelo();
-                string idRelacionado = ColumnaIdLocal == idName ? idValue?.ToString() : Common.GetPropValueByName(this, ColumnaIdLocal).ToString();
+                string idRelacionado = ColumnaIdLocal == idName ? idValue?.ToString() : Common.GetPropValueByName(this, ColumnaIdLocal)?.ToString();
+                if(string.IsNullOrEmpty(idRelacionado))return null;
                 var dt = Bd.Query(m.NombreTabla).select(ColumnasDelModelo<Tmodelo>())
                     .where(ColumnaIdForanea, idRelacionado).get(m.ConnName);
 
                 if (dt.Rows.Count > 0)
-                    return DataTableToModeloCollection<Tmodelo>(dt)[0];
+                    return Modelo<Tmodelo>.DataTableToModeloCollection(dt)[0];
             }
             catch (Exception e)
             {
@@ -453,12 +383,12 @@ namespace Mane.BD
         /// <param name="manyToManyToForeginKey">Nombre de la columna de la tabla muchos a muchos que se relaciona con la tabla del modelo resultante</param>
         /// <param name="foreginKey">Nombre de la columna del modelo resultante que se relaciona con la tabla muchos a muchos</param>
         /// <returns></returns>
-        protected ModeloCollection<Tmodelo> manyToMany<Tmodelo>(string localKey, string manyToManyTable, string manyToManyToLocalKey, string manyToManyToForeginKey, string foreginKey) where Tmodelo : Modelo, new()
+        protected Modelo<Tmodelo>.ModeloCollection manyToMany<Tmodelo>(string localKey, string manyToManyTable, string manyToManyToLocalKey, string manyToManyToForeginKey, string foreginKey) where Tmodelo : Modelo, new()
         {
             try
             {
                 var m = new Tmodelo();
-                return DataTableToModeloCollection<Tmodelo>(
+                return Modelo<Tmodelo>.DataTableToModeloCollection(
                     Bd.Query(NombreTabla)
                     .join(manyToManyTable, $"{manyToManyTable}.{manyToManyToLocalKey}", $"{NombreTabla}.{localKey}")
                     .join(m.NombreTabla, $"{m.NombreTabla}.{foreginKey}", $"{manyToManyTable}.{manyToManyToForeginKey}")
@@ -471,49 +401,11 @@ namespace Mane.BD
             {
                 ModeloExceptionHandler(e);
             }
-            return new ModeloCollection<Tmodelo>();
+            return new Modelo<Tmodelo>.ModeloCollection();
         }
         #endregion
 
-        #region Helpers
-        /// <summary>
-        /// Convierte un data table en una coleccion de modelos
-        /// </summary>
-        /// <typeparam name="Tmodelo">Tipo de modelo</typeparam>
-        /// <param name="dt">Tabla</param>
-        /// <returns>Coleccion de modelos</returns>
-        public static ModeloCollection<Tmodelo> DataTableToModeloCollection<Tmodelo>(DataTable dt) where Tmodelo : Modelo, new()
-        {
-            ModeloCollection<Tmodelo> mc = new ModeloCollection<Tmodelo>();
-            if (dt.Rows.Count == 0) return mc;
-            Tmodelo m = new Tmodelo();
-            try
-            {
-
-                Dictionary<string, object> dicAux = Common.ObjectToKeyValue(m);
-                Dictionary<string, object> dic = new Dictionary<string, object>();
-                foreach (DataRow r in dt.Rows)
-                {
-                    dic.Clear();
-                    foreach (string key in dicAux.Keys)
-                    {
-                        dic.Add(key, r[key]);
-                    }
-                    Tmodelo mAux = Common.KeyValueToObject<Tmodelo>(dic);
-                    mAux.idValue = r[mAux.idName];
-                    mAux.OriginalModel = dic;
-                    mAux.RegistredOnDataBase = true;
-                    mAux.originalIdValue = r[mAux.idName];
-                    mc.Add(mAux);
-                }
-            }
-            catch (Exception e)
-            {
-                m.ModeloExceptionHandler(e);
-            }
-            return mc;
-        }
-        #endregion
+        
 
 
         #region Compatibilidad con forms
@@ -773,7 +665,7 @@ namespace Mane.BD
                    idValue == modelo.idValue;
         }
 
-        private void ModeloExceptionHandler(Exception e)
+        internal void ModeloExceptionHandler(Exception e)
         {
             var ex = new ModeloException(this.GetType(), e.Message);
             if (OnException == null)

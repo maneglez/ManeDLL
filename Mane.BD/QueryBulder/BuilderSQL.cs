@@ -109,9 +109,21 @@ namespace Mane.BD
             {
                 extraCondicion = j.ExtraCondicion != null ?  "AND " + j.ExtraCondicion.buildWhereSQL() : "";
                 consulta = j.Consulta != null ? $"({j.Consulta.buildQuerySQL()}) {formatearColumnaSQL(j.AliasDeConsulta)}" : "";
-                joins += $" {j.Tipo} JOIN {consulta}{j.Tabla} ON {formatearColumnaSQL(j.Columna1)} {j.Operador} {formatearColumnaSQL(j.Columna2)} {extraCondicion}";
+                joins += $" {j.Tipo} JOIN {consulta}{formatearTablaSQL(j.Tabla)} ON {formatearColumnaSQL(j.Columna1)} {j.Operador} {formatearColumnaSQL(j.Columna2)} {extraCondicion}";
             }
             return joins;
+        }
+        private string formatearTablaSQL(string nombreTabla)
+        {
+            string output = nombreTabla.Trim();
+            if(output.Contains(" "))
+            {
+                var aux = output.Split(' ');
+                if (aux.Length == 2)
+                    return $"{formatearColumnaSQL(aux[0])} {formatearColumnaSQL(aux[1])}";
+                else return output;
+            }
+            return formatearColumnaSQL(output);
         }
         private static string formatearColumnaSQL(string columna)
         {
@@ -217,7 +229,7 @@ namespace Mane.BD
                 orderBy = buildOrderBySQL(),
                 groupBy = buildGroupBySQL();
             if (where != "") where = "WHERE " + where;
-            string query = $"SELECT {limit} {select} FROM [{this.Tabla}] {joins} {where} {orderBy} {groupBy}";
+            string query = $"SELECT {limit} {select} FROM {formatearTablaSQL(Tabla)} {joins} {where} {orderBy} {groupBy}";
             return System.Text.RegularExpressions.Regex.Replace(query, @"\s+", " ");
         }
         private string updateSQL(Dictionary<string,object> dic)

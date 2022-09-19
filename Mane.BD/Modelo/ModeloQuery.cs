@@ -24,7 +24,7 @@ namespace Mane.BD
             modelo = new Tmodelo();
             query.from(modelo.getNombreTabla());
         }
-        
+
         /// <summary>
         /// Elimina los modelos que coinciden con la consulta
         /// </summary>
@@ -260,24 +260,28 @@ namespace Mane.BD
         /// Obtiene todos los modelos que coinciden con las condiciones
         /// </summary>
         /// <returns>Coleccion de modelos que coinciden con las condiciones</returns>
-        public Modelo.ModeloCollection<Tmodelo> get()
+        public Modelo<Tmodelo>.ModeloCollection get()
         {
-            var dt = query.select(Modelo.ColumnasDelModelo(modelo)).get(modelo.getConnName());
-            if(dt.Rows.Count == 0) return new Modelo.ModeloCollection<Tmodelo>();
-            return Modelo.DataTableToModeloCollection<Tmodelo>(dt);
+            if (query.getCurrentColumnsNames().Length == 0)
+                query.select(Modelo.ColumnasDelModelo(modelo));
+            var dt = query.get(modelo.getConnName());
+            if(dt.Rows.Count == 0) return new Modelo<Tmodelo>.ModeloCollection();
+            return Modelo<Tmodelo>.DataTableToModeloCollection(dt);
         }
+      
         /// <summary>
         /// Obtiene el primer modelo que coincide con las condiciones
         /// </summary>
         /// <returns>Modelo o nulo si no hay resultados</returns>
         public Tmodelo first() 
         {
-            var dt = query.select(Modelo.ColumnasDelModelo(modelo))
+            if (query.getCurrentColumnsNames().Length == 0)
+                query.select(Modelo.ColumnasDelModelo(modelo));
+            var dt = query
                 .limit(1)
                 .get(modelo.getConnName());
             if(dt.Rows.Count == 0) return null;
-            
-            return Modelo.DataTableToModeloCollection<Tmodelo>(dt)[0];
+            return Modelo<Tmodelo>.DataTableToModeloCollection(dt)[0];
         }
         /// <summary>
         /// Determina si existe un modelo
@@ -287,6 +291,7 @@ namespace Mane.BD
         {
             return query.exists(modelo.getConnName());
         }
+       
 
     }
 }
