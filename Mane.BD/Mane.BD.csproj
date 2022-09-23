@@ -42,6 +42,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Bd\Bd.SQL.cs" />
+    <Compile Include="Bd\Bd.SQLite.cs" />
     <Compile Include="Bd\BdExeptionEventArgs.cs" />
     <Compile Include="Bd\Bd.cs" />
     <Compile Include="Bd\BdException.cs" />

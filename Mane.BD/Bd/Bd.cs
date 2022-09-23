@@ -16,7 +16,8 @@ namespace Mane.BD
         /// <summary>
         /// Servidor SQL
         /// </summary>
-        SqlServer
+        SqlServer,
+        SQLite
     }
 
     #endregion
@@ -30,7 +31,7 @@ namespace Mane.BD
     /// <item>SQL Server</item>
     /// </list>
     /// </remarks>
-    public static class Bd
+    public  static partial class Bd
     {
         public static event EventHandler<BdExeptionEventArgs> OnException;
         private static bool TestConectionSQL(Conexion conexion)
@@ -58,6 +59,7 @@ namespace Mane.BD
             }
             return result;
         }
+        
 
         /// <summary>
         /// Prueba una conexión a base de datos
@@ -126,35 +128,6 @@ namespace Mane.BD
             }
             return dt;
         }
-        private static DataTable executeQueryForSQLServer(string query, string nombreConexion = "")
-        {
-            DataTable dt = new DataTable();
-            SqlConnection conn = null;
-            SqlCommand cmd = null;
-            try
-            {
-                conn = new SqlConnection(getConnString(nombreConexion));
-                cmd = conn.CreateCommand();
-                cmd.CommandText = query;
-                cmd.Connection.Open();
-                var reader = cmd.ExecuteReader();
-                dt.Load(reader);
-            }
-            catch (SqlException e) {
-                bdExceptionHandler(e, query);
-            }
-            catch (Exception e) {
-                bdExceptionHandler(e, query);
-            }
-            finally
-            {
-                cmd?.Connection?.Close();
-                cmd?.Connection?.Dispose();
-                cmd?.Dispose();
-                conn?.Dispose();
-            }
-            return dt;
-        }
         private static void bdExceptionHandler(SqlException e,string query = "")
         {
         
@@ -204,76 +177,14 @@ namespace Mane.BD
             switch (getTipoBd(nombreConexion))
             {
                 case TipoDeBd.SqlServer:
-                    return getFirstValueForSQLServer(query,nombreConexion);
+                    return executeScalarSQL(query,nombreConexion);
                 default:
                     break;
             }
             return null;
             
         }
-        private static object getFirstValueForSQLServer(string query,string nombreConexion)
-        {
-            
-           
-            object result = null;
-            SqlConnection conn = null;
-            SqlCommand cmd = null;
-            try
-            {
-                conn = new SqlConnection(getConnString(nombreConexion));
-                cmd = conn.CreateCommand();
-                cmd.CommandText = query;
-                cmd.Connection.Open();
-                result = cmd.ExecuteScalar();
-            }
-            catch(SqlException sqlE)
-            {
-                bdExceptionHandler(sqlE, query);
-            }
-            catch (Exception e)
-            {
-                bdExceptionHandler(e, query);
-            }
-            finally
-            {
-                cmd?.Connection?.Close();
-                cmd?.Connection?.Dispose();
-                cmd?.Dispose();
-                conn?.Dispose();
-            }
-            return result;
-        }
-        private static int executeNonQueryForSQLServer(string query, string nombreConexion = "")
-        {
-            int result = 0;
-            SqlConnection conn = null;
-            SqlCommand cmd = null;
-            try
-            {
-                conn = new SqlConnection(getConnString(nombreConexion));
-                cmd = conn.CreateCommand();
-                cmd.CommandText = query;
-                cmd.Connection.Open();
-               result = cmd.ExecuteNonQuery();
-            }
-            catch (SqlException e) {
-                bdExceptionHandler(e, query);
-                    }
-            catch (Exception e)
-            {
-                bdExceptionHandler(e, query);
-            
-            }
-            finally
-            {
-                cmd?.Connection?.Close();
-                cmd?.Connection?.Dispose();
-                cmd?.Dispose();
-                conn?.Dispose();
-            }
-            return result;
-        }
-
+       
         private static string getConnString(string nombreConexion)
         {
             if (Conexiones.Count == 0)
@@ -287,18 +198,7 @@ namespace Mane.BD
             return conexion.CadenaDeConexion;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="d"></param>
-        /// <returns></returns>
-        public static string toDateTimeSqlFormat(DateTime d) => d.ToString("yyyy-MM-dd HH:mm:ss.fff");
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="d"></param>
-        /// <returns></returns>
-        public static string toDateSqlFormat(DateTime d) => d.ToString("yyyy-MM-dd");
+        
         /// <summary>
         /// Obtiene el tipo de BD de la conexión
         /// </summary>
