@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mane.BD", "Mane.BD\Mane.BD.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mane.Helpers", "Mane.Helpers\Mane.Helpers.csproj", "{6344B9E2-F825-4165-B506-AB3E2F822A49}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mane.Sap", "Mane.Sap\Mane.Sap.csproj", "{E1AE8BA9-39C3-4860-926A-A8FF6A1979DE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{6344B9E2-F825-4165-B506-AB3E2F822A49}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6344B9E2-F825-4165-B506-AB3E2F822A49}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6344B9E2-F825-4165-B506-AB3E2F822A49}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E1AE8BA9-39C3-4860-926A-A8FF6A1979DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E1AE8BA9-39C3-4860-926A-A8FF6A1979DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E1AE8BA9-39C3-4860-926A-A8FF6A1979DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E1AE8BA9-39C3-4860-926A-A8FF6A1979DE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
