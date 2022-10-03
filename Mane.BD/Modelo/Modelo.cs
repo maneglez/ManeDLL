@@ -98,6 +98,7 @@ namespace Mane.BD
 
         private object originalIdValue;
         private BindingSource bindingSource;
+        protected string _LastError;
         #endregion
 
         #region Eventos
@@ -203,6 +204,11 @@ namespace Mane.BD
         /// </summary>
         /// <returns>Nombre de la columna primaria</returns>
         public string getIdName() => idName;
+        /// <summary>
+        /// Obtiene el último error generado en el objeto
+        /// </summary>
+        /// <returns>Ultimo error generado en el objeto</returns>
+        public string GetLastError() => _LastError == null ? "" : _LastError;
         /// <summary>
         /// Identificador del objeto actual
         /// </summary>
