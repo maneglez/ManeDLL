@@ -142,33 +142,33 @@ namespace Mane.BD
                 if (bindedGrid == null) return;
                 if (bindedGrid.IsDisposed) return;
                 bindedGrid.DataSource = ToArray();
-                if (!mostrarSoloColumnasControladas) return;
-                T m;
-                if (Count == 0) m = new T();
-                else m = this[0];
-                var orgM = m.getOriginalModel();
-                string[] cols;
-                if (orgM == null)
-                {
-                     cols = ColumnasDelModelo(m);
-                }else
-                    cols = m.getOriginalModel().Keys.ToArray();
-                foreach (var item in cols)
-                    if (bindedGrid.Columns.Contains(item))
-                        bindedGrid.Columns[item].Visible = false;
+                //if (!mostrarSoloColumnasControladas) return;
+                //T m;
+                //if (Count == 0) m = new T();
+                //else m = this[0];
+                //var orgM = m.getOriginalModel();
+                //string[] cols;
+                //if (orgM == null)
+                //{
+                //     cols = ColumnasDelModelo(m);
+                //}else
+                //    cols = m.getOriginalModel().Keys.ToArray();
+                //foreach (var item in cols)
+                //    if (bindedGrid.Columns.Contains(item))
+                //        bindedGrid.Columns[item].Visible = false;
             }
 
             private DataGridView bindedGrid;
-            private bool mostrarSoloColumnasControladas;
+           
             /// <summary>
             /// Vincula la coleccion a un datagrid
             /// </summary>
             /// <param name="grid"></param>
             public void BindToGrid(DataGridView grid, bool soloColumnasControladas = false)
             {
-                mostrarSoloColumnasControladas = soloColumnasControladas;
                 bindedGrid = grid;
                 bindedGrid.DataBindings.Clear();
+                if (soloColumnasControladas) bindedGrid.AutoGenerateColumns = false;
                 UpdateBind();
             }
             private void NotifyChangeSubscription(object sender, PropertyChangedEventArgs e)

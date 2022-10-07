@@ -524,6 +524,7 @@ namespace Mane.BD
             }
             else if (tipoContexto == typeof(ContextoBinding[]))
             {
+                c.DataBindings.Clear();
                 foreach (var item in (ContextoBinding[])contexto)
                 {
                     if (GetType().GetProperty(item.PropiedadDeModelo) != null)

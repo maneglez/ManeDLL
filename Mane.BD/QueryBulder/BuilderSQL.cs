@@ -63,7 +63,7 @@ namespace Mane.BD
                 {
                     case TipoWhere.WhereIn:
                         string val = "";
-                        if (w.Valor.GetType() == typeof(string[]))
+                        if (w.Valor.GetType().IsArray)
                         {
                             Array valores = (Array)w.Valor;
                             foreach (var item in valores)

@@ -36,10 +36,11 @@ namespace Mane.BD
         public static event EventHandler<BdExeptionEventArgs> OnException;
         private static bool TestConectionSQL(Conexion conexion)
         {
-            var con = new SqlConnection(conexion.CadenaDeConexion);
+            SqlConnection con = null;
             bool result = true;
             try
             {
+                con = new SqlConnection(conexion.CadenaDeConexion);
                 con.Open();
             }
             catch(SqlException e)
@@ -54,8 +55,8 @@ namespace Mane.BD
             }
             finally
             {
-                con.Close();
-                con.Dispose();
+                con?.Close();
+                con?.Dispose();
             }
             return result;
         }

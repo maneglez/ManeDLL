@@ -19,15 +19,24 @@ namespace Mane.BD
                 switch (TipoDeBaseDeDatos)
                 {
                     case TipoDeBd.SqlServer:
-                        var sb = new SqlConnectionStringBuilder
+                        try
                         {
-                            DataSource = Servidor,
-                            InitialCatalog = NombreBD,
-                            UserID = Usuario,
-                            Password = Contrasena,
-                            ConnectTimeout = TimeOut
-                        };
-                        return sb.ConnectionString;
+                            var sb = new SqlConnectionStringBuilder
+                            {
+                                DataSource = Servidor,
+                                InitialCatalog = NombreBD,
+                                UserID = Usuario,
+                                Password = Contrasena,
+                                ConnectTimeout = TimeOut
+                            };
+                            return sb.ConnectionString;
+                        }
+                        catch (Exception)
+                        {
+
+                            return "";
+                        }
+                        
                     default: return "";
                 }
             }
