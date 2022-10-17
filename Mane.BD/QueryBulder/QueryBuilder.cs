@@ -22,6 +22,7 @@ namespace Mane.BD
         private string[] Columnas;
         private List<Join> Joins;
         private List<Where> Wheres;
+        private Dictionary<string, object> SelectSubquery;
         private string Tabla;
         private string RawQuery;
         private string[] GroupBy;
@@ -57,7 +58,7 @@ namespace Mane.BD
             Columnas = new string[] { };
             Tabla = "";
             Limit = 0;
-
+            SelectSubquery = new Dictionary<string, object>();
         }
         #endregion
 
@@ -315,6 +316,28 @@ namespace Mane.BD
         public QueryBuilder select(params string[] columnas)
         {
             Columnas = columnas;
+            return this;
+        }
+
+        public QueryBuilder select(QueryBuilder query, string alias)
+        {
+            if (query == null || string.IsNullOrEmpty(alias)) throw new ArgumentNullException("query");
+            SelectSubquery.Add(alias, query);
+            return this;
+        }
+        public QueryBuilder selectRaw(string RawQuery,string alias)
+        {
+            SelectSubquery.Add(alias, RawQuery);
+            return this;
+        }
+
+        public QueryBuilder select(Dictionary<string,QueryBuilder> SelectSubquery)
+        {
+            if (SelectSubquery == null) throw new ArgumentNullException("SelectSubquery");
+            foreach (var item in SelectSubquery.Keys)
+            {
+                this.SelectSubquery.Add(item, SelectSubquery[item]);
+            }
             return this;
         }
 
@@ -663,6 +686,19 @@ namespace Mane.BD
         /// <param name="valores"></param>
         /// <returns></returns>
         public QueryBuilder whereIn(string columna, string[] valores)
+        {
+            var w = new Where()
+            {
+                Columna = columna,
+                Operador = "IN",
+                Valor = valores,
+                Boleano = "AND",
+                Tipo = TipoWhere.WhereIn
+            };
+            Wheres.Add(w);
+            return this;
+        }
+        public QueryBuilder whereIn(string columna, int[] valores)
         {
             var w = new Where()
             {

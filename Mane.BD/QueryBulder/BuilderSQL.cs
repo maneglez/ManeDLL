@@ -55,7 +55,6 @@ namespace Mane.BD
         {
             var where = "";
             if (Wheres.Count == 0) return where;
-
             foreach (var w in Wheres)
             {
                 where += $" {w.Boleano} {formatearColumnaSQL(w.Columna)} {w.Operador} ";
@@ -190,6 +189,16 @@ namespace Mane.BD
             foreach (string item in Columnas)
             {
                 select += formatearColumnaSQL(item) + ",";
+            }
+            if(SelectSubquery.Count > 0)
+            {
+                foreach (var key in SelectSubquery.Keys)
+                {
+                    if (SelectSubquery[key] is QueryBuilder)
+                        select += $"({(SelectSubquery[key] as QueryBuilder).buildQuerySQL()})";
+                    else select += $"({SelectSubquery[key]})";
+                    select += $" AS {formatearColumnaSQL(key)},";
+                }
             }
             select = select.Trim(',');
             if (select == "") select = "*";

@@ -40,6 +40,7 @@ namespace Mane.BD
             bool result = true;
             try
             {
+                conexion.TimeOut = 5;
                 con = new SqlConnection(conexion.CadenaDeConexion);
                 con.Open();
             }

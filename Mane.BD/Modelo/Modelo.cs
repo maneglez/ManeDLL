@@ -23,7 +23,7 @@ namespace Mane.BD
         /// </summary>
         public Modelo()
         {
-            idValue = "";
+            idValue = null;
             OriginalModel = null;
         }
 
@@ -214,6 +214,16 @@ namespace Mane.BD
         /// </summary>
         /// <returns>Devuelve el identificador del objeto actual</returns>
         public object id() => idValue;
+        public int intId()
+        {
+            try
+            {
+                return Convert.ToInt32(idValue);
+            }catch(Exception)
+            {
+                return 0;
+            }
+        }
         /// <summary>
         /// Establece el valor del id
         /// </summary>
