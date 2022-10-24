@@ -33,6 +33,8 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -42,6 +44,32 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="MostrarDatosGenerico.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MostrarDatosGenerico.Designer.cs">
+      <DependentUpon>MostrarDatosGenerico.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SeleccionarGenerico.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SeleccionarGenerico.Designer.cs">
+      <DependentUpon>SeleccionarGenerico.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Mane.BD\Mane.BD.csproj">
+      <Project>{1698b67f-99ac-4a51-a19c-000c170b54b5}</Project>
+      <Name>Mane.BD</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="MostrarDatosGenerico.resx">
+      <DependentUpon>MostrarDatosGenerico.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SeleccionarGenerico.resx">
+      <DependentUpon>SeleccionarGenerico.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

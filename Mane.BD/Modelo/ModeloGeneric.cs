@@ -58,6 +58,7 @@ namespace Mane.BD
         public void Refresh()
         {
             if (string.IsNullOrEmpty(idValue?.ToString())) return;
+            Inicializando = true;
             var tipo = GetType();
             var m = Find(idValue);
             var dic = m.getOriginalModel();
@@ -68,6 +69,7 @@ namespace Mane.BD
                     if (info.CanWrite)
                         info.SetValue(this, dic[item]);
             }
+            Inicializando = false;
         }
 
         /// <summary>
@@ -92,9 +94,10 @@ namespace Mane.BD
             T m = new T();
             try
             {
-
+                
                 Dictionary<string, object> dicAux = Common.ObjectToKeyValue(m);
                 Dictionary<string, object> dic = new Dictionary<string, object>();
+                
                 foreach (DataRow r in dt.Rows)
                 {
                     dic.Clear();
@@ -102,7 +105,7 @@ namespace Mane.BD
                     {
                         dic.Add(key, r[key]);
                     }
-                    T mAux = Common.KeyValueToObject<T>(dic);
+                    T mAux = DicToModel(dic);
                     mAux.setId(r[mAux.getIdName()]);
                     mAux.setOriginalModel(dic);
                     mAux.setExists(true);
@@ -116,7 +119,27 @@ namespace Mane.BD
             }
             return mc;
         }
-        
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="dic"></param>
+        /// <returns></returns>
+        private static T DicToModel(Dictionary<string, object> dic)
+        {
+            T modelo = new T();
+            modelo.Inicializando = true;
+            var props = modelo.GetType().GetProperties();
+            foreach (var prop in props)
+            {
+                if (prop.CanWrite && !prop.IsDefined(typeof(IgnorarPropAttribute), false))
+                    prop.SetValue(modelo, Common.ConvertirATipo(prop.PropertyType, dic[prop.Name]));
+            }
+            modelo.Inicializando = false;
+            return modelo;
+        }
+
 
     }
 }

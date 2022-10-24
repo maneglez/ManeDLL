@@ -26,8 +26,75 @@ namespace Mane.BD
             if (value.GetType().BaseType == typeof(Enum))
                 return $"'{(int)value}'";
             return $"'{value}'";        
-            
+        }
+        private string formatearTablaSQL(string nombreTabla)
+        {
+            string output = nombreTabla.Trim();
+            if (output.Contains(" "))
+            {
+                var aux = output.Split(' ');
+                if (aux.Length == 2)
+                    return $"{formatearColumnaSQL(aux[0])} {formatearColumnaSQL(aux[1])}";
+                else return output;
+            }
+            return formatearColumnaSQL(output);
+        }
+        private static string formatearColumnaSQL(string columna)
+        {
+            if (columna == "") return columna;
+            string colFormateada = "";
 
+
+            if (columna.ToLower().Contains(" as ")) // Columna as otraCosa
+            {
+                string funcion = "";
+                if (columna.Contains(")"))//Funcion()
+                {
+                    var splitFunc = columna.Split(')');
+                    if (splitFunc.Length == 1)//funcion( as )
+                        return columna;
+                    funcion = splitFunc[0] + ")";
+
+                    if (funcion.ToLower().Contains(" as "))//funcion( as ) as columna
+                    {
+                        var colTmp = splitFunc[1];
+                        colTmp = colTmp.Trim();
+                        colTmp = colTmp.Replace("As ", "as ").Replace("AS ", "as ").Replace("aS ", "as ").Replace("as ", "");
+                        return $"{funcion} AS {formatearColumnaSQL(colTmp)}";
+
+                    }
+
+                }
+                columna = columna.Replace(" As ", " as ").Replace(" AS ", " as ").Replace(" aS ", " as ");
+                string[] aux2 = columna.Replace(" as ", ";").Split(';');
+                if (aux2.Length == 2)
+                {
+                    if (aux2[0].Contains("'"))// 'Algo' as Columna
+                        return $"{aux2[0]} AS {formatearColumnaSQL(aux2[1])}";
+                    return $"{formatearColumnaSQL(aux2[0])} AS {formatearColumnaSQL(aux2[1])}";
+                }
+                else if (aux2.Length == 1) // as columna
+                    return formatearColumnaSQL(aux2[0]);
+
+            }
+            if (columna.Contains("("))//Funcion()
+            {
+                return columna;
+            }
+
+            if (columna.Contains("."))//BaseDeDatos.Esquema.Tabla.Columna
+            {
+                string[] aux = columna.Split('.');
+                foreach (var item in aux)
+                {
+                    if (item == "*") colFormateada += item; //Columna.*
+                    else
+                        colFormateada += $"[{item}].";
+                }
+                colFormateada = colFormateada.Trim('.');
+            }
+            else colFormateada = $"[{columna}]";
+            return colFormateada;
         }
         private string insertSQL(Dictionary<string,object> diccionario)
         {
@@ -112,76 +179,7 @@ namespace Mane.BD
             }
             return joins;
         }
-        private string formatearTablaSQL(string nombreTabla)
-        {
-            string output = nombreTabla.Trim();
-            if(output.Contains(" "))
-            {
-                var aux = output.Split(' ');
-                if (aux.Length == 2)
-                    return $"{formatearColumnaSQL(aux[0])} {formatearColumnaSQL(aux[1])}";
-                else return output;
-            }
-            return formatearColumnaSQL(output);
-        }
-        private static string formatearColumnaSQL(string columna)
-        {
-            if (columna == "") return columna;
-            string colFormateada = "";
-
-
-            if (columna.ToLower().Contains(" as ")) // Columna as otraCosa
-            {
-                string funcion = "";
-                if (columna.Contains(")"))//Funcion()
-                {
-                    var splitFunc = columna.Split(')');
-                    if (splitFunc.Length == 1)//funcion( as )
-                        return columna;
-                    funcion = splitFunc[0] + ")";
-
-                    if (funcion.ToLower().Contains(" as "))//funcion( as ) as columna
-                    {
-                        var colTmp = splitFunc[1];
-                        colTmp = colTmp.Trim();
-                        colTmp = colTmp.Replace("As ", "as ").Replace("AS ", "as ").Replace("aS ", "as ").Replace("as ", "");
-                        return $"{funcion} AS {formatearColumnaSQL(colTmp)}";
-
-                    }
-
-                }
-                columna = columna.Replace(" As ", " as ").Replace(" AS ", " as ").Replace(" aS ", " as ");
-                string[] aux2 = columna.Replace(" as ", ";").Split(';');
-                if (aux2.Length == 2)
-                {
-                    if (aux2[0].Contains("'"))// 'Algo' as Columna
-                        return $"{aux2[0]} AS {formatearColumnaSQL(aux2[1])}";
-                    return $"{formatearColumnaSQL(aux2[0])} AS {formatearColumnaSQL(aux2[1])}";
-                }
-                else if (aux2.Length == 1) // as columna
-                    return formatearColumnaSQL(aux2[0]);
-
-            }
-            if (columna.Contains("("))//Funcion()
-            {
-                return columna;
-            }
-
-            if (columna.Contains("."))//BaseDeDatos.Esquema.Tabla.Columna
-            {
-                string[] aux = columna.Split('.');
-                foreach (var item in aux)
-                {
-                    if (item == "*") colFormateada += item; //Columna.*
-                    else
-                        colFormateada += $"[{item}].";
-                }
-                colFormateada = colFormateada.Trim('.');
-            }
-            else colFormateada = $"[{columna}]";
-            return colFormateada;
-        }
-            private string buildLimitSQL() =>
+        private string buildLimitSQL() =>
          this.Limit > 0 ? $"TOP({Limit})" : "";
         private string buildSelectSQL()
         {

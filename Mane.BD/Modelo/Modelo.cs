@@ -60,6 +60,13 @@ namespace Mane.BD
         /// Indica si el modelo ya fue registrado en la base de datos
         /// </summary>
         private bool RegistredOnDataBase;
+       
+        internal bool Inicializando { get; set; }
+        /// <summary>
+        /// Indica cuando se están asignando los valores obtenidos de la base de datos
+        /// a las propiedades del objeto
+        /// </summary>
+        public bool isInitializing() => Inicializando;
         ///// <summary>
         ///// Obtiene la relacion especificada
         ///// </summary>
@@ -284,8 +291,11 @@ namespace Mane.BD
         {
             if (!exists()) return false;
             if (originalIdValue != null && id() != null)
-                if (originalIdValue?.ToString() != id()?.ToString()) return true;
-            return OriginalModel != Common.ObjectToKeyValue(this);
+                if (originalIdValue.ToString() != id().ToString()) return true;
+            if (OriginalModel == null) return true;
+            var CurrModel = Common.ObjectToKeyValue(this);
+            if (CurrModel != OriginalModel) return true;
+            return false;
         }
         /// <summary>
         /// Tiene uno a traves de...
@@ -527,7 +537,7 @@ namespace Mane.BD
                                 if (e.DesiredType == typeof(string))
                                     e.Value = Convert.ToDouble(e.Value).ToString((s as Binding).FormatString);
                             }
-                            catch (Exception ex)
+                            catch (Exception)
                             {
 
                             }

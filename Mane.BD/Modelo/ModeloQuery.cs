@@ -163,15 +163,40 @@ namespace Mane.BD
             return this;
         }
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="func"></param>
+        /// <param name="col"></param>
+        /// <returns></returns>
+        public ModeloQuery<Tmodelo> where(Func<ModeloQuery<Tmodelo>, ModeloQuery<Tmodelo>> func)
+        {
+            var aux = func.Invoke(new ModeloQuery<Tmodelo>());
+            var qry = aux.query;
+            query.where(q => qry);
+            return this;
+        }
+        /// <summary>
         /// Condicion where con el operador or
         /// </summary>
         /// <param name="col1">Columna </param>
         /// <param name="operador">Operador</param>
         /// <param name="Valor">Valor </param>
         /// <returns></returns>
-        public ModeloQuery<Tmodelo> orWhere(string col1, string operador, string Valor)
+        public ModeloQuery<Tmodelo> orWhere(string col1, string operador, object Valor)
         {
             query.orWhere(col1,operador,Valor);
+            return this;
+        }
+        /// <summary>
+        /// Condicion where con el operador or
+        /// </summary>
+        /// <param name="col1">Columna </param>
+        /// <param name="operador">Operador</param>
+        /// <param name="Valor">Valor </param>
+        /// <returns></returns>
+        public ModeloQuery<Tmodelo> orWhere(string col1,object Valor)
+        {
+            query.orWhere(col1, "=", Valor);
             return this;
         }
         /// <summary>

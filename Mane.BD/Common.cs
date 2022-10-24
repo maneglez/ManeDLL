@@ -51,6 +51,7 @@ namespace Mane.BD
             }
             return obj;
         }
+       
         /// <summary>
         /// Obtiene el valor de una propiedad En base al nombre
         /// </summary>
@@ -83,7 +84,7 @@ namespace Mane.BD
                     case "Int32": return value == DBNull.Value ? 0 : int.Parse(value.ToString());
                     case "Decimal": return value == DBNull.Value ? 0 : decimal.Parse(value.ToString());
                 }
-                if (t.BaseType == typeof(Enum)) return int.Parse(value.ToString());
+                if (t.BaseType == typeof(Enum)) return Convert.ToInt16(value == DBNull.Value ? null : value);
 
             }
             catch (Exception)

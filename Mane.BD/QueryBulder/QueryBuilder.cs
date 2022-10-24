@@ -16,18 +16,19 @@ namespace Mane.BD
     /// </list>
     /// </remarks>
     [Serializable]
-    public partial class QueryBuilder
+    public partial class QueryBuilder 
     {
         #region Atributos de la clase
-        private string[] Columnas;
-        private List<Join> Joins;
-        private List<Where> Wheres;
-        private Dictionary<string, object> SelectSubquery;
-        private string Tabla;
-        private string RawQuery;
-        private string[] GroupBy;
-        private OrderBy Order;
-        private int Limit;
+        internal string[] Columnas;
+        internal List<Join> Joins;
+        internal List<Where> Wheres;
+        internal Dictionary<string, object> SelectSubquery;
+        internal string Tabla;
+        internal string RawQuery;
+        internal string[] GroupBy;
+        internal OrderBy Order;
+        internal int Limit;
+        internal string NombreConexion;
         #endregion
 
         #region Constructores
@@ -89,7 +90,7 @@ namespace Mane.BD
         public string[] getCurrentColumnsAlias()
         {
             var cols = new List<string>();
-            foreach(var item in Columnas)
+            foreach (var item in Columnas)
             {
 
                 if (item.ToLower().Contains(" as "))
@@ -143,7 +144,7 @@ namespace Mane.BD
             switch (Bd.getTipoBd(connName))
             {
                 case TipoDeBd.SqlServer:
-                  result  = Bd.getFirstValue(countSQL(),connName);
+                    result = Bd.getFirstValue(countSQL(), connName);
                     break;
             }
             return result == null ? 0 : Convert.ToInt32(result);
@@ -186,7 +187,7 @@ namespace Mane.BD
                     object result = Bd.getFirstValue(insertSQL(dic), connName);
                     if (result == DBNull.Value || result == null)
                         return null;
-                    else 
+                    else
                         return result;
                 default:
                     break;
@@ -224,7 +225,7 @@ namespace Mane.BD
             }
             return 0;
         }
-        
+
         /// <summary>
         /// Crea una copia del query actual;
         /// </summary>
@@ -234,7 +235,7 @@ namespace Mane.BD
             QueryBuilder q;
             using (var ms = new System.IO.MemoryStream())
             {
-                System.Runtime.Serialization.IFormatter formatter = 
+                System.Runtime.Serialization.IFormatter formatter =
                     new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
                 formatter.Serialize(ms, this);
                 ms.Seek(0, System.IO.SeekOrigin.Begin);
@@ -272,7 +273,7 @@ namespace Mane.BD
         /// Genera una cadena de consulta en formato SQL
         /// </summary>
         /// <returns>Consulta SQL</returns>
-        public string getQuery(string nombreConexion = "") 
+        public string getQuery(string nombreConexion = "")
             => getQuery(Bd.getTipoBd(nombreConexion));
 
         /// <summary>
@@ -291,7 +292,7 @@ namespace Mane.BD
         public bool exists(string connName)
         {
             limit(1);
-            return Bd.exists(getQuery(connName),connName);
+            return Bd.exists(getQuery(connName), connName);
         }
 
         #endregion
@@ -325,13 +326,13 @@ namespace Mane.BD
             SelectSubquery.Add(alias, query);
             return this;
         }
-        public QueryBuilder selectRaw(string RawQuery,string alias)
+        public QueryBuilder selectRaw(string RawQuery, string alias)
         {
             SelectSubquery.Add(alias, RawQuery);
             return this;
         }
 
-        public QueryBuilder select(Dictionary<string,QueryBuilder> SelectSubquery)
+        public QueryBuilder select(Dictionary<string, QueryBuilder> SelectSubquery)
         {
             if (SelectSubquery == null) throw new ArgumentNullException("SelectSubquery");
             foreach (var item in SelectSubquery.Keys)
@@ -422,9 +423,9 @@ namespace Mane.BD
             return this;
         }
 
-        private QueryBuilder commonJoin(QueryBuilder consulta,string alias,string col1,string col2,string operador, string tipo, Func<QueryBuilder, QueryBuilder> func = null)
+        private QueryBuilder commonJoin(QueryBuilder consulta, string alias, string col1, string col2, string operador, string tipo, Func<QueryBuilder, QueryBuilder> func = null)
         {
-            
+
             Joins.Add(new Join
             {
                 Consulta = consulta,
@@ -458,7 +459,7 @@ namespace Mane.BD
         /// <param name="otrasCondiciones"></param>
         /// <returns></returns>
         public QueryBuilder join(QueryBuilder consulta, string alias, string col1, string col2, Func<QueryBuilder, QueryBuilder> otrasCondiciones)
-            => commonJoin(consulta, alias, col1, col2, "=", "INNER",otrasCondiciones);
+            => commonJoin(consulta, alias, col1, col2, "=", "INNER", otrasCondiciones);
         /// <summary>
         /// Genera un join con otra tabla
         /// </summary>
@@ -466,7 +467,7 @@ namespace Mane.BD
         /// <param name="col1">Columna 1</param>
         /// <param name="col2">Columna 2</param>
         /// <returns></returns>
-        public QueryBuilder join(string tabla, string col1, string col2) 
+        public QueryBuilder join(string tabla, string col1, string col2)
             => join(tabla, col1, col2, "=");
 
         /// <summary>
@@ -477,7 +478,7 @@ namespace Mane.BD
         /// <param name="operador">operador</param>
         /// <param name="col2">Columna 2</param>
         /// <returns></returns>
-        public QueryBuilder join(string tabla, string col1, string col2, string operador = "=") 
+        public QueryBuilder join(string tabla, string col1, string col2, string operador = "=")
             => commonJoin(tabla, col1, col2, operador, "INNER");
 
         /// <summary>
@@ -488,7 +489,7 @@ namespace Mane.BD
         /// <param name="operador">operador</param>
         /// <param name="col2">Columna 2</param>
         /// <returns></returns>
-        public QueryBuilder leftJoin(string tabla, string col1, string col2, string operador = "=") 
+        public QueryBuilder leftJoin(string tabla, string col1, string col2, string operador = "=")
             => commonJoin(tabla, col1, col2, operador, "LEFT");
 
         /// <summary>
@@ -520,7 +521,7 @@ namespace Mane.BD
         /// <param name="func">Condicioens where extra</param>
         /// <param name="col2">Columna 2</param>
         /// <returns></returns>
-        public QueryBuilder leftJoin(string tabla, string col1, string col2, Func<QueryBuilder, QueryBuilder> func, string operador = "=") 
+        public QueryBuilder leftJoin(string tabla, string col1, string col2, Func<QueryBuilder, QueryBuilder> func, string operador = "=")
             => commonJoin(tabla, col1, col2, func, operador, "LEFT");
 
         /// <summary>
@@ -532,7 +533,7 @@ namespace Mane.BD
         /// <param name="func">Condicioens where extra</param>
         /// <param name="col2">Columna 2</param>
         /// <returns></returns>
-        public QueryBuilder rightJoin(string tabla, string col1, string col2, Func<QueryBuilder, QueryBuilder> func, string operador = "=") 
+        public QueryBuilder rightJoin(string tabla, string col1, string col2, Func<QueryBuilder, QueryBuilder> func, string operador = "=")
             => commonJoin(tabla, col1, col2, func, operador, "RIGHT");
 
         #endregion
@@ -657,7 +658,7 @@ namespace Mane.BD
         /// <param name="operador">Operador</param>
         /// <param name="Valor">Valor </param>
         /// <returns></returns>
-        public QueryBuilder orWhere(string col1, string operador, string Valor)
+        public QueryBuilder orWhere(string col1, string operador, object Valor)
         => commonWhere(col1, operador, Valor, "OR", TipoWhere.Where);
 
         /// <summary>
@@ -666,7 +667,7 @@ namespace Mane.BD
         /// <param name="func"></param>
         /// <returns></returns>
         public QueryBuilder orWhere(Func<QueryBuilder, QueryBuilder> func)
-            => commonWhere("","","OR",func);
+            => commonWhere("", "", "OR", func);
         //{
         //    QueryBuilder q = func.Invoke(new QueryBuilder());
         //    Where w = new Where()
@@ -784,24 +785,26 @@ namespace Mane.BD
             throw new NotImplementedException();
         }
 
+
+
         #endregion
 
         #region SubClases y Enums
         [Serializable]
-        private class Where
+        internal class Where
         {
             public string Columna, Operador, Boleano;
             public object Valor;
             public TipoWhere Tipo;
-           public Where()
+            public Where()
             {
                 Columna = Operador = Boleano = "";
                 Tipo = TipoWhere.Where;
             }
-            
+
         }
         [Serializable]
-        private class OrderBy
+        internal class OrderBy
         {
             public string Columna;
             public OrderDireccion Orden = OrderDireccion.Asendente;
@@ -821,7 +824,7 @@ namespace Mane.BD
             /// </summary>
             Descendente
         }
-        private enum TipoWhere
+        internal enum TipoWhere
         {
             Where,
             WhereGroup,
@@ -831,17 +834,25 @@ namespace Mane.BD
             WhereBetween
         }
         [Serializable]
-        private class Join
+        internal class Join
         {
-            public string Tabla, Columna1, Columna2, Operador, Tipo,AliasDeConsulta;
+            public string Tabla, Columna1, Columna2, Operador, Tipo, AliasDeConsulta;
             public QueryBuilder ExtraCondicion;
             public QueryBuilder Consulta;
             public Join()
             {
-               Tabla = Columna1 = Columna2 = Operador = Tipo = AliasDeConsulta = "";
+                Tabla = Columna1 = Columna2 = Operador = Tipo = AliasDeConsulta = "";
             }
         }
-        #endregion 
+        #endregion
+
+        #region helpers
+        /// <summary>
+        /// Obtener el valor del límite actual
+        /// </summary>
+        /// <returns></returns>
+        public int CurrentLimit => Limit;
+        #endregion
 
     }
 }

@@ -1,6 +1,9 @@
-﻿using System;
+﻿using Mane.BD.Executors;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
+using System.Data.Common;
 using System.Data.SqlClient;
 
 
@@ -16,7 +19,12 @@ namespace Mane.BD
         /// <summary>
         /// Servidor SQL
         /// </summary>
+        [Description("SQL Server")]
         SqlServer,
+        /// <summary>
+        /// Base de datos SQLite
+        /// </summary>
+        [Description("SQLite")]
         SQLite
     }
 
@@ -34,35 +42,6 @@ namespace Mane.BD
     public  static partial class Bd
     {
         public static event EventHandler<BdExeptionEventArgs> OnException;
-        private static bool TestConectionSQL(Conexion conexion)
-        {
-            SqlConnection con = null;
-            bool result = true;
-            try
-            {
-                conexion.TimeOut = 5;
-                con = new SqlConnection(conexion.CadenaDeConexion);
-                con.Open();
-            }
-            catch(SqlException e)
-            {
-                result = false;
-                LastErrorCode = e.ErrorCode;
-                LastErrorDescription = e.Message;
-            }
-            catch (Exception)
-            {
-                result = false;
-            }
-            finally
-            {
-                con?.Close();
-                con?.Dispose();
-            }
-            return result;
-        }
-        
-
         /// <summary>
         /// Prueba una conexión a base de datos
         /// </summary>
@@ -70,14 +49,15 @@ namespace Mane.BD
         /// <returns>Verdadero si logra conectar, falso si no</returns>
         public static bool TestConection(Conexion conexion)
         {
+            conexion.TimeOut = 5;
             switch (conexion.TipoDeBaseDeDatos)
             {
                 case TipoDeBd.SqlServer:
-                    return TestConectionSQL(conexion);
-                default:
-                    break;
+                    return new SQLServer(conexion.CadenaDeConexion).TestConnection();
+                case TipoDeBd.SQLite:
+                    return new SQLite(conexion.CadenaDeConexion).TestConnection();
+                default: throw new NotImplementedException();
             }
-            return false;
         }
 
         /// <summary>
@@ -120,17 +100,9 @@ namespace Mane.BD
         /// <returns>DataTable con el resultado de la consulta</returns>
         public static DataTable executeQuery(string query, string nombreConexion = "")
         {
-            DataTable dt = new DataTable();
-            switch (getTipoBd(nombreConexion))
-            {
-                case TipoDeBd.SqlServer:
-                    return executeQueryForSQLServer(query, nombreConexion);
-                default:
-                    break;
-            }
-            return dt;
+           return GetExecutor(nombreConexion, query).ExecuteQuery();
         }
-        private static void bdExceptionHandler(SqlException e,string query = "")
+        internal static void bdExceptionHandler(DbException e,string query = "")
         {
         
             LastErrorCode = e.ErrorCode;
@@ -159,14 +131,7 @@ namespace Mane.BD
         /// <returns></returns>
         public static int executeNonQuery(string query, string nombreConexion = "")
         {
-            switch (getTipoBd(nombreConexion))
-            {
-                case TipoDeBd.SqlServer:
-                    return executeNonQueryForSQLServer(query, nombreConexion);
-                default:
-                    break;
-            }
-            return 0;
+            return GetExecutor(nombreConexion, query).ExecuteNonQuery();
         }
         /// <summary>
         /// Retorna el primer valor de la tabla resultante de ejecutar una consulta
@@ -176,29 +141,9 @@ namespace Mane.BD
         /// <returns>Retorna nulo si no encuentra un valor</returns>
         public static object getFirstValue(string query,string nombreConexion = "")
         {
-            switch (getTipoBd(nombreConexion))
-            {
-                case TipoDeBd.SqlServer:
-                    return executeScalarSQL(query,nombreConexion);
-                default:
-                    break;
-            }
-            return null;
-            
+            return GetExecutor(nombreConexion, query).ExecuteEscalar();
         }
-       
-        private static string getConnString(string nombreConexion)
-        {
-            if (Conexiones.Count == 0)
-                throw new Exception("No se tiene configurada ni una conexión a base de datos");
-            if (nombreConexion == "")
-                if (DefaultConnectionName == "")
-                    return Conexiones[0].CadenaDeConexion;
-                else nombreConexion = DefaultConnectionName;
-            Conexion conexion = Conexiones.Find(c => c.Nombre == nombreConexion);
-            if (conexion == null) throw new Exception($"La conexión \"{nombreConexion}\" no existe");
-            return conexion.CadenaDeConexion;
-        }
+
 
         
         /// <summary>
@@ -208,17 +153,41 @@ namespace Mane.BD
         /// <returns></returns>
         public static TipoDeBd getTipoBd(string connName)
         {
-            if (Conexiones.Count == 0) throw new QueryBuilderExeption("No existen conexiones a base de datos");
-            Conexion con;
-            if (connName == "")
-            {
-                if(DefaultConnectionName == "")
-                con = Conexiones[0];
-                else con = Conexiones.Find(DefaultConnectionName);
-            }
-            else con = Conexiones.Find(connName);
-            if (con == null) throw new QueryBuilderExeption($"La conexión {connName} no existe.");
+            var con = Conexiones.Find(connName);
+            if (con == null) bdExceptionHandler(new Exception($"La conexión {connName} no existe."));
             return con.TipoDeBaseDeDatos;
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="d"></param>
+        /// <returns></returns>
+        public static string toDateTimeSqlFormat(DateTime d) => d.ToString("yyyy-MM-dd HH:mm:ss.fff");
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="d"></param>
+        /// <returns></returns>
+        public static string toDateSqlFormat(DateTime d) => d.ToString("yyyy-MM-dd");
+        private static IBdExecutor GetExecutor(string nombreConexion)
+        {
+            var con = Conexiones.Find(nombreConexion);
+            if (con == null) bdExceptionHandler(new Exception($"La conexión \"{nombreConexion}\" no existe."));
+            switch (con.TipoDeBaseDeDatos)
+            {
+                case TipoDeBd.SqlServer:
+                    return new SQLServer(con.CadenaDeConexion);
+                case TipoDeBd.SQLite:
+                    return new SQLite(con.CadenaDeConexion);
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+        private static IBdExecutor GetExecutor(string nombreConexion,string query)
+        {
+            var ex = GetExecutor(nombreConexion);
+            ex.Query = query;
+            return ex;
         }
 
         /// <summary>
@@ -264,9 +233,12 @@ namespace Mane.BD
             /// <returns>Obtine la primera conexion que coincide con el nombre proporcionado o nulo si no existe</returns>
             public Conexion Find(string nombreConexion)
             {
-              return this.Find(c => c.Nombre == nombreConexion);
-                
+                if (Count == 0) return null;
+                if (string.IsNullOrEmpty(nombreConexion) && string.IsNullOrEmpty(DefaultConnectionName))
+                        return Conexiones[0];
+                return Find(c => c.Nombre == nombreConexion);
             }
+
         }
     }
     #endregion
