@@ -10,27 +10,7 @@ using System.Data.SqlClient;
 
 namespace Mane.BD
 {
-    #region Enums
-    /// <summary>
-    /// Tipos de bases de datos
-    /// </summary>
-    public enum TipoDeBd
-    {
-        /// <summary>
-        /// Servidor SQL
-        /// </summary>
-        [Description("SQL Server")]
-        SqlServer,
-        /// <summary>
-        /// Base de datos SQLite
-        /// </summary>
-        [Description("SQLite")]
-        SQLite
-    }
-
-    #endregion
-
-    #region Clase Bd
+   
     /// <summary>
     /// Base de datos. By ManeG
     /// </summary>
@@ -66,9 +46,9 @@ namespace Mane.BD
         /// <param name="query">consulta</param>
         /// <param name="nombreConexion">nombre de la conexion</param>
         /// <returns>Verdadero si existieron registros</returns>
-        public static bool exists(string query,string nombreConexion = "")
+        public static bool Exists(string query,string nombreConexion = "")
         {
-            return executeQuery(query, nombreConexion).Rows.Count > 0;
+            return ExecuteQuery(query, nombreConexion).Rows.Count > 0;
         }
 
         /// <summary>
@@ -98,7 +78,7 @@ namespace Mane.BD
         /// <param name="query">Consulta</param>
         /// <param name="nombreConexion">Nombre de la conexión</param>
         /// <returns>DataTable con el resultado de la consulta</returns>
-        public static DataTable executeQuery(string query, string nombreConexion = "")
+        public static DataTable ExecuteQuery(string query, string nombreConexion = "")
         {
            return GetExecutor(nombreConexion, query).ExecuteQuery();
         }
@@ -129,7 +109,7 @@ namespace Mane.BD
         /// <param name="query">Consulta</param>
         /// <param name="nombreConexion">Nombre de la conexión que se utilizará</param>
         /// <returns></returns>
-        public static int executeNonQuery(string query, string nombreConexion = "")
+        public static int ExecuteNonQuery(string query, string nombreConexion = "")
         {
             return GetExecutor(nombreConexion, query).ExecuteNonQuery();
         }
@@ -139,7 +119,7 @@ namespace Mane.BD
         /// <param name="query">Consulta</param>
         /// <param name="nombreConexion">Nombre de la conexion a utilizar</param>
         /// <returns>Retorna nulo si no encuentra un valor</returns>
-        public static object getFirstValue(string query,string nombreConexion = "")
+        public static object ExecuteEscalar(string query,string nombreConexion = "")
         {
             return GetExecutor(nombreConexion, query).ExecuteEscalar();
         }
@@ -151,7 +131,7 @@ namespace Mane.BD
         /// </summary>
         /// <param name="connName">Nombre de la conexión</param>
         /// <returns></returns>
-        public static TipoDeBd getTipoBd(string connName)
+        public static TipoDeBd GetTipoBd(string connName)
         {
             var con = Conexiones.Find(connName);
             if (con == null) bdExceptionHandler(new Exception($"La conexión {connName} no existe."));
@@ -162,13 +142,19 @@ namespace Mane.BD
         /// </summary>
         /// <param name="d"></param>
         /// <returns></returns>
-        public static string toDateTimeSqlFormat(DateTime d) => d.ToString("yyyy-MM-dd HH:mm:ss.fff");
+        public static string ToDateTimeSqlFormat(DateTime d) => d.ToString("yyyy-MM-dd HH:mm:ss.fff");
         /// <summary>
         /// 
         /// </summary>
         /// <param name="d"></param>
         /// <returns></returns>
-        public static string toDateSqlFormat(DateTime d) => d.ToString("yyyy-MM-dd");
+        public static string ToDateSqlFormat(DateTime d) => d.ToString("yyyy-MM-dd");
+        /// <summary>
+        /// Obtiene la clase que se encarga de ejecutar la consulta
+        /// </summary>
+        /// <param name="nombreConexion"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
         private static IBdExecutor GetExecutor(string nombreConexion)
         {
             var con = Conexiones.Find(nombreConexion);
@@ -204,9 +190,9 @@ namespace Mane.BD
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
-        public static QueryBuilder rawQuery(string query)
+        public static QueryBuilder RawQuery(string query)
         {
-            return new QueryBuilder().rawQuery(query);
+            return new QueryBuilder().RawQuery(query) as QueryBuilder;
         }
         /// <summary>
         /// Colección de Conexiones
@@ -241,11 +227,5 @@ namespace Mane.BD
 
         }
     }
-    #endregion
-
-  
-
- 
-
 
 }

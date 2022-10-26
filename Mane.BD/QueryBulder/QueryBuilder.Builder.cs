@@ -15,81 +15,91 @@ namespace Mane.BD
 
         public string BuildGroupBy()
         {
-            throw new NotImplementedException();
+            return GetBuilder()?.BuildGroupBy();
         }
 
         public string BuildJoins()
         {
-            throw new NotImplementedException();
+            return GetBuilder()?.BuildJoins();
         }
 
         public string BuildLimit()
         {
-            throw new NotImplementedException();
+            return GetBuilder()?.BuildLimit();
         }
 
         public string BuildOrderBy()
         {
-            throw new NotImplementedException();
+            return GetBuilder()?.BuildOrderBy();
         }
 
         public string BuildQuery()
         {
-            throw new NotImplementedException();
+            return GetBuilder()?.BuildQuery();
+        }
+        public string BuildQuery(TipoDeBd tipo)
+        {
+            return GetBuilder(tipo)?.BuildQuery();
         }
 
         public string BuildSelect()
         {
-            throw new NotImplementedException();
+            return GetBuilder()?.BuildSelect();
         }
 
         public string BuildWeres()
         {
-            throw new NotImplementedException();
+            return GetBuilder()?.BuildWeres();
         }
 
         public string Count()
         {
-            throw new NotImplementedException();
+            return GetBuilder()?.Count();
         }
 
         public string Delete()
         {
-            throw new NotImplementedException();
+            return GetBuilder()?.Delete();
         }
 
         public string FormatColumn(string columna)
         {
-            throw new NotImplementedException();
+            return GetBuilder()?.FormatColumn(columna);
         }
 
         public string FormatTable(string value)
         {
-            throw new NotImplementedException();
+            return GetBuilder()?.FormatTable(value);
         }
 
         public string FormatValue(object value)
         {
-            throw new NotImplementedException();
+            return GetBuilder()?.FormatValue(value);
         }
 
         public string Insert(object objeto)
         {
-            throw new NotImplementedException();
+            return GetBuilder()?.Insert(objeto);
         }
 
         public string Insert(Dictionary<string, object> diccionario)
         {
-            throw new NotImplementedException();
+            return GetBuilder()?.Insert(diccionario);
         }
 
         public string Update(Dictionary<string, object> diccionario)
         {
-            throw new NotImplementedException();
+          return  GetBuilder().Update(diccionario);
         }
-        private IBuilder GetBuilder()
+        private IBuilder GetBuilder(string NombreConexion = null)
         {
-            switch (Bd.getTipoBd(NombreConexion))
+            if (NombreConexion != null)
+                this.NombreConexion = NombreConexion;
+            return GetBuilder(Bd.GetTipoBd(this.NombreConexion));
+        }
+        private IBuilder GetBuilder(TipoDeBd tipo)
+        {
+            switch (tipo)
             {
                 case TipoDeBd.SqlServer:
                     return new BuilderSQL(this);

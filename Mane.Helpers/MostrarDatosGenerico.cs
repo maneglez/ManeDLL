@@ -18,8 +18,8 @@ namespace Mane.Helpers
         private QueryBuilder query { get; set; }
         public event EventHandler<ItemCambiaEventArgs> ItemSeleccionadoCambia;
 
-        private string Desde => Bd.toDateSqlFormat(dtpDesde.Value);
-        private string Hasta => Bd.toDateSqlFormat(dtpHasta.Value);
+        private string Desde => Bd.ToDateSqlFormat(dtpDesde.Value);
+        private string Hasta => Bd.ToDateSqlFormat(dtpHasta.Value);
         /// <summary>
         /// Indica la columna que se utilizará para filtrar los datos por fecha
         /// </summary>
@@ -120,7 +120,7 @@ namespace Mane.Helpers
             }
             else
             {
-                foreach (var item in query.getCurrentColumnsAlias())
+                foreach (var item in query.GetCurrentColumnsAlias())
                 {
                     var r = dtFiltro.NewRow();
                     r["name"] = item;
@@ -133,7 +133,7 @@ namespace Mane.Helpers
                         SortMode = DataGridViewColumnSortMode.NotSortable,
                     });
                 }
-                string[] colNames = query.getCurrentColumnsNames();
+                string[] colNames = query.GetCurrentColumnsNames();
                 for (int i = 0; i < colNames.Length; i++)
                 {
                     string item = colNames[i];
@@ -164,12 +164,12 @@ namespace Mane.Helpers
                     q.whereBetween(ColumnaFiltradoFecha, Desde, Hasta);
                 if (string.IsNullOrEmpty(Busqueda))
                 {
-                    dt = q.get(ConnName);
+                    dt = q.Get(ConnName);
                 }
                 else
                 {
                     q.where(cbFiltro.SelectedValue.ToString(), "LIKE", $"%{Busqueda}%");
-                    dt = q.get(ConnName);
+                    dt = q.Get(ConnName);
                 }
             }
             catch (Exception ex)

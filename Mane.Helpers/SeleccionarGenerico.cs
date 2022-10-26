@@ -86,7 +86,7 @@ namespace Mane.Helpers
             }
             else
             {
-                foreach (var item in query.getCurrentColumnsAlias())
+                foreach (var item in query.GetCurrentColumnsAlias())
                 {
                     var r = dtFiltro.NewRow();
                     r["name"] = item;
@@ -99,7 +99,7 @@ namespace Mane.Helpers
                         SortMode = DataGridViewColumnSortMode.NotSortable,
                     });
                 }
-                string[] colNames = query.getCurrentColumnsNames();
+                string[] colNames = query.GetCurrentColumnsNames();
                 for (int i = 0; i < colNames.Length; i++)
                 {
                     string item = colNames[i];
@@ -125,13 +125,13 @@ namespace Mane.Helpers
             DataTable dt;
             if (string.IsNullOrEmpty(Busqueda))
             {
-                dt = query.get(ConnName);
+                dt = query.Get(ConnName);
             }
             else
             {
                 var q = query.copy();
                 q.where(cbFiltro.SelectedValue.ToString(), "LIKE", $"%{Busqueda}%");
-                dt = q.get(ConnName);
+                dt = q.Get(ConnName);
             }
             dgvContenido.DataSource = dt;
             AjustarTamano();
