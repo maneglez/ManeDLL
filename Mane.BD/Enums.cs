@@ -35,6 +35,11 @@ namespace Mane.BD
         /// Base de datos SQLite
         /// </summary>
         [Description("SQLite")]
-        SQLite
+        SQLite,
+        /// <summary>
+        /// Base de datos de HanaDB
+        /// </summary>
+        [Description("Hana DB")]
+        Hana
     }
 }

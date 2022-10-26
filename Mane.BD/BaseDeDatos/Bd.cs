@@ -10,7 +10,7 @@ using System.Data.SqlClient;
 
 namespace Mane.BD
 {
-   
+
     /// <summary>
     /// Base de datos. By ManeG
     /// </summary>
@@ -19,23 +19,34 @@ namespace Mane.BD
     /// <item>SQL Server</item>
     /// </list>
     /// </remarks>
-    public  static partial class Bd
+    public static partial class Bd
     {
         public static event EventHandler<BdExeptionEventArgs> OnException;
-        /// <summary>
-        /// Prueba una conexión a base de datos
-        /// </summary>
-        /// <param name="conexion">Conexión a probar</param>
-        /// <returns>Verdadero si logra conectar, falso si no</returns>
+        public static bool AutoDisconnect
+        {
+            get => autoDisconnect; set
+            {
+                if (value == autoDisconnect) return;
+                if (!value)
+                {
+                    foreach (var c in Conexiones)
+                    {
+                        c.Executor.AutoDisconnect = value;
+                    }
+                }
+                autoDisconnect = value;
+            }
+        }        /// <summary>
+                 /// <returns>Verdadero si logra conectar, falso si no</returns>
         public static bool TestConection(Conexion conexion)
         {
             conexion.TimeOut = 5;
             switch (conexion.TipoDeBaseDeDatos)
             {
                 case TipoDeBd.SqlServer:
-                    return new SQLServer(conexion.CadenaDeConexion).TestConnection();
+                    return new SQLServerExecutor(conexion.CadenaDeConexion).TestConnection();
                 case TipoDeBd.SQLite:
-                    return new SQLite(conexion.CadenaDeConexion).TestConnection();
+                    return new SQLiteExecutor(conexion.CadenaDeConexion).TestConnection();
                 default: throw new NotImplementedException();
             }
         }
@@ -46,7 +57,7 @@ namespace Mane.BD
         /// <param name="query">consulta</param>
         /// <param name="nombreConexion">nombre de la conexion</param>
         /// <returns>Verdadero si existieron registros</returns>
-        public static bool Exists(string query,string nombreConexion = "")
+        public static bool Exists(string query, string nombreConexion = "")
         {
             return ExecuteQuery(query, nombreConexion).Rows.Count > 0;
         }
@@ -71,6 +82,7 @@ namespace Mane.BD
         /// El ultimo error de BD
         /// </summary>
         public static string LastErrorDescription;
+        private static bool autoDisconnect;
 
         /// <summary>
         /// Ejecuta una consulta en la BD SAP o satelite
@@ -80,24 +92,33 @@ namespace Mane.BD
         /// <returns>DataTable con el resultado de la consulta</returns>
         public static DataTable ExecuteQuery(string query, string nombreConexion = "")
         {
-           return GetExecutor(nombreConexion, query).ExecuteQuery();
+            return GetExecutor(nombreConexion, query).ExecuteQuery();
         }
-        internal static void bdExceptionHandler(DbException e,string query = "")
+        private static IBdExecutor GetExecutor(string nombreConexion,string query = "")
         {
-        
+            var ex = Conexiones.Find(nombreConexion)?.Executor;
+            if (ex == null)
+            {
+               throw new BdException($"La conexion {nombreConexion} no existe");
+            }
+            return ex;
+        }
+        internal static void bdExceptionHandler(DbException e, string query = "")
+        {
+
             LastErrorCode = e.ErrorCode;
             LastErrorDescription = e.Message;
-            var ex = new BdException("Error de base de datos: " + e.Message,query);
+            var ex = new BdException("Error de base de datos: " + e.Message, query);
             var EvID = e.Data["HelpLink.EvtID"]?.ToString();//2 significa error de conexion 17142 significa servidor pausado
-            if(EvID == "2" || EvID == "17142") ex.IsConnectionError = true;
+            if (EvID == "2" || EvID == "17142") ex.IsConnectionError = true;
             if (OnException == null)
                 throw ex;
             else OnException.Invoke(null, new BdExeptionEventArgs(ex));
         }
-        private static void bdExceptionHandler(Exception e,string query = "")
+        private static void bdExceptionHandler(Exception e, string query = "")
         {
             LastErrorDescription = e.Message;
-            var ex = new BdException(e.Message,query);
+            var ex = new BdException(e.Message, query);
             if (OnException == null)
                 throw ex;
             else OnException.Invoke(null, new BdExeptionEventArgs(ex));
@@ -119,13 +140,13 @@ namespace Mane.BD
         /// <param name="query">Consulta</param>
         /// <param name="nombreConexion">Nombre de la conexion a utilizar</param>
         /// <returns>Retorna nulo si no encuentra un valor</returns>
-        public static object ExecuteEscalar(string query,string nombreConexion = "")
+        public static object ExecuteEscalar(string query, string nombreConexion = "")
         {
             return GetExecutor(nombreConexion, query).ExecuteEscalar();
         }
 
 
-        
+
         /// <summary>
         /// Obtiene el tipo de BD de la conexión
         /// </summary>
@@ -149,32 +170,7 @@ namespace Mane.BD
         /// <param name="d"></param>
         /// <returns></returns>
         public static string ToDateSqlFormat(DateTime d) => d.ToString("yyyy-MM-dd");
-        /// <summary>
-        /// Obtiene la clase que se encarga de ejecutar la consulta
-        /// </summary>
-        /// <param name="nombreConexion"></param>
-        /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
-        private static IBdExecutor GetExecutor(string nombreConexion)
-        {
-            var con = Conexiones.Find(nombreConexion);
-            if (con == null) bdExceptionHandler(new Exception($"La conexión \"{nombreConexion}\" no existe."));
-            switch (con.TipoDeBaseDeDatos)
-            {
-                case TipoDeBd.SqlServer:
-                    return new SQLServer(con.CadenaDeConexion);
-                case TipoDeBd.SQLite:
-                    return new SQLite(con.CadenaDeConexion);
-                default:
-                    throw new NotImplementedException();
-            }
-        }
-        private static IBdExecutor GetExecutor(string nombreConexion,string query)
-        {
-            var ex = GetExecutor(nombreConexion);
-            ex.Query = query;
-            return ex;
-        }
+
 
         /// <summary>
         /// Genera un nuevo query builder
@@ -203,10 +199,11 @@ namespace Mane.BD
             /// Agrega una nueva conexión
             /// </summary>
             /// <param name="con"></param>
-           new public void Add(Conexion con)
+            new public void Add(Conexion con)
             {
+                Bd.AutoDisconnect = true;// establecer en verdadero cada que se agrega una conexion
                 if (con.Nombre == "") con.Nombre = $"Conexion{this.Count}";
-                foreach(Conexion c in this)
+                foreach (Conexion c in this)
                 {
                     if (c.Nombre == con.Nombre) throw new Exception("El nombre de la conexión ya existe");
                 }
@@ -221,7 +218,7 @@ namespace Mane.BD
             {
                 if (Count == 0) return null;
                 if (string.IsNullOrEmpty(nombreConexion) && string.IsNullOrEmpty(DefaultConnectionName))
-                        return Conexiones[0];
+                    return Conexiones[0];
                 return Find(c => c.Nombre == nombreConexion);
             }
 

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Mane.BD.Executors
 {
-    interface IBdExecutor
+   public interface IBdExecutor
     {
         /// <summary>
         /// Consulta a ejecutar
@@ -17,6 +17,7 @@ namespace Mane.BD.Executors
         /// Cadena de conexion
         /// </summary>
         string ConnString { get; set; }
+        bool AutoDisconnect { get; set; }
         DataTable ExecuteQuery();
         int ExecuteNonQuery();
         object ExecuteEscalar();

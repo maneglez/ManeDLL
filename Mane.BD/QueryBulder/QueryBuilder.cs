@@ -82,14 +82,7 @@ namespace Mane.BD
         /// <returns>Consulta SQL</returns>
         public string GetQuery(TipoDeBd tipo = TipoDeBd.SqlServer)
         {
-            switch (tipo)
-            {
-                case TipoDeBd.SqlServer:
-                    return new BuilderSQL(this).BuildQuery();
-                default:
-                    break;
-            }
-            return "";
+            return GetBuilder(tipo)?.BuildQuery();
         }
 
         /// <summary>

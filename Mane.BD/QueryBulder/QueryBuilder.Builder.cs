@@ -104,11 +104,13 @@ namespace Mane.BD
                 case TipoDeBd.SqlServer:
                     return new BuilderSQL(this);
                 case TipoDeBd.SQLite:
-                    break;
+                    return new BuilderSQLite(this);
+                case TipoDeBd.Hana:
+                    return new BuilderHana(this);
                 default:
-                    break;
+                    return null;
             }
-            return null;
+            
         }
     }
 }

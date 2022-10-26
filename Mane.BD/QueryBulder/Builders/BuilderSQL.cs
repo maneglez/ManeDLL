@@ -48,7 +48,7 @@ namespace Mane.BD.QueryBulder.Builders
             return joins;
         }
 
-        public string BuildLimit()
+      virtual  public string BuildLimit()
         {
             return QueryBuilder._Limit > 0 ? $"TOP({QueryBuilder._Limit})" : "";
         }
@@ -65,7 +65,7 @@ namespace Mane.BD.QueryBulder.Builders
             return orderBy;
         }
 
-        public string BuildQuery()
+       virtual public string BuildQuery()
         {
             var q = QueryBuilder;
             if (q._RawQuery != null) return q._RawQuery;
