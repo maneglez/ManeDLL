@@ -56,7 +56,7 @@ namespace Mane.Helpers
             InitializeComponent();
             this.query = query;
             if(query.CurrentLimit == 0)
-            query.limit(300);
+            query.Limit(300);
             ConnName = connName;
             HabilitarBusqueda = true;
             var dtFiltro = new DataTable();
@@ -64,7 +64,7 @@ namespace Mane.Helpers
             dtFiltro.Columns.Add(new DataColumn("name"));
             if (queryColNames_DisplayColNames != null)
             {
-                this.query.select(queryColNames_DisplayColNames.Keys.ToArray());
+                this.query.Select(queryColNames_DisplayColNames.Keys.ToArray());
                 foreach (var item in queryColNames_DisplayColNames.Keys)
                 {
                     dgvContenido.Columns.Add(new DataGridViewTextBoxColumn
@@ -129,8 +129,8 @@ namespace Mane.Helpers
             }
             else
             {
-                var q = query.copy();
-                q.where(cbFiltro.SelectedValue.ToString(), "LIKE", $"%{Busqueda}%");
+                var q = query.Copy();
+                q.Where(cbFiltro.SelectedValue.ToString(), "LIKE", $"%{Busqueda}%");
                 dt = q.Get(ConnName);
             }
             dgvContenido.DataSource = dt;

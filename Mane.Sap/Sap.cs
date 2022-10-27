@@ -100,7 +100,7 @@ namespace Mane.Sap
             var c = ConexionActual?.ToBdCon();
             c.Nombre = NombreConexionBd;
             Bd.Conexiones.Add(c);
-            int docNum = Convert.ToInt32(Bd.Query(tabla).where("DocEntry", docEntry).getScalar(NombreConexionBd));
+            int docNum = Convert.ToInt32(Bd.Query(tabla).Where("DocEntry", docEntry).GetScalar(NombreConexionBd));
             Bd.Conexiones.Remove(c);
             return docNum;
         }

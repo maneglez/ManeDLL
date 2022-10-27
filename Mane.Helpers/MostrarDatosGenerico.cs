@@ -87,7 +87,7 @@ namespace Mane.Helpers
         {
             InitializeComponent();
             this.query = query;
-            query.limit(300);
+            query.Limit(300);
             ConnName = connName;
             HabilitarBusqueda = true;
             ColumnaFiltradoFecha = "";
@@ -100,7 +100,7 @@ namespace Mane.Helpers
             
             if (queryColNames_DisplayColNames != null)
             {
-                this.query.select(queryColNames_DisplayColNames.Keys.ToArray());
+                this.query.Select(queryColNames_DisplayColNames.Keys.ToArray());
                 foreach (var item in queryColNames_DisplayColNames.Keys)
                 {
                     dgvContenido.Columns.Add(new DataGridViewTextBoxColumn
@@ -159,16 +159,16 @@ namespace Mane.Helpers
             DataTable dt = null;
             try
             {
-                var q = query.copy();
+                var q = query.Copy();
                 if (!string.IsNullOrEmpty(ColumnaFiltradoFecha))
-                    q.whereBetween(ColumnaFiltradoFecha, Desde, Hasta);
+                    q.WhereBetween(ColumnaFiltradoFecha, Desde, Hasta);
                 if (string.IsNullOrEmpty(Busqueda))
                 {
                     dt = q.Get(ConnName);
                 }
                 else
                 {
-                    q.where(cbFiltro.SelectedValue.ToString(), "LIKE", $"%{Busqueda}%");
+                    q.Where(cbFiltro.SelectedValue.ToString(), "LIKE", $"%{Busqueda}%");
                     dt = q.Get(ConnName);
                 }
             }
