@@ -22,7 +22,7 @@ namespace Mane.BD
         {
             query = new QueryBuilder();
             modelo = new Tmodelo();
-            query.from(modelo.getNombreTabla());
+            query.From(modelo.getNombreTabla());
         }
 
         /// <summary>
@@ -30,7 +30,7 @@ namespace Mane.BD
         /// </summary>
         public void delete() 
         {
-           query.delete(modelo.getConnName());
+           query.Delete(modelo.getConnName());
         }
         /// <summary>
         /// Cuenta total de registros devueltos por la consulta
@@ -38,7 +38,7 @@ namespace Mane.BD
         /// <returns>El numero de registros devueltos por la consulta</returns>
         public int count()
         {
-            return query.count(modelo.getConnName());
+            return query.Count(modelo.getConnName());
         }
 
         /// <summary>
@@ -47,7 +47,7 @@ namespace Mane.BD
         /// <param name="objeto">Objeto que representa las columnas y valores ej: new {Nombre = "Nombre",Edad = "23"}</param>
         public void update(object objeto) 
         {
-            query.update(objeto,modelo.getConnName());
+            query.Update(objeto,modelo.getConnName());
         }
         /// <summary>
         /// Indica si quiere limitar la cantidad de registros retornados
@@ -56,7 +56,7 @@ namespace Mane.BD
         /// <returns></returns>
         public ModeloQuery<Tmodelo> limit(int limit)
         {
-            query.limit(limit);
+            query.Limit(limit);
             return this;
         }
 
@@ -77,7 +77,7 @@ namespace Mane.BD
         /// <returns>ModeloQuery</returns>
         public ModeloQuery<Tmodelo> from(string tabla)
         {
-            query.from(tabla);
+            query.From(tabla);
             return this;
         }
         /// <summary>
@@ -87,7 +87,7 @@ namespace Mane.BD
         /// <returns>ModelQuery</returns>
         public ModeloQuery<Tmodelo> select(params string[] columnas)
         {
-            query.select(columnas);
+            query.Select(columnas);
             return this;
         }
         /// <summary>
@@ -99,7 +99,7 @@ namespace Mane.BD
         /// <returns></returns>
         public ModeloQuery<Tmodelo> where(string col1, string operador, object valor)
         {
-            query.where(col1, operador, valor);
+            query.Where(col1, operador, valor);
             return this;
         }
         /// <summary>
@@ -121,7 +121,7 @@ namespace Mane.BD
         /// <returns></returns>
         public ModeloQuery<Tmodelo> whereColumn(string col1, string operador, string col2)
         {
-            query.whereColumn(col1,operador,col2);
+            query.WhereColumn(col1,operador,col2);
             return this;
         }
         /// <summary>
@@ -133,7 +133,7 @@ namespace Mane.BD
         /// <returns></returns>
         public ModeloQuery<Tmodelo> whereBetween(string col1, string valor1, string valor2)
         {
-            query.whereBetween(col1, valor1, valor2);
+            query.WhereBetween(col1, valor1, valor2);
             return this;
         }
         /// <summary>
@@ -145,7 +145,7 @@ namespace Mane.BD
         /// <returns></returns>
         public ModeloQuery<Tmodelo> orWhereBetween(string col1, string valor1, string valor2)
         {
-            query.orWhereBetween(col1, valor1, valor2);
+            query.OrWhereBetween(col1, valor1, valor2);
             return this;
         }
         /// <summary>
@@ -159,7 +159,7 @@ namespace Mane.BD
             var aux = func.Invoke(new ModeloQuery<Tmodelo>());
             var qry = aux.query;
 
-            query.where(col,(q) => qry);
+            query.Where(col,(q) => qry);
             return this;
         }
         /// <summary>
@@ -172,7 +172,7 @@ namespace Mane.BD
         {
             var aux = func.Invoke(new ModeloQuery<Tmodelo>());
             var qry = aux.query;
-            query.where(q => qry);
+            query.Where(q => qry);
             return this;
         }
         /// <summary>
@@ -184,7 +184,7 @@ namespace Mane.BD
         /// <returns></returns>
         public ModeloQuery<Tmodelo> orWhere(string col1, string operador, object Valor)
         {
-            query.orWhere(col1,operador,Valor);
+            query.OrWhere(col1,operador,Valor);
             return this;
         }
         /// <summary>
@@ -196,7 +196,7 @@ namespace Mane.BD
         /// <returns></returns>
         public ModeloQuery<Tmodelo> orWhere(string col1,object Valor)
         {
-            query.orWhere(col1, "=", Valor);
+            query.OrWhere(col1, "=", Valor);
             return this;
         }
         /// <summary>
@@ -208,7 +208,7 @@ namespace Mane.BD
         {
             var aux = func.Invoke(new ModeloQuery<Tmodelo>());
             var qry = aux.query;
-            query.orWhere((q) => qry);
+            query.OrWhere((q) => qry);
             return this;
         }
         /// <summary>
@@ -219,7 +219,7 @@ namespace Mane.BD
         /// <returns></returns>
         public ModeloQuery<Tmodelo> whereIn(string columna, string[] valores)
         {
-            query.whereIn(columna,valores);
+            query.WhereIn(columna,valores);
             return this;
         }
         /// <summary>
@@ -228,9 +228,9 @@ namespace Mane.BD
         /// <param name="columna"></param>
         /// <param name="valores"></param>
         /// <returns></returns>
-        public ModeloQuery<Tmodelo> whereNotIn(string columna, Array valores)
+        public ModeloQuery<Tmodelo> whereNotIn(string columna, object[] valores)
         {
-            query.whereNotIn(columna,valores);
+            query.WhereNotIn(columna,valores);
             return this;
         }
         /// <summary>
@@ -243,7 +243,7 @@ namespace Mane.BD
         {
             var aux = func.Invoke(new ModeloQuery<Tmodelo>());
             var qry = aux.query;
-            query.whereIn(columna,(q) => qry);
+            query.WhereIn(columna,(q) => qry);
             return this;
         }
         /// <summary>
@@ -256,7 +256,7 @@ namespace Mane.BD
         {
             var aux = func.Invoke(new ModeloQuery<Tmodelo>());
             var qry = aux.query;
-            query.whereNotIn(columna, (q) => qry);
+            query.WhereNotIn(columna, (q) => qry);
             return this;
         }
         /// <summary>
@@ -265,10 +265,10 @@ namespace Mane.BD
         /// <param name="columna">columna a ordenar</param>
         /// <param name="orden">orden (asc | desc) por defecto asc</param>
         /// <returns></returns>
-        public ModeloQuery<Tmodelo> orderBy(string columna, QueryBuilder.OrderDireccion orden = QueryBuilder.OrderDireccion.Asendente)
+        public ModeloQuery<Tmodelo> orderBy(string columna, OrderDireccion orden = OrderDireccion.Asendente)
         {
             
-            query.orderBy(columna, orden);
+            query.OrderBy(columna, orden);
             return this;
         }
         /// <summary>
@@ -278,7 +278,7 @@ namespace Mane.BD
         /// <returns></returns>
         public ModeloQuery<Tmodelo> groupBy(params string[] columnas)
         {
-            query.groupBy(columnas);
+            query.GroupBy(columnas);
             return this;
         }
         /// <summary>
@@ -287,9 +287,9 @@ namespace Mane.BD
         /// <returns>Coleccion de modelos que coinciden con las condiciones</returns>
         public Modelo<Tmodelo>.ModeloCollection get()
         {
-            if (query.getCurrentColumnsNames().Length == 0)
-                query.select(Modelo.ColumnasDelModelo(modelo));
-            var dt = query.get(modelo.getConnName());
+            if (query.GetCurrentColumnsNames().Length == 0)
+                query.Select(Modelo.ColumnasDelModelo(modelo));
+            var dt = query.Get(modelo.getConnName());
             if(dt.Rows.Count == 0) return new Modelo<Tmodelo>.ModeloCollection();
             return Modelo<Tmodelo>.DataTableToModeloCollection(dt);
         }
@@ -300,11 +300,11 @@ namespace Mane.BD
         /// <returns>Modelo o nulo si no hay resultados</returns>
         public Tmodelo first() 
         {
-            if (query.getCurrentColumnsNames().Length == 0)
-                query.select(Modelo.ColumnasDelModelo(modelo));
+            if (query.GetCurrentColumnsNames().Length == 0)
+                query.Select(Modelo.ColumnasDelModelo(modelo));
             var dt = query
-                .limit(1)
-                .get(modelo.getConnName());
+                .Limit(1)
+                .Get(modelo.getConnName());
             if(dt.Rows.Count == 0) return null;
             return Modelo<Tmodelo>.DataTableToModeloCollection(dt)[0];
         }
@@ -314,7 +314,7 @@ namespace Mane.BD
         /// <returns>verdadero si la consulta retorna valores</returns>
         public bool exists()
         {
-            return query.exists(modelo.getConnName());
+            return query.Exists(modelo.getConnName());
         }
        
 

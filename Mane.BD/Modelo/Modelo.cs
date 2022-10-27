@@ -125,7 +125,7 @@ namespace Mane.BD
         private object Add()
         {
             var q = new QueryBuilder(NombreTabla);
-            idValue = q.insert(Common.ObjectToKeyValue(this), ConnName);
+            idValue = q.Insert(Common.ObjectToKeyValue(this), ConnName);
             RegistredOnDataBase = true;
             return idValue;
         }
@@ -157,7 +157,7 @@ namespace Mane.BD
             {
                 if (!RegistredOnDataBase) return;
                 var q = new QueryBuilder(NombreTabla);
-                q.where(idName, idValue).delete(ConnName);
+                q.Where(idName, idValue).Delete(ConnName);
             }
             catch (Exception e)
             {
@@ -171,7 +171,7 @@ namespace Mane.BD
         {
             if (!IsDirty()) return;
             var q = new QueryBuilder(NombreTabla);
-            q.where(idName, idValue);
+            q.Where(idName, idValue);
             var CurrModel = Common.ObjectToKeyValue(this);
             //Actualizar solo los valores que cambiaron respecto al original
             if (OriginalModel != null)
@@ -186,14 +186,14 @@ namespace Mane.BD
                     propsActualizadas.Add(getIdName(), id());
                 if (propsActualizadas.Count > 0)
                 {
-                    q.update(propsActualizadas, ConnName);
+                    q.Update(propsActualizadas, ConnName);
                     OriginalModel = CurrModel;
                     originalIdValue = id();
                 }
 
             }
             else
-                q.update(CurrModel, ConnName);
+                q.Update(CurrModel, ConnName);
 
         }
 
@@ -273,9 +273,9 @@ namespace Mane.BD
                 string idRelacionado = ColumnaIdLocal == idName ? id()?.ToString() : Common.GetPropValueByName(this, ColumnaIdLocal).ToString();
                 if (idRelacionado == "") return new Modelo<Tmodelo>.ModeloCollection();
                 Tmodelo m = new Tmodelo();
-                DataTable dt = Bd.Query(m.getNombreTabla()).select(ColumnasDelModelo<Tmodelo>())
-                    .where($"{m.NombreTabla}.{ColumnaIdForaneo}", idRelacionado)
-                    .get(this.ConnName);
+                DataTable dt = Bd.Query(m.getNombreTabla()).Select(ColumnasDelModelo<Tmodelo>())
+                    .Where($"{m.NombreTabla}.{ColumnaIdForaneo}", idRelacionado)
+                    .Get(this.ConnName);
                 string nombreRel = (currRelName == "" || currRelName == null) ? typeof(Tmodelo).Name : currRelName;
                 var relacion = Modelo<Tmodelo>.DataTableToModeloCollection(dt);
                 return relacion;
@@ -385,8 +385,8 @@ namespace Mane.BD
                 Tmodelo m = new Tmodelo();
                 string idRelacionado = ColumnaIdLocal == idName ? idValue?.ToString() : Common.GetPropValueByName(this, ColumnaIdLocal)?.ToString();
                 if(string.IsNullOrEmpty(idRelacionado))return null;
-                var dt = Bd.Query(m.NombreTabla).select(ColumnasDelModelo<Tmodelo>())
-                    .where(ColumnaIdForanea, idRelacionado).get(m.ConnName);
+                var dt = Bd.Query(m.NombreTabla).Select(ColumnasDelModelo<Tmodelo>())
+                    .Where(ColumnaIdForanea, idRelacionado).Get(m.ConnName);
 
                 if (dt.Rows.Count > 0)
                     return Modelo<Tmodelo>.DataTableToModeloCollection(dt)[0];
@@ -416,11 +416,11 @@ namespace Mane.BD
                 var m = new Tmodelo();
                 return Modelo<Tmodelo>.DataTableToModeloCollection(
                     Bd.Query(NombreTabla)
-                    .join(manyToManyTable, $"{manyToManyTable}.{manyToManyToLocalKey}", $"{NombreTabla}.{localKey}")
-                    .join(m.NombreTabla, $"{m.NombreTabla}.{foreginKey}", $"{manyToManyTable}.{manyToManyToForeginKey}")
-                    .where($"{NombreTabla}.{localKey}", localKey == idName ? idValue : Common.GetPropValueByName(this, localKey))
-                    .select(ColumnasDelModelo(m, true))
-                    .get(ConnName)
+                    .Join(manyToManyTable, $"{manyToManyTable}.{manyToManyToLocalKey}", $"{NombreTabla}.{localKey}")
+                    .Join(m.NombreTabla, $"{m.NombreTabla}.{foreginKey}", $"{manyToManyTable}.{manyToManyToForeginKey}")
+                    .Where($"{NombreTabla}.{localKey}", localKey == idName ? idValue : Common.GetPropValueByName(this, localKey))
+                    .Select(ColumnasDelModelo(m, true))
+                    .Get(ConnName)
                     );
             }
             catch (Exception e)

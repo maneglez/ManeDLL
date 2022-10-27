@@ -26,8 +26,8 @@ namespace Mane.BD
         {
             var m = new T();
             var dt = Bd.Query(m.getNombreTabla())
-                .select(ColumnasDelModelo(m))
-                .limit(1).get(m.getConnName());
+                .Select(ColumnasDelModelo(m))
+                .Limit(1).Get(m.getConnName());
             if (dt.Rows.Count == 0) return null;
             return DataTableToModeloCollection(dt)[0];
         }
@@ -42,8 +42,8 @@ namespace Mane.BD
         {
             T m = new T();
             string[] columnas = ColumnasDelModelo(m);
-            DataTable dt = Bd.Query(m.getNombreTabla()).select(columnas)
-                .where(m.getIdName(), id.ToString()).limit(1).get(m.getConnName());
+            DataTable dt = Bd.Query(m.getNombreTabla()).Select(columnas)
+                .Where(m.getIdName(), id.ToString()).Limit(1).Get(m.getConnName());
             if (dt.Rows.Count == 0)
                 return null;
             var mdls = DataTableToModeloCollection(dt);

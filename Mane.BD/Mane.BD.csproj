@@ -67,9 +67,11 @@
     <Compile Include="BaseDeDatos\Bd.cs" />
     <Compile Include="BaseDeDatos\BdException.cs" />
     <Compile Include="BaseDeDatos\Conexion.cs" />
+    <Compile Include="BaseDeDatos\Executors\HanaExecutor.cs" />
     <Compile Include="BaseDeDatos\Executors\IBdExecutor.cs" />
-    <Compile Include="BaseDeDatos\Executors\SQLite.cs" />
-    <Compile Include="BaseDeDatos\Executors\SQLServer.cs" />
+    <Compile Include="BaseDeDatos\Executors\SQLiteExecutor.cs" />
+    <Compile Include="BaseDeDatos\Executors\SQLServerExecutor.cs" />
+    <Compile Include="Enums.cs" />
     <Compile Include="Common.cs" />
     <Compile Include="IgnorarPropAttribute.cs" />
     <Compile Include="Modelo\Modelo.cs" />
@@ -78,13 +80,15 @@
     <Compile Include="Modelo\ModeloGeneric.cs" />
     <Compile Include="Modelo\ModeloQuery.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QueryBulder\Builders\BuilderHana.cs" />
     <Compile Include="QueryBulder\Builders\BuilderSQL.cs" />
+    <Compile Include="QueryBulder\Builders\BuilderSQLite.cs" />
     <Compile Include="QueryBulder\Builders\Common.cs" />
     <Compile Include="QueryBulder\Builders\IBuilder.cs" />
-    <Compile Include="QueryBulder\IQueryBuilder.cs" />
+    <Compile Include="QueryBulder\IQuery.cs" />
     <Compile Include="QueryBulder\QueryBuilder.Builder.cs" />
+    <Compile Include="QueryBulder\QueryBuilder.Query.cs" />
     <Compile Include="QueryBulder\QueryBuilderExeption.cs" />
-    <Compile Include="QueryBulder\BuilderSQL.cs" />
     <Compile Include="QueryBulder\QueryBuilder.cs" />
   </ItemGroup>
   <ItemGroup>

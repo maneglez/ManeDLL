@@ -23,7 +23,7 @@ namespace Mane.BD.QueryBulder.Builders
             if (value is bool)
                 return (bool)value ? Delimit("1",delimiters) : Delimit("0",delimiters);
             if (value is DateTime)
-                return Delimit(Bd.toDateTimeSqlFormat((DateTime)value),delimiters);
+                return Delimit(Bd.ToDateTimeSqlFormat((DateTime)value),delimiters);
             if (value.GetType().IsEnum)
                 return Delimit(((int)value).ToString(),delimiters);
             return Delimit(value.ToString(),delimiters);

@@ -5,15 +5,16 @@ using System.Data.SQLite;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace Mane.BD.Executors
 {
-    internal class SQLite : IBdExecutor
+    internal class SQLiteExecutor : IBdExecutor
     {
         private SQLiteConnection conn = null;
         private SQLiteCommand cmd = null;
         private SQLiteDataReader reader = null;
-        internal SQLite(string query, string connString)
+        internal SQLiteExecutor(string query, string connString)
         {
             Query = query;
             ConnString = connString;
@@ -21,19 +22,31 @@ namespace Mane.BD.Executors
 
         public string Query { get; set; }
         public string ConnString { get; set; }
+        public bool AutoDisconnect
+        {
+            get => autoDisconnect; set
+            {
+                if (autoDisconnect == value) return;
+                autoDisconnect = value;
+                if (value) Disconnect();
+            }
+        }
+        private bool autoDisconnect;
 
-        public SQLite(string connString)
+        public SQLiteExecutor(string connString,bool autodisconnect = true)
         {
             ConnString = connString;
+            AutoDisconnect = autodisconnect;
         }
 
         public void Connect()
         {
-            if (conn?.State == ConnectionState.Open)
-                Disconnect();
             try
             {
-                conn = new SQLiteConnection(ConnString);
+                if (conn?.State == ConnectionState.Open)
+                    Disconnect();
+                else
+                    conn = new SQLiteConnection(ConnString);
                 cmd = conn.CreateCommand();
                 cmd.CommandText = Query;
                 conn.Open();
@@ -46,6 +59,7 @@ namespace Mane.BD.Executors
 
         public void Disconnect()
         {
+            if (!AutoDisconnect) return;
             reader?.Close();
             cmd?.Dispose();
             conn?.Close();

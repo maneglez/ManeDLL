@@ -22,9 +22,9 @@ namespace Mane.BD.QueryBulder.Builders
         public string BuildGroupBy()
         {
             string groupBy = "";
-            if (QueryBuilder.GroupBy != null)
+            if (QueryBuilder._GroupBy != null)
             {
-                foreach (string col in QueryBuilder.GroupBy)
+                foreach (string col in QueryBuilder._GroupBy)
                 {
                     groupBy += FormatColumn(col) + ",";
                 }
@@ -41,46 +41,129 @@ namespace Mane.BD.QueryBulder.Builders
             string consulta = "";
             foreach (var j in QueryBuilder.Joins)
             {
-                extraCondicion = j.ExtraCondicion != null ? "AND " + j.ExtraCondicion.buildWhereSQL() : "";
-                consulta = j.Consulta != null ? $"({j.Consulta.buildQuerySQL()}) {formatearColumnaSQL(j.AliasDeConsulta)}" : "";
-                joins += $" {j.Tipo} JOIN {consulta}{FormatTable(j.Tabla)} ON {formatearColumnaSQL(j.Columna1)} {j.Operador} {formatearColumnaSQL(j.Columna2)} {extraCondicion}";
+                extraCondicion = j.ExtraCondicion != null ? "AND " + j.ExtraCondicion.BuildWeres() : "";
+                consulta = j.Consulta != null ? $"({j.Consulta.BuildQuery()}) {FormatColumn(j.AliasDeConsulta)}" : "";
+                joins += $" {j.Tipo} JOIN {consulta}{FormatTable(j.Tabla)} ON {FormatColumn(j.Columna1)} {j.Operador} {FormatColumn(j.Columna2)} {extraCondicion}";
             }
             return joins;
         }
 
-        public string BuildLimit()
+      virtual  public string BuildLimit()
         {
-            throw new NotImplementedException();
+            return QueryBuilder._Limit > 0 ? $"TOP({QueryBuilder._Limit})" : "";
         }
 
         public string BuildOrderBy()
         {
-            throw new NotImplementedException();
+            string orderBy = "";
+            var q = QueryBuilder;
+            if (q.Order != null)
+            {
+                string orden = q.Order.Orden == OrderDireccion.Asendente ? "ASC" : "DESC";
+                orderBy = $"ORDER BY {FormatColumn(q.Order.Columna)} {orden}";
+            }
+            return orderBy;
         }
 
-        public string BuildQuery()
+       virtual public string BuildQuery()
         {
-            throw new NotImplementedException();
+            var q = QueryBuilder;
+            if (q._RawQuery != null) return q._RawQuery;
+            string select = BuildSelect(),
+                where = BuildWeres(),
+                joins = BuildJoins(),
+                limit = BuildLimit(),
+                orderBy = BuildOrderBy(),
+                groupBy = BuildGroupBy();
+            if (where != "") where = "WHERE " + where;
+            string query = $"SELECT {limit} {select} FROM {FormatTable(q.Tabla)} {joins} {where} {orderBy} {groupBy}";
+            return System.Text.RegularExpressions.Regex.Replace(query, @"\s+", " ");
         }
 
         public string BuildSelect()
         {
-            throw new NotImplementedException();
+            string select = "";
+            var q = QueryBuilder;
+            foreach (string item in q.Columnas)
+            {
+                select += FormatColumn(item) + ",";
+            }
+            if (q._SelectSubquery.Count > 0)
+            {
+                foreach (var key in q._SelectSubquery.Keys)
+                {
+                    if (q._SelectSubquery[key] is QueryBuilder)
+                        select += $"({(q._SelectSubquery[key] as QueryBuilder).BuildQuery()})";
+                    else select += $"({q._SelectSubquery[key]})";
+                    select += $" AS {FormatColumn(key)},";
+                }
+            }
+            select = select.Trim(',');
+            if (select == "") select = "*";
+            return select;
         }
 
         public string BuildWeres()
         {
-            throw new NotImplementedException();
+            var where = "";
+            var qb = QueryBuilder;
+            if (qb.Wheres.Count == 0) return where;
+            foreach (var w in qb.Wheres)
+            {
+                where += $" {w.Boleano} {FormatColumn(w.Columna)} {w.Operador} ";
+                switch (w.Tipo)
+                {
+                    case QueryBuilder.TipoWhere.WhereIn:
+                        string val = "";
+                        if (w.Valor.GetType().IsArray)
+                        {
+                            Array valores = (Array)w.Valor;
+                            foreach (var item in valores)
+                            {
+                                val += $"{FormatValue(item)},";
+                            }
+                            val = val.Trim(',');
+                            val = $"({val})";
+                        }
+                        else if (w.Valor.GetType() == typeof(QueryBuilder))
+                        {
+                            QueryBuilder q = (QueryBuilder)w.Valor;
+                            val = $"({q.BuildQuery()})";
+                        }
+                        where = where.Trim(' ');
+                        where += val;
+                        break;
+                    case QueryBuilder.TipoWhere.WhereColumn:
+                        where += FormatColumn((string)w.Valor);
+                        break;
+                    case QueryBuilder.TipoWhere.WhereGroup:
+                        QueryBuilder q1 = (QueryBuilder)w.Valor;
+                        if (q1.Columnas.Length == 0) where += $"({q1.BuildWeres()})";
+                        else where += $"({q1.GetQuery(TipoDeBd.SqlServer)})";
+                        break;
+                    case QueryBuilder.TipoWhere.WhereBetween:
+                        var vals = (object[])w.Valor;
+                        where += $"{FormatValue(vals[0])} AND {FormatValue(vals[1])}";
+                        break;
+                    case QueryBuilder.TipoWhere.WhereNull:
+                        break;
+                    default:
+                        where += FormatValue(w.Valor);
+                        break;
+                }
+            }
+            where = where.Substring(qb.Wheres[0].Boleano.Length + 1);
+            return where;
         }
 
         public string Count()
         {
-            throw new NotImplementedException();
+           return $"SELECT COUNT(*) AS [Count] FROM ({BuildQuery()}) AS [QueryBuilder_Count]";
         }
 
         public string Delete()
         {
-            throw new NotImplementedException();
+            return $"DELETE FROM {FormatTable(QueryBuilder.Tabla)} WHERE {BuildWeres()}";
         }
 
         public string FormatColumn(string columna)
@@ -90,7 +173,7 @@ namespace Mane.BD.QueryBulder.Builders
 
         public string FormatTable(string value)
         {
-            throw new NotImplementedException();
+            return Common.FormatTable(value, ColumnDelimiters);
         }
 
         public string FormatValue(object value)
@@ -100,17 +183,38 @@ namespace Mane.BD.QueryBulder.Builders
 
         public string Insert(object objeto)
         {
-            throw new NotImplementedException();
+            Dictionary<string, object> modelDic = BD.Common.ObjectToKeyValue(objeto);
+            return Insert(modelDic);
         }
 
         public string Insert(Dictionary<string, object> diccionario)
         {
-            throw new NotImplementedException();
+            var q = QueryBuilder;
+            if (q.Tabla == null || q.Tabla == "") throw new QueryBuilderExeption("No se ha establecido el nombre de la tabla para el insert");
+            string into = "";
+            string values = "";
+            foreach (string item in diccionario.Keys)
+            {
+                into += $"[{item}],";
+            }
+            foreach (object item in diccionario.Values)
+            {
+                values += FormatValue(item) + ",";
+            }
+            into = into.Trim(',');
+            values = values.Trim(',');
+            return $"INSERT INTO {FormatTable(q.Tabla)}({into}) VALUES ({values}); SELECT SCOPE_IDENTITY();";
         }
 
-        public string Update(Dictionary<string, object> diccionario)
+        public string Update(Dictionary<string, object> dic)
         {
-            throw new NotImplementedException();
+            string set = "";
+            foreach (string key in dic.Keys)
+            {
+                set += $"[{key}] = {FormatValue(dic[key])},";
+            }
+            set = set.Trim(',');
+            return $"UPDATE {FormatTable(QueryBuilder.Tabla)} SET {set} WHERE {BuildWeres()}";
         }
     }
 }

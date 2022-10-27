@@ -8,26 +8,21 @@ using System.Threading.Tasks;
 
 namespace Mane.BD.Executors
 {
-    internal class SQLServer : IBdExecutor
+    internal class SQLServerExecutor : IBdExecutor
     {
       private SqlConnection conn = null;
       private SqlCommand cmd = null;
       private SqlDataReader reader = null;
-        internal SQLServer(string query, string connString)
-        {
-            Query = query;
-            ConnString = connString;
-        }
-        public SQLServer(string connString)
+        public SQLServerExecutor(string connString, bool autodisconnect = true)
         {
             ConnString = connString;
+            AutoDisconnect = autodisconnect;
         }
 
 
-        public string Query { get; set; }
+    public string Query { get; set; }
         public string ConnString { get; set; }
-
-        
+        public bool AutoDisconnect { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         public void Connect()
         {
