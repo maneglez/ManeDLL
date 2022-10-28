@@ -22,7 +22,16 @@ namespace Mane.BD.Executors
 
     public string Query { get; set; }
         public string ConnString { get; set; }
-        public bool AutoDisconnect { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public bool AutoDisconnect
+        {
+            get => autoDisconnect; set
+            {
+                if (autoDisconnect == value) return;
+                autoDisconnect = value;
+                if (value) Disconnect();
+            }
+        }
+        private bool autoDisconnect;
 
         public void Connect()
         {

@@ -25,11 +25,14 @@ namespace Mane.BD
                     switch (TipoDeBaseDeDatos)
                     {
                         case TipoDeBd.SqlServer:
-                            return new SQLServerExecutor(CadenaDeConexion, Bd.AutoDisconnect);
+                            executor = new SQLServerExecutor(CadenaDeConexion, Bd.AutoDisconnect);
+                            break;
                         case TipoDeBd.SQLite:
-                            return new SQLiteExecutor(CadenaDeConexion, Bd.AutoDisconnect);
+                            executor = new SQLiteExecutor(CadenaDeConexion, Bd.AutoDisconnect);
+                            break;
                         case TipoDeBd.Hana:
-                            return new HanaExecutor(CadenaDeConexion, Bd.AutoDisconnect);
+                            executor = new HanaExecutor(CadenaDeConexion, Bd.AutoDisconnect);
+                            break;
                         default:
                             break;
                     }

@@ -15,7 +15,7 @@ namespace Mane.BD
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
         public static ModeloCollection All(int limit = 1000)
-            => Query().limit(limit).get();
+            => Query().Limit(limit).Get();
 
         /// <summary>
         /// Obtiene el pirmer modelo que encuentre en la tabla

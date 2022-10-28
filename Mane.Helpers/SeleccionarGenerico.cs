@@ -33,10 +33,19 @@ namespace Mane.Helpers
                 habilitarBusqueda = value;
             }
         }
+        public bool CerrarAlSeleccionar { get; set; }
+        public bool MostrarBotonesDeSeleccionYCancelar
+        { set
+            {
+                btnCancelar.Visible = value;
+                btnSeleccionar.Visible = value;
+            }
+        }
 
         private string ConnName;
         private int cBusqueda;
         private bool habilitarBusqueda;
+
         public DataRow SelectedRow { get; private set; }
 
         private DataRow getSelectedRow()
@@ -51,12 +60,12 @@ namespace Mane.Helpers
         /// </summary>
         /// <param name="query">Consulta</param>
         /// <param name="queryColNames_DisplayColNames">(opcional) Columna(query) -> nombre a mostrar, ej. [NombreUsuario, Nombre de usuario]</param>
-        public SeleccionarGenerico(QueryBuilder query, string connName, Dictionary<string, string> queryColNames_DisplayColNames = null,string[] FilterBy = null)
+        public SeleccionarGenerico(QueryBuilder query, string connName, Dictionary<string, string> queryColNames_DisplayColNames = null, string[] FilterBy = null)
         {
             InitializeComponent();
             this.query = query;
-            if(query.CurrentLimit == 0)
-            query.Limit(300);
+            if (query.CurrentLimit == 0)
+                query.Limit(300);
             ConnName = connName;
             HabilitarBusqueda = true;
             var dtFiltro = new DataTable();
@@ -75,8 +84,8 @@ namespace Mane.Helpers
                         SortMode = DataGridViewColumnSortMode.NotSortable,
 
                     });
-                    if(FilterBy == null)
-                    dtFiltro.Rows.Add(item, queryColNames_DisplayColNames[item]);
+                    if (FilterBy == null)
+                        dtFiltro.Rows.Add(item, queryColNames_DisplayColNames[item]);
                     else if (FilterBy.Contains(item))
                     {
                         dtFiltro.Rows.Add(item, queryColNames_DisplayColNames[item]);
@@ -112,6 +121,9 @@ namespace Mane.Helpers
             cbFiltro.DisplayMember = "name";
             if (dtFiltro.Rows.Count > 0)
                 cbFiltro.SelectedIndex = 0;
+
+            MostrarBotonesDeSeleccionYCancelar = true;
+            CerrarAlSeleccionar = true;
         }
         private void Buscar()
         {
@@ -174,6 +186,7 @@ namespace Mane.Helpers
         {
             if (dgvContenido.SelectedRows.Count == 0) MessageBox.Show("No se seleccionó nada");
             SelectedRow = getSelectedRow();
+            if (!CerrarAlSeleccionar) return;
             DialogResult = DialogResult.OK;
             Close();
         }
@@ -207,7 +220,7 @@ namespace Mane.Helpers
             Buscar();
         }
 
-  
+
         /// <summary>
         /// Ejecuta una acción después de un tiempo transcurrido
         /// </summary>

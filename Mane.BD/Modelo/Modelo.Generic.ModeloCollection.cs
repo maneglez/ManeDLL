@@ -15,6 +15,7 @@ namespace Mane.BD
         /// </summary>
         public class ModeloCollection : List<T>
         {
+
             /// <summary>
             /// Guarda todos los modelos de la coleccion
             /// </summary>
@@ -41,7 +42,7 @@ namespace Mane.BD
                 }
                 if (ids.Count == 0) return;
                 T modelo = this[0];
-                Query().whereIn(modelo.getIdName(), ids.ToArray()).delete();
+                Query().WhereIn(modelo.getIdName(), ids.ToArray()).Delete();
                 if (clearCollection)
                     Clear();
             }
@@ -54,8 +55,7 @@ namespace Mane.BD
             {
                 m.PropertyChanged += new PropertyChangedEventHandler(this.NotifyChangeSubscription);
                 base.Add(m);
-                NotyfyChange();
-                UpdateBind();
+                NotifyChange();
             }
 
             /// <summary>
@@ -69,8 +69,7 @@ namespace Mane.BD
                     item.PropertyChanged += new PropertyChangedEventHandler(this.NotifyChangeSubscription);
                 }
                 base.AddRange(modelos);
-                NotyfyChange();
-                UpdateBind();
+                NotifyChange();
             }
             public bool IsDirty()
             {
@@ -89,7 +88,7 @@ namespace Mane.BD
                 if (modelo == null) return false;
                 var res = base.Remove(modelo);
                 if (withDelete) modelo.Delete();
-                NotyfyChange();
+                NotifyChange();
                 UpdateBind();
                 return res;
             }
@@ -102,7 +101,7 @@ namespace Mane.BD
             {
                 if (modelo == null) return false;
                 var res = base.Remove(modelo);
-                NotyfyChange();
+                NotifyChange();
                 UpdateBind();
                 return res;
             }
@@ -113,8 +112,7 @@ namespace Mane.BD
             new public void RemoveAt(int index)
             {
                 base.RemoveAt(index);
-                NotyfyChange();
-                UpdateBind();
+                NotifyChange();
             }
             /// <summary>
             /// Encuentra el modelo en la coleccion cuyo id coincida
@@ -131,8 +129,7 @@ namespace Mane.BD
             new public void Clear()
             {
                 base.Clear();
-                NotyfyChange();
-                UpdateBind();
+                NotifyChange();
             }
 
 
@@ -142,20 +139,6 @@ namespace Mane.BD
                 if (bindedGrid == null) return;
                 if (bindedGrid.IsDisposed) return;
                 bindedGrid.DataSource = ToArray();
-                //if (!mostrarSoloColumnasControladas) return;
-                //T m;
-                //if (Count == 0) m = new T();
-                //else m = this[0];
-                //var orgM = m.getOriginalModel();
-                //string[] cols;
-                //if (orgM == null)
-                //{
-                //     cols = ColumnasDelModelo(m);
-                //}else
-                //    cols = m.getOriginalModel().Keys.ToArray();
-                //foreach (var item in cols)
-                //    if (bindedGrid.Columns.Contains(item))
-                //        bindedGrid.Columns[item].Visible = false;
             }
 
             private DataGridView bindedGrid;
@@ -173,13 +156,25 @@ namespace Mane.BD
             }
             private void NotifyChangeSubscription(object sender, PropertyChangedEventArgs e)
             {
-                NotyfyChange(e.PropertyName);
-                bindedGrid?.Refresh();
+                NotifyChange(e.PropertyName);
             }
-            private void NotyfyChange(string prop = "")
+            private void NotifyChange(string prop = "")
             {
+                if (bindSuspended) return;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
+                if (string.IsNullOrEmpty(prop))
+                    UpdateBind();
+                else bindedGrid?.Refresh();
             }
+            private bool bindSuspended;
+            public void SuspendBind()
+                => bindSuspended = true;
+            public void ResumeBind()
+            {
+                bindSuspended = false;
+                NotifyChange();
+            }
+            
             /// <summary>
             /// 
             /// </summary>

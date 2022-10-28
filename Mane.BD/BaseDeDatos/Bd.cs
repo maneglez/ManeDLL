@@ -101,6 +101,7 @@ namespace Mane.BD
             {
                throw new BdException($"La conexion {nombreConexion} no existe");
             }
+            ex.Query = query;
             return ex;
         }
         internal static void bdExceptionHandler(DbException e, string query = "")

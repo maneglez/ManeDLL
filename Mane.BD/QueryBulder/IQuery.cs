@@ -23,6 +23,7 @@ namespace Mane.BD
         T Limit(int limit);
         T OrderBy(string columna, OrderDireccion orden = OrderDireccion.Asendente);
         T OrWhere(Func<T, T> func);
+        T OrWhere(string col, object valor);
         T OrWhere(string col1, string operador, object Valor);
         T OrWhereBetween(string col1, object valor1, object valor2);
         T RawQuery(string query);

@@ -119,6 +119,11 @@ namespace Mane.BD
             return CommonWhere(col1, operador, Valor, "OR", TipoWhere.Where);
         }
 
+        public QueryBuilder OrWhere(string col, object valor)
+        {
+            return OrWhere(col, "=", valor);
+        }
+
         public QueryBuilder OrWhereBetween(string col1, object valor1, object valor2)
         {
             return CommonWhere(col1, "BETWEEN", new object[] { valor1, valor2 }, "OR", TipoWhere.WhereBetween);
