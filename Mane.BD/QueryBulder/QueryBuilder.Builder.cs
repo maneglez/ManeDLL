@@ -9,85 +9,87 @@ namespace Mane.BD
 {
     public partial class QueryBuilder : IBuilder
     {
-        public char[] ColumnDelimiters { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public char[] ValueDelimiters { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        QueryBuilder IBuilder.QueryBuilder { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+         char[] IBuilder.ColumnDelimiters { get; set; }
+         char[] IBuilder.ValueDelimiters { get; set; }
+        QueryBuilder IBuilder.QueryBuilder { get; set; }
 
-        public string BuildGroupBy()
+         string IBuilder.SelectLastInsertedIndexQuery => throw new NotImplementedException();
+
+        string IBuilder.BuildGroupBy()
         {
             return GetBuilder()?.BuildGroupBy();
         }
 
-        public string BuildJoins()
+         string IBuilder.BuildJoins()
         {
             return GetBuilder()?.BuildJoins();
         }
 
-        public string BuildLimit()
+         string IBuilder.BuildLimit()
         {
             return GetBuilder()?.BuildLimit();
         }
 
-        public string BuildOrderBy()
+         string IBuilder.BuildOrderBy()
         {
             return GetBuilder()?.BuildOrderBy();
         }
 
-        public string BuildQuery()
+         string IBuilder.BuildQuery()
         {
             return GetBuilder()?.BuildQuery();
         }
-        public string BuildQuery(TipoDeBd tipo)
+        internal string BuildQuery(TipoDeBd tipo)
         {
             return GetBuilder(tipo)?.BuildQuery();
         }
 
-        public string BuildSelect()
+         string IBuilder.BuildSelect()
         {
             return GetBuilder()?.BuildSelect();
         }
 
-        public string BuildWeres()
+         string IBuilder.BuildWeres()
         {
             return GetBuilder()?.BuildWeres();
         }
 
-        public string Count()
+         string IBuilder.Count()
         {
             return GetBuilder()?.Count();
         }
 
-        public string Delete()
+         string IBuilder.Delete()
         {
             return GetBuilder()?.Delete();
         }
 
-        public string FormatColumn(string columna)
+         string IBuilder.FormatColumn(string columna)
         {
             return GetBuilder()?.FormatColumn(columna);
         }
 
-        public string FormatTable(string value)
+         string IBuilder.FormatTable(string value)
         {
             return GetBuilder()?.FormatTable(value);
         }
 
-        public string FormatValue(object value)
+         string IBuilder.FormatValue(object value)
         {
             return GetBuilder()?.FormatValue(value);
         }
 
-        public string Insert(object objeto)
+         string IBuilder.Insert(object objeto)
         {
             return GetBuilder()?.Insert(objeto);
         }
 
-        public string Insert(Dictionary<string, object> diccionario)
+         string IBuilder.Insert(Dictionary<string, object> diccionario)
         {
             return GetBuilder()?.Insert(diccionario);
         }
 
-        public string Update(Dictionary<string, object> diccionario)
+         string IBuilder.Update(Dictionary<string, object> diccionario)
         {
           return  GetBuilder().Update(diccionario);
         }

@@ -11,6 +11,7 @@ namespace Mane.BD.QueryBulder.Builders
         public QueryBuilder QueryBuilder { get; set; }
         public char[] ColumnDelimiters { get; set; }
         public char[] ValueDelimiters { get; set; }
+        public virtual string SelectLastInsertedIndexQuery => "SELECT SCOPE_IDENTITY()";
 
         public BuilderSQL(QueryBuilder queryBuilder)
         {
@@ -41,8 +42,8 @@ namespace Mane.BD.QueryBulder.Builders
             string consulta = "";
             foreach (var j in QueryBuilder.Joins)
             {
-                extraCondicion = j.ExtraCondicion != null ? "AND " + j.ExtraCondicion.BuildWeres() : "";
-                consulta = j.Consulta != null ? $"({j.Consulta.BuildQuery()}) {FormatColumn(j.AliasDeConsulta)}" : "";
+                extraCondicion = j.ExtraCondicion != null ? "AND " + (j.ExtraCondicion as IBuilder).BuildWeres() : "";
+                consulta = j.Consulta != null ? $"({(j.Consulta as IBuilder).BuildQuery()}) {FormatColumn(j.AliasDeConsulta)}" : "";
                 joins += $" {j.Tipo} JOIN {consulta}{FormatTable(j.Tabla)} ON {FormatColumn(j.Columna1)} {j.Operador} {FormatColumn(j.Columna2)} {extraCondicion}";
             }
             return joins;
@@ -93,7 +94,7 @@ namespace Mane.BD.QueryBulder.Builders
                 foreach (var key in q._SelectSubquery.Keys)
                 {
                     if (q._SelectSubquery[key] is QueryBuilder)
-                        select += $"({(q._SelectSubquery[key] as QueryBuilder).BuildQuery()})";
+                        select += $"({(q._SelectSubquery[key] as IBuilder).BuildQuery()})";
                     else select += $"({q._SelectSubquery[key]})";
                     select += $" AS {FormatColumn(key)},";
                 }
@@ -127,7 +128,7 @@ namespace Mane.BD.QueryBulder.Builders
                         }
                         else if (w.Valor.GetType() == typeof(QueryBuilder))
                         {
-                            QueryBuilder q = (QueryBuilder)w.Valor;
+                            var q = (IBuilder)w.Valor;
                             val = $"({q.BuildQuery()})";
                         }
                         where = where.Trim(' ');
@@ -138,7 +139,7 @@ namespace Mane.BD.QueryBulder.Builders
                         break;
                     case QueryBuilder.TipoWhere.WhereGroup:
                         QueryBuilder q1 = (QueryBuilder)w.Valor;
-                        if (q1.Columnas.Length == 0) where += $"({q1.BuildWeres()})";
+                        if (q1.Columnas.Length == 0) where += $"({(q1 as IBuilder).BuildWeres()})";
                         else where += $"({q1.GetQuery(TipoDeBd.SqlServer)})";
                         break;
                     case QueryBuilder.TipoWhere.WhereBetween:
@@ -203,7 +204,7 @@ namespace Mane.BD.QueryBulder.Builders
             }
             into = into.Trim(',');
             values = values.Trim(',');
-            return $"INSERT INTO {FormatTable(q.Tabla)}({into}) VALUES ({values}); SELECT SCOPE_IDENTITY();";
+            return $"INSERT INTO {FormatTable(q.Tabla)}({into}) VALUES ({values}); {SelectLastInsertedIndexQuery}";
         }
 
         public string Update(Dictionary<string, object> dic)

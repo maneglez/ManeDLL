@@ -1,7 +1,6 @@
 ﻿using Mane.BD.Executors;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity.Infrastructure.Design;
 using System.Data.Odbc;
 using System.Data.SqlClient;
 using System.Data.SQLite;

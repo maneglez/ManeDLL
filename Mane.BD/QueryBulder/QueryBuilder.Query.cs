@@ -17,7 +17,7 @@ namespace Mane.BD
         {
             if (Wheres.Count == 0 && !forzar) throw new QueryBuilderExeption("No puede ejecutar un delete sin condición");
             if (Tabla == "") throw new QueryBuilderExeption("No se eligió una tabla");
-            Bd.ExecuteQuery(GetBuilder(NombreConexion).Delete(), NombreConexion);
+            Bd.ExecuteNonQuery(GetBuilder(NombreConexion).Delete(), NombreConexion);
         }
 
         public bool Exists(string NombreConexion = "")

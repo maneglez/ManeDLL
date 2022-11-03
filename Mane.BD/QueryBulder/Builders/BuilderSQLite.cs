@@ -8,6 +8,7 @@ namespace Mane.BD.QueryBulder.Builders
 {
     internal class BuilderSQLite : BuilderSQL
     {
+        public override string SelectLastInsertedIndexQuery => "SELECT last_insert_rowid()";
         public BuilderSQLite(QueryBuilder queryBuilder) : base(queryBuilder)
         {
         }

@@ -109,9 +109,9 @@ namespace Mane.BD
         #endregion
 
         #region Eventos
-        
-
         public event EventHandler<ModeloExceptionEventArgs> OnException;
+        public event EventHandler OnSave;
+        public event EventHandler OnDelete;
         #endregion
 
         #region Metodos Publicos
@@ -142,6 +142,7 @@ namespace Mane.BD
             {
                 ModeloExceptionHandler(e);
             }
+            OnSave?.Invoke(this, new EventArgs());
         }
        
 
@@ -160,6 +161,7 @@ namespace Mane.BD
             {
                 ModeloExceptionHandler(e);
             }
+            OnDelete?.Invoke(this, new EventArgs());
         }
         /// <summary>
         /// Actualiza en base de datos
@@ -268,7 +270,7 @@ namespace Mane.BD
             try
             {
                 string idRelacionado = ColumnaIdLocal == idName ? id()?.ToString() : Common.GetPropValueByName(this, ColumnaIdLocal).ToString();
-                if (idRelacionado == "") return new Modelo<Tmodelo>.ModeloCollection();
+                if (string.IsNullOrEmpty(idRelacionado)) return new Modelo<Tmodelo>.ModeloCollection();
                 Tmodelo m = new Tmodelo();
                 DataTable dt = Bd.Query(m.getNombreTabla()).Select(ColumnasDelModelo<Tmodelo>())
                     .Where($"{m.NombreTabla}.{ColumnaIdForaneo}", idRelacionado)
@@ -456,10 +458,34 @@ namespace Mane.BD
         /// <returns></returns>
         public override bool Equals(object obj)
         {
-            return obj is Modelo modelo &&
-                   NombreTabla == modelo.NombreTabla &&
+            if (!(obj is Modelo)) return false;
+            var modelo = obj as Modelo;
+            if(IntId() == 0 && modelo.IntId() == 0)
+            {
+                var thisType = GetType();
+                var objType = modelo.GetType();
+                if (thisType.FullName != objType.FullName) return false;
+                var thisProps = thisType.GetProperties().ToList();
+                var objProps = objType.GetProperties().ToList();
+                if (thisProps.Count != objProps.Count) return false;
+                try
+                {
+                    foreach (var prop in thisProps)
+                    {
+                        var objProp = objProps.Find(p => p.Name == prop.Name);
+                        if (objProp == null) return false;
+                        if (prop.GetValue(this)?.ToString() != objProp.GetValue(modelo)?.ToString() ) return false;
+                    }
+                }
+                catch (Exception)
+                {
+                    return false;
+                }
+                return true;
+            } else
+            return NombreTabla == modelo.NombreTabla &&
                    ConnName == modelo.ConnName &&
-                   idValue == modelo.idValue;
+                   IntId() == modelo.IntId();
         }
 
         internal void ModeloExceptionHandler(Exception e)

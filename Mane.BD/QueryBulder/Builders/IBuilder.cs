@@ -10,6 +10,7 @@ namespace Mane.BD.QueryBulder.Builders
     {
         char[] ColumnDelimiters { get; set; }
         char[] ValueDelimiters { get; set; }
+        string SelectLastInsertedIndexQuery { get; }
         QueryBuilder QueryBuilder { get; set; }
         string FormatValue(object value);
         string FormatTable(string value);

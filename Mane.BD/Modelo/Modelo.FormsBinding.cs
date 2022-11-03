@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Runtime.Remoting.Contexts;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -81,6 +82,46 @@ namespace Mane.BD
             }
         }
 
+        private void AddBindTocontrol(Control control, ContextoBinding contexto)
+        {
+            var pInfo = this.GetType().GetProperty(contexto.PropiedadDeModelo);
+            if (pInfo != null)
+            {
+                var bind = new Binding(contexto.PropiedadDelObjeto, bindingSource, contexto.PropiedadDeModelo);
+                if (contexto.NegarProp)
+                {
+                    bind.FormattingEnabled = true;
+                    bind.DataSourceUpdateMode = DataSourceUpdateMode.Never;
+                    bind.Format += new ConvertEventHandler((s, e) =>
+                    {
+                        try
+                        {
+                            e.Value = !Convert.ToBoolean(e.Value);
+                        }
+                        catch (Exception) { }
+                    });
+                }
+                if (!string.IsNullOrEmpty(contexto.Format))
+                {
+                    bind.FormattingEnabled = true;
+                    bind.FormatString = contexto.Format;
+                    bind.Format += new ConvertEventHandler((s, e) =>
+                    {
+                        try
+                        {
+                            if (e.DesiredType == typeof(string))
+                                e.Value = Convert.ToDouble(e.Value).ToString((s as Binding).FormatString);
+                        }
+                        catch (Exception)
+                        {
+
+                        }
+                    });
+                }
+                control.DataBindings.Clear();
+                control.DataBindings.Add(bind);
+            }
+        }
         private void SetBindingToControl(Control c)
         {
             object tag = c.Tag;
@@ -90,53 +131,14 @@ namespace Mane.BD
             Type tipoContexto = contexto.GetType();
             if (tipoContexto == typeof(ContextoBinding))
             {
-                var aux = (ContextoBinding)contexto;
-                var pInfo = this.GetType().GetProperty(aux.PropiedadDeModelo);
-                if (pInfo != null)
-                {
-                    var bind = new Binding(aux.PropiedadDelObjeto, bindingSource, aux.PropiedadDeModelo);
-                    if (aux.NegarProp)
-                    {
-                        bind.FormattingEnabled = true;
-                        bind.DataSourceUpdateMode = DataSourceUpdateMode.Never;
-                        bind.Format += new ConvertEventHandler((s, e) =>
-                        {
-                            try
-                            {
-                                e.Value = !Convert.ToBoolean(e.Value);
-                            }
-                            catch (Exception) { }
-                        });
-                    }
-                    if (!string.IsNullOrEmpty(aux.Format))
-                    {
-                        bind.FormattingEnabled = true;
-                        bind.FormatString = aux.Format;
-                        bind.Format += new ConvertEventHandler((s, e) =>
-                        {
-                            try
-                            {
-                                if (e.DesiredType == typeof(string))
-                                    e.Value = Convert.ToDouble(e.Value).ToString((s as Binding).FormatString);
-                            }
-                            catch (Exception)
-                            {
-
-                            }
-                        });
-                    }
-                    c.DataBindings.Clear();
-                    c.DataBindings.Add(bind);
-                }
-
+                AddBindTocontrol(c, contexto as ContextoBinding);
             }
             else if (tipoContexto == typeof(ContextoBinding[]))
             {
                 c.DataBindings.Clear();
                 foreach (var item in (ContextoBinding[])contexto)
                 {
-                    if (GetType().GetProperty(item.PropiedadDeModelo) != null)
-                        c.DataBindings.Add(item.PropiedadDelObjeto, bindingSource, item.PropiedadDeModelo);
+                    AddBindTocontrol(c, item);
                 }
             }
         }

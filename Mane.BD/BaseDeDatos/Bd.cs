@@ -143,7 +143,10 @@ namespace Mane.BD
         /// <returns>Retorna nulo si no encuentra un valor</returns>
         public static object ExecuteEscalar(string query, string nombreConexion = "")
         {
-            return GetExecutor(nombreConexion, query).ExecuteEscalar();
+            var val =  GetExecutor(nombreConexion, query).ExecuteEscalar();
+            if (val == DBNull.Value)
+                return null;
+            return val;
         }
 
 

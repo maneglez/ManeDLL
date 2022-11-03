@@ -86,8 +86,8 @@ namespace Mane.BD
             public bool Remove(T modelo, bool withDelete = false)
             {
                 if (modelo == null) return false;
-                var res = base.Remove(modelo);
                 if (withDelete) modelo.Delete();
+                var res = base.Remove(modelo);
                 NotifyChange();
                 UpdateBind();
                 return res;
