@@ -87,6 +87,7 @@ namespace Mane.BD.QueryBulder.Builders
         }
         public static string FormatTable(string tabla,char[] delimiters)
         {
+            if (string.IsNullOrEmpty(tabla)) return "";
             string output = tabla.Trim();
             if (output.Contains(" "))// table alias
             {

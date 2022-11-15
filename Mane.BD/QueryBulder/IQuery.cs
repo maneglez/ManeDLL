@@ -11,7 +11,19 @@ namespace Mane.BD
         bool Exists(string NombreConexion = "");
         T From(string tabla);
         T GroupBy(params string[] columnas);
+        /// <summary>
+        /// Inserta un registro en la tabla seleccionada utilizando la conexión proporcionada
+        /// </summary>
+        /// <param name="col_values">Nombre y valores de cada columna</param>
+        /// <param name="NombreConexion">Nombre de la conexión a utilizar</param>
+        /// <returns>El valor de la identidad (ID insertado)</returns>
         object Insert(Dictionary<string, object> col_values, string NombreConexion = "");
+        /// <summary>
+        /// Inserta un registro en la tabla seleccionada utilizando la conexión proporcionada
+        /// </summary>
+        /// <param name="col_values">Nombre y valores de cada columna</param>
+        /// <param name="NombreConexion">Nombre de la conexión a utilizar</param>
+        /// <returns>El valor de la identidad (ID insertado)</returns>
         object Insert(object col_values, string NombreConexion = "");
         T Join(T consulta, string alias, string col1, string col2);
         T Join(T consulta, string alias, string col1, string col2, Func<T, T> otrasCondiciones);

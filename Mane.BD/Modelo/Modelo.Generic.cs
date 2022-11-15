@@ -97,7 +97,6 @@ namespace Mane.BD
                 
                 Dictionary<string, object> dicAux = Common.ObjectToKeyValue(m);
                 Dictionary<string, object> dic = new Dictionary<string, object>();
-                
                 foreach (DataRow r in dt.Rows)
                 {
                     dic.Clear();
