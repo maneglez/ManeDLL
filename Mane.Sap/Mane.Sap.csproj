@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="Clases\Document.cs" />
     <Compile Include="Clases\Lines.cs" />
+    <Compile Include="Enums.cs" />
     <Compile Include="Sap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sap.Funciones.cs" />

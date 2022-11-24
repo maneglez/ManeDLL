@@ -358,6 +358,7 @@ namespace Mane.BD
         {
             List<string> columnasDelModelo = new List<string>();
             columnasDelModelo.AddRange(Common.ObjectToKeyValue(m).Keys);
+            if(!string.IsNullOrEmpty(m.idName))
             columnasDelModelo.Add(m.idName);
             if (incluirNombreTabla)
             {

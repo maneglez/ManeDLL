@@ -249,5 +249,10 @@ namespace Mane.Helpers
                 funcion.Invoke();
             contador--;
         }
+
+        private void btnActualizar_Click(object sender, EventArgs e)
+        {
+            Actualizar();
+        }
     }
 }

@@ -14,6 +14,11 @@ namespace Mane.BD
     {
         private IBdExecutor executor;
         private string servidor;
+        private string nombre;
+        private string nombreBD;
+        private string usuario;
+        private string contrasena;
+        private string driver;
 
         public IBdExecutor Executor
         {
@@ -92,29 +97,32 @@ namespace Mane.BD
         /// <summary>
         /// Nombre de la conexión
         /// </summary>
-        public string Nombre { get; set; }
+        public string Nombre { get => nombre == null ? "" : nombre; set => nombre = value; }
         /// <summary>
         /// Nombre del servidor
         /// </summary>
-        public string Servidor { get { 
-                return  Puerto != 0 ? servidor + Puerto : servidor; 
-            } set => servidor = value; }
+        public string Servidor
+        {
+            get => Puerto != 0 ? servidor + Puerto : servidor;
+            
+            set => servidor = value == null ? "" : value;
+        }
         /// <summary>
         /// Nombre de la base de datos
         /// </summary>
-        public string NombreBD { get; set; }
+        public string NombreBD { get => nombreBD; set => nombreBD = value == null ? "" : value; }
         /// <summary>
         /// Usuario de la base de datos
         /// </summary>
-        public string Usuario { get; set; }
+        public string Usuario { get => usuario; set => usuario = value == null ? "" : value; }
         /// <summary>
         /// Contraseña de la base de datos
         /// </summary>
-        public string Contrasena { get; set; }
+        public string Contrasena { get => contrasena; set => contrasena = value == null ? "" : value; }
         /// <summary>
         /// Especificar solo para conexiones ODBC
         /// </summary>
-        public string Driver { get; set; }
+        public string Driver { get => driver; set => driver = value == null ? "" : value; }
         /// <summary>
         /// Tiempo maximo de espera para la conexion y ejecucion de comando, por defecto 15 segundos
         /// </summary>

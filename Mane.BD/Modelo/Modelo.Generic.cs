@@ -105,10 +105,13 @@ namespace Mane.BD
                         dic.Add(key, r[key]);
                     }
                     T mAux = DicToModel(dic);
-                    mAux.setId(r[mAux.getIdName()]);
+                    if (!string.IsNullOrEmpty(mAux.getIdName()))
+                    {
+                        mAux.setId(r[mAux.getIdName()]);
+                        mAux.setOriginalIdValue(r[mAux.getIdName()]);
+                    }
                     mAux.setOriginalModel(dic);
                     mAux.setExists(true);
-                    mAux.setOriginalIdValue(r[mAux.getIdName()]);
                     mc.Add(mAux);
                 }
             }
