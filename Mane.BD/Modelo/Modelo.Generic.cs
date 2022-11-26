@@ -62,12 +62,12 @@ namespace Mane.BD
             var tipo = GetType();
             var m = Find(idValue);
             var dic = m.getOriginalModel();
+            OriginalModel = dic;
             foreach (var item in dic.Keys)
             {
                 var info = tipo.GetProperty(item);
-                if (info != null)
-                    if (info.CanWrite)
-                        info.SetValue(this, dic[item]);
+                if (info != null && info.CanWrite)
+                        info.SetValue(this, Common.ConvertirATipo(info.PropertyType, dic[item]));
             }
             Inicializando = false;
         }

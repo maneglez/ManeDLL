@@ -78,7 +78,7 @@ namespace Mane.BD
                     case "String": return value == DBNull.Value ? "" : value.ToString();
                     case "Boolean":
                         if (value is bool) return (bool)value;
-                        return value == DBNull.Value ? false : (value.ToString() == "1" ? true : false);
+                        return value == DBNull.Value ? false : Convert.ToBoolean(value);
                     case "DateTime": return value == DBNull.Value ? DateTime.MinValue : DateTime.Parse(value.ToString());
                     case "Double": return value == DBNull.Value ? 0 : double.Parse(value.ToString());
                     case "Int32": return value == DBNull.Value ? 0 : int.Parse(value.ToString());
