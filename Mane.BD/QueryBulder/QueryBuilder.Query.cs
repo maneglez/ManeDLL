@@ -52,10 +52,7 @@ namespace Mane.BD
         {
             if (Tabla == "") throw new QueryBuilderExeption("No se eligió una tabla");
             object result = Bd.ExecuteEscalar(GetBuilder(NombreConexion).Insert(col_values), NombreConexion);
-            if (result == DBNull.Value)
-                return "";
-            else return result.ToString();
-
+             return result;
         }
 
         public QueryBuilder Join(QueryBuilder consulta, string alias, string col1, string col2)

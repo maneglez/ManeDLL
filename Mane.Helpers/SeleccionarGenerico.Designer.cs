@@ -116,6 +116,7 @@
             this.Margin = new System.Windows.Forms.Padding(2);
             this.MinimumSize = new System.Drawing.Size(370, 465);
             this.Name = "SeleccionarGenerico";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Seleccionar";
             this.Load += new System.EventHandler(this.SeleccionarGenerico_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgvContenido)).EndInit();
