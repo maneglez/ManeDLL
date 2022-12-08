@@ -75,9 +75,9 @@ namespace Mane.BD
             return CommonJoin(tabla, col1, col2, operador, "INNER");
         }
 
-        public QueryBuilder Join(string tabla, string col1, string col2, Func<QueryBuilder, QueryBuilder> func, string operador = "=")
+        public QueryBuilder Join(string tabla, string col1, string col2, Func<QueryBuilder, QueryBuilder> extraCondicion, string operador = "=")
         {
-           return CommonJoin(tabla, col1, col2, func, operador, "INNER");
+           return CommonJoin(tabla, col1, col2, extraCondicion, operador, "INNER");
         }
 
         public QueryBuilder LeftJoin(string tabla, string col1, string col2, string operador = "=")

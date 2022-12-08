@@ -15,7 +15,10 @@ namespace Mane.BD
         /// </summary>
         public class ModeloCollection : List<T>
         {
-
+            /// <summary>
+            /// Ejecuta el evento PropertyChanged
+            /// </summary>
+            public void PerformChange() => NotifyChange();
             /// <summary>
             /// Guarda todos los modelos de la coleccion
             /// </summary>
@@ -89,7 +92,6 @@ namespace Mane.BD
                 if (withDelete) modelo.Delete();
                 var res = base.Remove(modelo);
                 NotifyChange();
-                UpdateBind();
                 return res;
             }
             /// <summary>
@@ -102,7 +104,6 @@ namespace Mane.BD
                 if (modelo == null) return false;
                 var res = base.Remove(modelo);
                 NotifyChange();
-                UpdateBind();
                 return res;
             }
             /// <summary>
@@ -139,6 +140,7 @@ namespace Mane.BD
                 if (bindedGrid == null) return;
                 if (bindedGrid.IsDisposed) return;
                 bindedGrid.DataSource = ToArray();
+                
             }
 
             private DataGridView bindedGrid;
@@ -156,19 +158,34 @@ namespace Mane.BD
             }
             private void NotifyChangeSubscription(object sender, PropertyChangedEventArgs e)
             {
-                NotifyChange(e.PropertyName);
+                NotifyChange(sender,e);
             }
-            private void NotifyChange(string prop = "")
+            /// <summary>
+            /// Se agrega o elimina un elemento en la coleccion
+            /// </summary>
+            private void NotifyChange()
             {
                 if (bindSuspended) return;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
-                if (string.IsNullOrEmpty(prop))
-                    UpdateBind();
-                else bindedGrid?.Refresh();
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(""));
+                UpdateBind();
+            }
+            /// <summary>
+            /// La propiedad de un elemento de la cilección cambia
+            /// </summary>
+            /// <param name="sender"></param>
+            /// <param name="e"></param>
+            private void NotifyChange(object sender,PropertyChangedEventArgs e)
+            {
+                if (bindSuspended) return;
+                PropertyChanged?.Invoke(sender, e);
+                bindedGrid?.Refresh();
             }
             private bool bindSuspended;
             public void SuspendBind()
-                => bindSuspended = true;
+            {
+                bindSuspended = true;
+            }
+                
             public void ResumeBind()
             {
                 bindSuspended = false;
@@ -176,7 +193,7 @@ namespace Mane.BD
             }
             
             /// <summary>
-            /// 
+            /// Se desencadena cuando la coleccion o un la propiedad de uno de los elementos de la coleccion cambia
             /// </summary>
             public event PropertyChangedEventHandler PropertyChanged;
             #endregion
