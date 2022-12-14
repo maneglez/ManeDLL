@@ -27,6 +27,7 @@ namespace Mane.BD.QueryBulder.Builders
         string BuildGroupBy();
         string Count();
         string BuildQuery();
+        string BuildExecProcedure(string ProcedureName, object[] ProcParameters = null);
 
     }
 }

@@ -67,7 +67,7 @@ namespace Mane.BD.Executors
             }
             catch (SqlException ex)
             {
-                Bd.bdExceptionHandler(ex);
+                Bd.bdExceptionHandler(ex,Query);
             }
             Disconnect();
             return null;
@@ -82,7 +82,7 @@ namespace Mane.BD.Executors
             }
             catch (SqlException ex)
             {
-                Bd.bdExceptionHandler(ex);
+                Bd.bdExceptionHandler(ex,Query);
             }
             Disconnect();
             return 0;
@@ -99,7 +99,7 @@ namespace Mane.BD.Executors
             }
             catch (SqlException ex)
             {
-                Bd.bdExceptionHandler(ex);
+                Bd.bdExceptionHandler(ex,Query);
             }
             Disconnect();
             return dt;

@@ -104,7 +104,7 @@ namespace Mane.BD.QueryBulder.Builders
             return select;
         }
 
-        public string BuildWeres()
+       virtual public string BuildWeres()
         {
             var where = "";
             var qb = QueryBuilder;
@@ -172,7 +172,7 @@ namespace Mane.BD.QueryBulder.Builders
             return Common.FormatColumn(columna, ColumnDelimiters);
         }
 
-        public string FormatTable(string value)
+        public virtual string FormatTable(string value)
         {
             return Common.FormatTable(value, ColumnDelimiters);
         }
@@ -216,6 +216,17 @@ namespace Mane.BD.QueryBulder.Builders
             }
             set = set.Trim(',');
             return $"UPDATE {FormatTable(QueryBuilder.Tabla)} SET {set} WHERE {BuildWeres()}";
+        }
+
+        public string BuildExecProcedure(string ProcedureName, object[] ProcParameters = null)
+        {
+            var proc = $"EXEC {ProcedureName}";
+            if (ProcParameters == null) return proc;
+            foreach (var item in ProcParameters)
+            {
+                proc += $" '{item}',";
+            }
+            return proc.TrimEnd(',');
         }
     }
 }

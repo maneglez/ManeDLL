@@ -84,6 +84,7 @@ namespace Mane.BD
         {
             return GetBuilder(tipo)?.BuildQuery();
         }
+ 
 
         /// <summary>
         /// Genera una cadena de consulta en formato SQL
@@ -100,6 +101,13 @@ namespace Mane.BD
         public DataTable Get(string NombreConexion = "") => Bd.ExecuteQuery(
             GetBuilder(NombreConexion).BuildQuery(),
             NombreConexion);
+        public DataTable ExecuteProcedure(string procedureName, object[] parametros = null,string ConnName = "")
+        {
+            return Bd.ExecuteQuery(
+                GetBuilder(NombreConexion).BuildExecProcedure(procedureName,parametros),
+                ConnName == null ? "" : ConnName
+                );
+        }
 
 
         #endregion

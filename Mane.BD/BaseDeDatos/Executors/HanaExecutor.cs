@@ -15,10 +15,11 @@ namespace Mane.BD.Executors
         private OdbcConnection conn = null;
         private OdbcCommand cmd = null;
         private OdbcDataReader reader = null;
-        public HanaExecutor(string connString, bool autoDisconnect)
+        public HanaExecutor(string connString, bool autoDisconnect = true)
         {
             ConnString = connString;
             AutoDisconnect = autoDisconnect;
+
         }
         public string Query { get; set; }
         public string ConnString { get; set; }
@@ -45,6 +46,7 @@ namespace Mane.BD.Executors
                 cmd = conn.CreateCommand();
                 cmd.CommandText = Query;
                 conn.Open();
+
             }
             catch (OdbcException ex)
             {

@@ -84,7 +84,7 @@ namespace Mane.BD
                         ob.Add("SERVERNODE", Servidor);
                         ob.Add("UID", Usuario);
                         ob.Add("PWD", Contrasena);
-                        ob.Add("SERVERDB", NombreBD);
+                     //   ob.Add("DATABASENAME", NombreBD);
                         return ob.ConnectionString;
                     default: return "";
                 }
@@ -130,6 +130,7 @@ namespace Mane.BD
         private void Construct()
         {
             Nombre = Servidor = NombreBD = Usuario = Contrasena = "";
+            Driver = IntPtr.Size == 4 ? "HDBODBC32" : "HDBODBC";
             TimeOut = 15;
         }
         /// <summary>

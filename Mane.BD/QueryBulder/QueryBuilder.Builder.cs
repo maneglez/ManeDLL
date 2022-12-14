@@ -97,7 +97,9 @@ namespace Mane.BD
         {
             if (NombreConexion != null)
                 this.NombreConexion = NombreConexion;
-            return GetBuilder(Bd.GetTipoBd(this.NombreConexion));
+            var con = Bd.Conexiones.Find(this.NombreConexion);
+            if (con == null) throw new Exception($"La conexion '{NombreConexion}' no existe");
+            return GetBuilder(con);
         }
         private IBuilder GetBuilder(TipoDeBd tipo)
         {
@@ -113,6 +115,27 @@ namespace Mane.BD
                     return null;
             }
             
+        }
+        internal IBuilder GetBuilder(Conexion c)
+        {
+            switch (c.TipoDeBaseDeDatos)
+            {
+                case TipoDeBd.SqlServer:
+                    return new BuilderSQL(this);
+                case TipoDeBd.SQLite:
+                    return new BuilderSQLite(this);
+                case TipoDeBd.Hana:
+                    //Requiere el nombre de la BD
+                    return new BuilderHana(this,c.NombreBD);
+                default:
+                    return null;
+            }
+
+        }
+
+        string IBuilder.BuildExecProcedure(string ProcedureName, object[] ProcParameters = null)
+        {
+            throw new NotImplementedException();
         }
     }
 }

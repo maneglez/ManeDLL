@@ -47,6 +47,8 @@ namespace Mane.BD
                     return new SQLServerExecutor(conexion.CadenaDeConexion).TestConnection();
                 case TipoDeBd.SQLite:
                     return new SQLiteExecutor(conexion.CadenaDeConexion).TestConnection();
+                case TipoDeBd.Hana:
+                    return new HanaExecutor(conexion.CadenaDeConexion).TestConnection();
                 default: throw new NotImplementedException();
             }
         }
@@ -151,6 +153,7 @@ namespace Mane.BD
 
 
 
+
         /// <summary>
         /// Obtiene el tipo de BD de la conexión
         /// </summary>
@@ -181,10 +184,11 @@ namespace Mane.BD
         /// </summary>
         /// <param name="tabla">Nombre de la tabla</param>
         /// <returns></returns>
-        public static QueryBuilder Query(string tabla)
+        public static QueryBuilder Query(string tabla = "")
         {
-            return new QueryBuilder(tabla);
+            return string.IsNullOrEmpty(tabla) ? new QueryBuilder() : new QueryBuilder(tabla);
         }
+ 
         /// <summary>
         /// consulta en raw
         /// </summary>
