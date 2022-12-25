@@ -22,19 +22,17 @@ namespace Mane.Helpers
             try
             {
                 string dir = Path.GetDirectoryName(path);
-                if (!Directory.Exists(dir))
-                    Directory.CreateDirectory(dir);
-
+                CrearCarpeta(dir);
                 if(!File.Exists(path) || sobreescribir)
                 {
                     using (FileStream fs = File.Create(path)) { }
                 }
-                    using (StreamWriter sw = new StreamWriter(path))
+                    using (StreamWriter sw = new StreamWriter(path,true))
                         sw.Write(data);
             }
             catch (UnauthorizedAccessException)
             {
-                MessageBox.Show($"Error al crear la carpeta {Path.GetDirectoryName(path)}, por favor ejecute el programa con privilegios de administrador y vuelva a intentarlo.");
+                MessageBox.Show($"Error al editar o crear el archivo {Path.GetDirectoryName(path)}, por favor ejecute el programa con privilegios de administrador y vuelva a intentarlo.");
             }
             catch (Exception e)
             {
@@ -53,6 +51,23 @@ namespace Mane.Helpers
             using (var sr = new StreamReader(ruta))
                 data = sr.ReadToEnd();
             return data;
+        }
+
+        /// <summary>
+        /// Crea una carpeta
+        /// </summary>
+        /// <param name="carpeta"></param>
+        public static void CrearCarpeta(string carpeta)
+        {
+            try
+            {
+                if (!Directory.Exists(carpeta))
+                    Directory.CreateDirectory(carpeta);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show($"No se pudo crear el directorio '{carpeta}', ejecute la aplicación como administrador","Error",MessageBoxButtons.OK,MessageBoxIcon.Error);
+            }
         }
         
     }

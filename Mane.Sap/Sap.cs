@@ -1,4 +1,4 @@
-﻿using Mane.BD;
+﻿
 using SAPbobsCOM;
 using System;
 using System.Collections.Generic;
@@ -23,12 +23,10 @@ namespace Mane.Sap
         /// </summary>
         /// <param name="nombreConexion">Nombre de la conexión</param>
         /// <returns></returns>
-        public static bool connect(string nombreConexion = "")
+        public static void connect(string nombreConexion = "")
         {
-            try
-            {
                 if (comp == null) comp = new Company();
-                if (comp.Connected && ConexionActual?.Nombre == nombreConexion) return true;
+                if (comp.Connected && ConexionActual?.Nombre == nombreConexion) return;
                 else
                 {
                     disconnect();
@@ -45,8 +43,8 @@ namespace Mane.Sap
                 comp.Server = con.Server;
                 if (con.LicenseServer != "")
                     comp.LicenseServer = con.LicenseServer;
-                if (con.SLDServer != "")
-                    comp.SLDServer = con.SLDServer;
+                //if (con.SLDServer != "")
+                //    comp.SLDServer = con.SLDServer;
                 comp.CompanyDB = con.DbCompany;
                 comp.DbUserName = con.DbUser;
                 comp.DbPassword = con.DbPassword;
@@ -56,13 +54,7 @@ namespace Mane.Sap
                 comp.language = BoSuppLangs.ln_Spanish_La;
                 comp.UseTrusted = false;
                 if (comp.Connect() != 0) throw new Exception(comp.GetLastErrorDescription());
-            }
-            catch (Exception e)
-            {
-                LastError = e.Message;
-                return false;
-            }
-            return true;
+
         }
         /// <summary>
         /// Prueba una conexión a SAP
@@ -79,8 +71,8 @@ namespace Mane.Sap
                 comp.Server = con.Server;
                 if (con.LicenseServer != "")
                     comp.LicenseServer = con.LicenseServer;
-                if (con.SLDServer != "")
-                    comp.SLDServer = con.SLDServer;
+                //if (con.SLDServer != "")
+                //    comp.SLDServer = con.SLDServer;
                 comp.CompanyDB = con.DbCompany;
                 comp.DbUserName = con.DbUser;
                 comp.DbPassword = con.DbPassword;
@@ -100,23 +92,23 @@ namespace Mane.Sap
             }
             return true;
         }
-        /// <summary>
-        /// Obtiene el DocNum a partir del doc Entry
-        /// </summary>
-        /// <param name="tabla">Nombre de la tabla de documento</param>
-        /// <param name="docEntry">DocEntry</param>
-        /// <returns></returns>
-        public static int GetDocNum(string tabla,int docEntry = 0)
-        {
-            if (string.IsNullOrEmpty(NewObjectKey) && docEntry == 0) return 0;
-            if (docEntry == 0) docEntry = Convert.ToInt32(NewObjectKey);
-            var c = ConexionActual?.ToBdCon();
-            c.Nombre = NombreConexionBd;
-            Bd.Conexiones.Add(c);
-            int docNum = Convert.ToInt32(Bd.Query(tabla).Where("DocEntry", docEntry).GetScalar(NombreConexionBd));
-            Bd.Conexiones.Remove(c);
-            return docNum;
-        }
+        ///// <summary>
+        ///// Obtiene el DocNum a partir del doc Entry
+        ///// </summary>
+        ///// <param name="tabla">Nombre de la tabla de documento</param>
+        ///// <param name="docEntry">DocEntry</param>
+        ///// <returns></returns>
+        //public static int GetDocNum(string tabla,int docEntry = 0)
+        //{
+        //    if (string.IsNullOrEmpty(NewObjectKey) && docEntry == 0) return 0;
+        //    if (docEntry == 0) docEntry = Convert.ToInt32(NewObjectKey);
+        //    var c = ConexionActual?.ToBdCon();
+        //    c.Nombre = NombreConexionBd;
+        //    Bd.Conexiones.Add(c);
+        //    int docNum = Convert.ToInt32(Bd.Query(tabla).Where("DocEntry", docEntry).GetScalar(NombreConexionBd));
+        //    Bd.Conexiones.Remove(c);
+        //    return docNum;
+        //}
         /// <summary>
         /// Finaliza la conexión con sap
         /// </summary>
@@ -183,16 +175,16 @@ namespace Mane.Sap
         /// Genera una objeto de clase Mane.BD.Bd.Conexion a partir de una clase ConexionSap
         /// </summary>
         /// <returns>Mane.BD.Bd.Conexion</returns>
-        public Conexion ToBdCon()
-        {
-            var c = new Conexion();
-            c.Servidor = Server;
-            c.NombreBD = DbCompany;
-            c.TipoDeBaseDeDatos = TipoDeBd.SqlServer;
-            c.Usuario = DbUser;
-            c.Contrasena = DbPassword;
-            return c;
-        }
+        //public Conexion ToBdCon()
+        //{
+        //    var c = new Conexion();
+        //    c.Servidor = Server;
+        //    c.NombreBD = DbCompany;
+        //    c.TipoDeBaseDeDatos = TipoDeBd.SqlServer;
+        //    c.Usuario = DbUser;
+        //    c.Contrasena = DbPassword;
+        //    return c;
+        //}
     }
 
    
