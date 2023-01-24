@@ -1,4 +1,5 @@
-﻿using Mane.BD.Executors;
+﻿using Mane.BD.BaseDeDatos.Executors.WebApiExecutor;
+using Mane.BD.Executors;
 using System;
 using System.Collections.Generic;
 using System.Data.Odbc;
@@ -36,6 +37,9 @@ namespace Mane.BD
                             break;
                         case TipoDeBd.Hana:
                             executor = new HanaExecutor(CadenaDeConexion, Bd.AutoDisconnect);
+                            break;
+                        case TipoDeBd.ApiWeb:
+                            executor = new WebApiExecutor(this);
                             break;
                         default:
                             break;
@@ -86,6 +90,8 @@ namespace Mane.BD
                         ob.Add("PWD", Contrasena);
                      //   ob.Add("DATABASENAME", NombreBD);
                         return ob.ConnectionString;
+                    case TipoDeBd.ApiWeb:
+                        return $"{Servidor}/api/";
                     default: return "";
                 }
             }
@@ -94,6 +100,11 @@ namespace Mane.BD
         /// Tipo de base de datos
         /// </summary>
         public TipoDeBd TipoDeBaseDeDatos { get; set; } = TipoDeBd.SqlServer;
+        /// <summary>
+        /// Tipo de base de datos (solo aplica para web api)
+        /// </summary>
+        public TipoDeBd SubTipoDeBD { get; set; } = TipoDeBd.SqlServer;
+    
         /// <summary>
         /// Nombre de la conexión
         /// </summary>

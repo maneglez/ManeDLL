@@ -40,6 +40,12 @@ namespace Mane.BD
         /// Base de datos de HanaDB
         /// </summary>
         [Description("Hana DB")]
-        Hana
+        Hana,
+        /// <summary>
+        /// Consultas via web
+        /// </summary>
+        [Description("Api Web")]
+        ApiWeb
+
     }
 }
