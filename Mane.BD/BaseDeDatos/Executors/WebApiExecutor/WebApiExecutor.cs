@@ -1,4 +1,5 @@
 ﻿using Mane.BD.Executors;
+using Mane.BD.QueryBulder.Builders;
 using RestSharp;
 using System;
 using System.Collections.Generic;
@@ -13,7 +14,11 @@ namespace Mane.BD.BaseDeDatos.Executors.WebApiExecutor
     {
         private static List<WebApiToken> Tokens = new List<WebApiToken>();
 
-        private WebApiToken CurrentToken => Tokens.Find(t => t.ConnectionName == ConnectionName);
+        private WebApiToken CurrentToken { get => Tokens.Find(t => t.ConnectionName == Conexion.Nombre); set {
+                if (CurrentToken == null)
+                    Tokens.Add(value);
+                else CurrentToken.Token = value.Token;
+            } }
         private Conexion Conexion;
 
         public WebApiExecutor(Conexion conexion)
@@ -27,17 +32,17 @@ namespace Mane.BD.BaseDeDatos.Executors.WebApiExecutor
         public bool AutoDisconnect { get; set; }
         private WebApiResponse POST(string query,object body)
         {
-            var cli = new RestClient(Conexion.CadenaDeConexion + query);
+            var cli = new RestClient(Conexion.Servidor + query);
             var req = new RestRequest(Method.POST);
             req.AddHeader("Content-Type", "application/json");
             req.AddHeader("Accept", "application/json");
             req.AddHeader("Authorization", "Bearer " + CurrentToken?.Token);
             req.AddJsonBody(body);
-            cli.Timeout = Conexion.TimeOut;
+            cli.Timeout = Conexion.TimeOut * 1000;
             var resp = cli.Execute(req);
             if (!resp.IsSuccessful)
                 throw new Exception(resp.ErrorMessage + resp.Content);
-            return resp.Content.JsonToObject<WebApiResponse>();
+            return WebApiResponse.Parse(resp.Content);
         }
        
         public void Connect()
@@ -45,7 +50,7 @@ namespace Mane.BD.BaseDeDatos.Executors.WebApiExecutor
            if(CurrentToken == null)
             {
                 var resp = POST("login", new { name = Conexion.Usuario, password = Conexion.Contrasena });
-                Tokens.Add(new WebApiToken(Conexion.Nombre,resp.GetDataValue("user_token").ToString()));
+               CurrentToken = new WebApiToken(Conexion.Nombre,resp.GetDataValue("user_token").ToString());
             }
         }
 
@@ -56,7 +61,31 @@ namespace Mane.BD.BaseDeDatos.Executors.WebApiExecutor
 
         public object ExecuteEscalar()
         {
-            var dt = ExecuteQuery();
+            DataTable dt;
+            var lower = Query.ToLower();
+            if (lower.Contains("insert into"))//Ajustar la consulta quintando la parte que consulta el id insertado
+            {
+                switch (Conexion.SubTipoDeBD)
+                {
+                    case TipoDeBd.SqlServer:
+                        Query = Query.Replace(new BuilderSQL(null).SelectLastInsertedIndexQuery, "");
+                        break;
+                    case TipoDeBd.SQLite:
+                        Query = Query.Replace(new BuilderSQLite(null).SelectLastInsertedIndexQuery, "");
+                        break;
+                    case TipoDeBd.Hana:
+                        Query = Query.Replace(new BuilderHana(null).SelectLastInsertedIndexQuery, "");
+                        break;
+                    default:
+                        break;
+                }
+                Query = Query.Trim().TrimEnd(new char[] {';'} );
+                dt = POST("execute/query", new WebApiQuery(Query, "insert_id", Conexion.Nombre)).data.JsonToObject<DataTable>();
+
+            }
+            else
+                dt = ExecuteQuery();
+            if (dt == null) return null;
             if (dt.Rows.Count == 0) return null;
             return dt.Rows[0][0];
         }
@@ -70,6 +99,8 @@ namespace Mane.BD.BaseDeDatos.Executors.WebApiExecutor
                 tipo = "delete";
             else if (q.Contains("update "))
                 tipo = "update";
+            else if (q.Contains("insert into"))
+                tipo = "insert";
             if (string.IsNullOrEmpty(tipo))
                 throw new Exception("La consulta debe de ser del tipo delete o update: " + Query);
            return Convert.ToInt32(POST("execute/query", new WebApiQuery(Query, tipo, Conexion.Nombre)).data);
@@ -91,7 +122,7 @@ namespace Mane.BD.BaseDeDatos.Executors.WebApiExecutor
             {
                 return false;
             }
-            return CurrentToken == null;
+            return CurrentToken != null;
         }
     }
 }

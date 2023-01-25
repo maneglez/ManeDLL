@@ -15,5 +15,14 @@ namespace Mane.BD.BaseDeDatos.Executors.WebApiExecutor
         {
            return JObject.Parse(data)[propName];
         }
+        public static WebApiResponse Parse(string json)
+        {
+            var obj = JObject.Parse(json);
+            return new WebApiResponse()
+            {
+                message = obj["message"].ToString(),
+                data = obj["data"].ToString()
+            };
+        }
     }
 }

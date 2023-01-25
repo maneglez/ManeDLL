@@ -90,8 +90,6 @@ namespace Mane.BD
                         ob.Add("PWD", Contrasena);
                      //   ob.Add("DATABASENAME", NombreBD);
                         return ob.ConnectionString;
-                    case TipoDeBd.ApiWeb:
-                        return $"{Servidor}/api/";
                     default: return "";
                 }
             }
@@ -114,7 +112,7 @@ namespace Mane.BD
         /// </summary>
         public string Servidor
         {
-            get => Puerto != 0 ? servidor + Puerto : servidor;
+            get => Puerto != 0 ? servidor + ":" + Puerto : servidor;
             
             set => servidor = value == null ? "" : value;
         }
@@ -148,6 +146,7 @@ namespace Mane.BD
         /// Puerto
         /// </summary>
         public int Puerto { get; set; }
+        public bool UseSSL { get; set; }
         /// <summary>
         /// Modelo de conexión a base de datos
         /// </summary>

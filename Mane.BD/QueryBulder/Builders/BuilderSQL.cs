@@ -196,7 +196,7 @@ namespace Mane.BD.QueryBulder.Builders
             string values = "";
             foreach (string item in diccionario.Keys)
             {
-                into += $"[{item}],";
+                into += FormatColumn(item) + ",";
             }
             foreach (object item in diccionario.Values)
             {
@@ -212,7 +212,7 @@ namespace Mane.BD.QueryBulder.Builders
             string set = "";
             foreach (string key in dic.Keys)
             {
-                set += $"[{key}] = {FormatValue(dic[key])},";
+                set += $"{FormatColumn(key)} = {FormatValue(dic[key])},";
             }
             set = set.Trim(',');
             return $"UPDATE {FormatTable(QueryBuilder.Tabla)} SET {set} WHERE {BuildWeres()}";
