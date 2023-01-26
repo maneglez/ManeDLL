@@ -101,7 +101,7 @@ namespace Mane.BD
             if (con == null) throw new Exception($"La conexion '{NombreConexion}' no existe");
             return GetBuilder(con);
         }
-        private IBuilder GetBuilder(TipoDeBd tipo)
+        internal IBuilder GetBuilder(TipoDeBd tipo)
         {
             switch (tipo)
             {

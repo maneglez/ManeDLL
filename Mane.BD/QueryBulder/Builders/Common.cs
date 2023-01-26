@@ -54,12 +54,15 @@ namespace Mane.BD.QueryBulder.Builders
                     }
 
                 }
+
                 columna = columna.Replace(" As ", " as ").Replace(" AS ", " as ").Replace(" aS ", " as ");
                 string[] aux2 = columna.Replace(" as ", ";").Split(';');
                 if (aux2.Length == 2)
                 {
                     if (aux2[0].Contains("'"))// 'Algo' as Columna
                         return $"{aux2[0]} AS {FormatColumn(aux2[1], delimiters)}";
+                    if (aux2[0].Contains("-") || aux2[0].Contains("+") || (aux2[0].Contains("*") && !aux2[0].Contains(".*")) || aux2[0].Contains("/"))
+                        return $"{aux2[0]} AS {FormatColumn(aux2[1],delimiters)}";
                     return $"{FormatColumn(aux2[0], delimiters)} AS {FormatColumn(aux2[1], delimiters)}";
                 }
                 else if (aux2.Length == 1) // as columna
