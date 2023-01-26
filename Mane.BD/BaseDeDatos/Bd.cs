@@ -40,17 +40,8 @@ namespace Mane.BD
                  /// <returns>Verdadero si logra conectar, falso si no</returns>
         public static bool TestConection(Conexion conexion)
         {
-            conexion.TimeOut = 5;
-            switch (conexion.TipoDeBaseDeDatos)
-            {
-                case TipoDeBd.SqlServer:
-                    return new SQLServerExecutor(conexion.CadenaDeConexion).TestConnection();
-                case TipoDeBd.SQLite:
-                    return new SQLiteExecutor(conexion.CadenaDeConexion).TestConnection();
-                case TipoDeBd.Hana:
-                    return new HanaExecutor(conexion.CadenaDeConexion).TestConnection();
-                default: throw new NotImplementedException();
-            }
+            conexion.TimeOut = 10;
+            return conexion.Executor.TestConnection();
         }
 
         /// <summary>

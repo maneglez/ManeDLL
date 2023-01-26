@@ -101,7 +101,7 @@ namespace Mane.BD
             if (con == null) throw new Exception($"La conexion '{NombreConexion}' no existe");
             return GetBuilder(con);
         }
-        private IBuilder GetBuilder(TipoDeBd tipo)
+        internal IBuilder GetBuilder(TipoDeBd tipo)
         {
             switch (tipo)
             {
@@ -127,6 +127,8 @@ namespace Mane.BD
                 case TipoDeBd.Hana:
                     //Requiere el nombre de la BD
                     return new BuilderHana(this,c.NombreBD);
+                case TipoDeBd.ApiWeb:
+                    return GetBuilder(c.SubTipoDeBD);
                 default:
                     return null;
             }
@@ -135,7 +137,8 @@ namespace Mane.BD
 
         string IBuilder.BuildExecProcedure(string ProcedureName, object[] ProcParameters = null)
         {
-            throw new NotImplementedException();
+            return "";
+            
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Mane.BD.Executors;
+﻿using Mane.BD.BaseDeDatos.Executors.WebApiExecutor;
+using Mane.BD.Executors;
 using System;
 using System.Collections.Generic;
 using System.Data.Odbc;
@@ -36,6 +37,9 @@ namespace Mane.BD
                             break;
                         case TipoDeBd.Hana:
                             executor = new HanaExecutor(CadenaDeConexion, Bd.AutoDisconnect);
+                            break;
+                        case TipoDeBd.ApiWeb:
+                            executor = new WebApiExecutor(this);
                             break;
                         default:
                             break;
@@ -95,6 +99,11 @@ namespace Mane.BD
         /// </summary>
         public TipoDeBd TipoDeBaseDeDatos { get; set; } = TipoDeBd.SqlServer;
         /// <summary>
+        /// Tipo de base de datos (solo aplica para web api)
+        /// </summary>
+        public TipoDeBd SubTipoDeBD { get; set; } = TipoDeBd.SqlServer;
+    
+        /// <summary>
         /// Nombre de la conexión
         /// </summary>
         public string Nombre { get => nombre == null ? "" : nombre; set => nombre = value; }
@@ -103,7 +112,7 @@ namespace Mane.BD
         /// </summary>
         public string Servidor
         {
-            get => Puerto != 0 ? servidor + Puerto : servidor;
+            get => Puerto != 0 ? servidor + ":" + Puerto : servidor;
             
             set => servidor = value == null ? "" : value;
         }
@@ -137,6 +146,7 @@ namespace Mane.BD
         /// Puerto
         /// </summary>
         public int Puerto { get; set; }
+        public bool UseSSL { get; set; }
         /// <summary>
         /// Modelo de conexión a base de datos
         /// </summary>

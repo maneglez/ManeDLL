@@ -8,6 +8,7 @@ namespace Mane.BD.QueryBulder.Builders
 {
     internal class BuilderSQL : IBuilder
     {
+        protected virtual TipoDeBd Tipo => TipoDeBd.SqlServer;
         public QueryBuilder QueryBuilder { get; set; }
         public char[] ColumnDelimiters { get; set; }
         public char[] ValueDelimiters { get; set; }
@@ -42,7 +43,7 @@ namespace Mane.BD.QueryBulder.Builders
             string consulta = "";
             foreach (var j in QueryBuilder.Joins)
             {
-                extraCondicion = j.ExtraCondicion != null ? "AND " + (j.ExtraCondicion as IBuilder).BuildWeres() : "";
+                extraCondicion = j.ExtraCondicion != null ? "AND " + j.ExtraCondicion.GetBuilder(Tipo).BuildWeres() : "";
                 consulta = j.Consulta != null ? $"({(j.Consulta as IBuilder).BuildQuery()}) {FormatColumn(j.AliasDeConsulta)}" : "";
                 joins += $" {j.Tipo} JOIN {consulta}{FormatTable(j.Tabla)} ON {FormatColumn(j.Columna1)} {j.Operador} {FormatColumn(j.Columna2)} {extraCondicion}";
             }
@@ -139,7 +140,7 @@ namespace Mane.BD.QueryBulder.Builders
                         break;
                     case QueryBuilder.TipoWhere.WhereGroup:
                         QueryBuilder q1 = (QueryBuilder)w.Valor;
-                        if (q1.Columnas.Length == 0) where += $"({(q1 as IBuilder).BuildWeres()})";
+                        if (q1.Columnas.Length == 0) where += $"({q1.GetBuilder(Tipo).BuildWeres()})";
                         else where += $"({q1.GetQuery(TipoDeBd.SqlServer)})";
                         break;
                     case QueryBuilder.TipoWhere.WhereBetween:
@@ -196,7 +197,7 @@ namespace Mane.BD.QueryBulder.Builders
             string values = "";
             foreach (string item in diccionario.Keys)
             {
-                into += $"[{item}],";
+                into += FormatColumn(item) + ",";
             }
             foreach (object item in diccionario.Values)
             {
@@ -212,7 +213,7 @@ namespace Mane.BD.QueryBulder.Builders
             string set = "";
             foreach (string key in dic.Keys)
             {
-                set += $"[{key}] = {FormatValue(dic[key])},";
+                set += $"{FormatColumn(key)} = {FormatValue(dic[key])},";
             }
             set = set.Trim(',');
             return $"UPDATE {FormatTable(QueryBuilder.Tabla)} SET {set} WHERE {BuildWeres()}";
