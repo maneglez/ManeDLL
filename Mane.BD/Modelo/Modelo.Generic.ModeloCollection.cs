@@ -197,6 +197,13 @@ namespace Mane.BD
             /// </summary>
             public event PropertyChangedEventHandler PropertyChanged;
             #endregion
+
+            public T Peek()
+            {
+                if (Count == 0)
+                    return null;
+                else return this[Count - 1];
+            }
         }
     }
 }
