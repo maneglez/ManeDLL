@@ -178,6 +178,22 @@ namespace Mane.Helpers
             return bindings.ToArray();
 
         }
+        public static object GetCellValue(this DataGridView grid, DataGridViewCellEventArgs e)
+        {
+            return grid.Rows[e.RowIndex].Cells[e.ColumnIndex]?.Value;
+        }
+        public static object GetCellValue(this DataGridView grid, DataGridViewCellCancelEventArgs e)
+        {
+            return grid.Rows[e.RowIndex].Cells[e.ColumnIndex]?.Value;
+        }
+        public static void SetCellValue(this DataGridView grid, DataGridViewCellEventArgs e,object value)
+        {
+             grid.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = value;
+        }
+        public static void SetCellValue(this DataGridView grid, DataGridViewCellCancelEventArgs e, object value)
+        {
+             grid.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = value;
+        }
 
 
         /// <summary>
