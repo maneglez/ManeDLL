@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Forms;
 
 namespace Mane.BD
 {
-   public partial class Modelo<T> : INotifyPropertyChanged
+    public partial class Modelo<T> : INotifyPropertyChanged
     {
         /// <summary>
         /// Colección de modelos
@@ -140,11 +136,11 @@ namespace Mane.BD
                 if (bindedGrid == null) return;
                 if (bindedGrid.IsDisposed) return;
                 bindedGrid.DataSource = ToArray();
-                
+
             }
 
             private DataGridView bindedGrid;
-           
+
             /// <summary>
             /// Vincula la coleccion a un datagrid
             /// </summary>
@@ -158,7 +154,7 @@ namespace Mane.BD
             }
             private void NotifyChangeSubscription(object sender, PropertyChangedEventArgs e)
             {
-                NotifyChange(sender,e);
+                NotifyChange(sender, e);
             }
             /// <summary>
             /// Se agrega o elimina un elemento en la coleccion
@@ -174,7 +170,7 @@ namespace Mane.BD
             /// </summary>
             /// <param name="sender"></param>
             /// <param name="e"></param>
-            private void NotifyChange(object sender,PropertyChangedEventArgs e)
+            private void NotifyChange(object sender, PropertyChangedEventArgs e)
             {
                 if (bindSuspended) return;
                 PropertyChanged?.Invoke(sender, e);
@@ -185,13 +181,13 @@ namespace Mane.BD
             {
                 bindSuspended = true;
             }
-                
+
             public void ResumeBind()
             {
                 bindSuspended = false;
                 NotifyChange();
             }
-            
+
             /// <summary>
             /// Se desencadena cuando la coleccion o un la propiedad de uno de los elementos de la coleccion cambia
             /// </summary>

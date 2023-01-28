@@ -1,9 +1,4 @@
 ﻿using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Mane.BD.BaseDeDatos.Executors.WebApiExecutor
 {
@@ -13,7 +8,7 @@ namespace Mane.BD.BaseDeDatos.Executors.WebApiExecutor
         public string data { get; set; }
         public JToken GetDataValue(string propName)
         {
-           return JObject.Parse(data)[propName];
+            return JObject.Parse(data)[propName];
         }
         public static WebApiResponse Parse(string json)
         {

@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Data;
 
 namespace Mane.BD.Executors
 {
-   public interface IBdExecutor
+    public interface IBdExecutor
     {
         /// <summary>
         /// Consulta a ejecutar

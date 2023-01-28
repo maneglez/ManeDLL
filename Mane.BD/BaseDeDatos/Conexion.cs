@@ -1,13 +1,9 @@
 ﻿using Mane.BD.BaseDeDatos.Executors.WebApiExecutor;
 using Mane.BD.Executors;
 using System;
-using System.Collections.Generic;
 using System.Data.Odbc;
 using System.Data.SqlClient;
 using System.Data.SQLite;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Mane.BD
 {
@@ -88,7 +84,7 @@ namespace Mane.BD
                         ob.Add("SERVERNODE", Servidor);
                         ob.Add("UID", Usuario);
                         ob.Add("PWD", Contrasena);
-                     //   ob.Add("DATABASENAME", NombreBD);
+                        //   ob.Add("DATABASENAME", NombreBD);
                         return ob.ConnectionString;
                     default: return "";
                 }
@@ -102,7 +98,7 @@ namespace Mane.BD
         /// Tipo de base de datos (solo aplica para web api)
         /// </summary>
         public TipoDeBd SubTipoDeBD { get; set; } = TipoDeBd.SqlServer;
-    
+
         /// <summary>
         /// Nombre de la conexión
         /// </summary>
@@ -113,7 +109,7 @@ namespace Mane.BD
         public string Servidor
         {
             get => Puerto != 0 ? servidor + ":" + Puerto : servidor;
-            
+
             set => servidor = value == null ? "" : value;
         }
         /// <summary>

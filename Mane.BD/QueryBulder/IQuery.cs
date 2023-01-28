@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 
 namespace Mane.BD
 {
-    public interface IQuery<T> where T: IQuery<T>
+    public interface IQuery<T> where T : IQuery<T>
     {
         int Count(string NombreConexion = "");
-        void Delete(string NombreConexion = "",bool forzar = false);
+        void Delete(string NombreConexion = "", bool forzar = false);
         bool Exists(string NombreConexion = "");
         T From(string tabla);
         T GroupBy(params string[] columnas);
@@ -45,7 +44,7 @@ namespace Mane.BD
         T Select(params string[] columnas);
         T Select(T query, string alias);
         T SelectRaw(string RawQuery, string alias);
-        int Update(Dictionary<string, object> dic, string NombreConexion = "",bool forzar = false);
+        int Update(Dictionary<string, object> dic, string NombreConexion = "", bool forzar = false);
         int Update(object objeto, string NombreConexion = "", bool forzar = false);
         T Where(Func<T, T> func);
         T Where(string col, Func<T, T> func);

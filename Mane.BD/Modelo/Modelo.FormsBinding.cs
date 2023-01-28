@@ -3,15 +3,12 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Runtime.Remoting.Contexts;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Mane.BD
 {
-        
-    public  partial class Modelo : INotifyPropertyChanged
+
+    public partial class Modelo : INotifyPropertyChanged
     {
         /// <summary>
         /// Envento que es invoncado cada que el valor de una propiedad cambia
@@ -240,6 +237,6 @@ namespace Mane.BD
                 PropiedadDelObjeto = propiedadDelObjeto;
             }
         }
-       
+
     }
 }

@@ -1,10 +1,8 @@
 ﻿using Mane.BD.Executors;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Data.Common;
-using System.Data.SqlClient;
 
 
 
@@ -87,12 +85,12 @@ namespace Mane.BD
         {
             return GetExecutor(nombreConexion, query).ExecuteQuery();
         }
-        private static IBdExecutor GetExecutor(string nombreConexion,string query = "")
+        private static IBdExecutor GetExecutor(string nombreConexion, string query = "")
         {
             var ex = Conexiones.Find(nombreConexion)?.Executor;
             if (ex == null)
             {
-               throw new BdException($"La conexion {nombreConexion} no existe");
+                throw new BdException($"La conexion {nombreConexion} no existe");
             }
             ex.Query = query;
             return ex;
@@ -136,7 +134,7 @@ namespace Mane.BD
         /// <returns>Retorna nulo si no encuentra un valor</returns>
         public static object ExecuteEscalar(string query, string nombreConexion = "")
         {
-            var val =  GetExecutor(nombreConexion, query).ExecuteEscalar();
+            var val = GetExecutor(nombreConexion, query).ExecuteEscalar();
             if (val == DBNull.Value)
                 return null;
             return val;
@@ -179,7 +177,7 @@ namespace Mane.BD
         {
             return string.IsNullOrEmpty(tabla) ? new QueryBuilder() : new QueryBuilder(tabla);
         }
- 
+
         /// <summary>
         /// consulta en raw
         /// </summary>

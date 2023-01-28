@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Mane.BD
 {
@@ -17,7 +13,7 @@ namespace Mane.BD
         /// Excepcion de la clase Bd
         /// </summary>
         /// <param name="message">Mensaje de error</param>
-        public BdException(string message, string queryCulpable  = "") : base(message)
+        public BdException(string message, string queryCulpable = "") : base(message)
         {
             QueryCulpable = queryCulpable;
         }

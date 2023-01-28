@@ -2,10 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Mane.Helpers
@@ -81,7 +78,7 @@ namespace Mane.Helpers
             }
             catch (Exception ex)
             {
-              Log.Add("Conversor de tipo \r\n" + ex.StackTrace);
+                Log.Add("Conversor de tipo \r\n" + ex.StackTrace);
             }
             return value;
         }

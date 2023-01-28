@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 
@@ -14,7 +10,7 @@ namespace Mane.BD
     /// <summary>
     /// Modelo
     /// </summary>
-    public partial class Modelo 
+    public partial class Modelo
     {
 
         #region Constructores
@@ -60,7 +56,7 @@ namespace Mane.BD
         /// Indica si el modelo ya fue registrado en la base de datos
         /// </summary>
         private bool RegistredOnDataBase;
-       
+
         internal bool Inicializando { get; set; }
         /// <summary>
         /// Indica cuando se están asignando los valores obtenidos de la base de datos
@@ -144,7 +140,7 @@ namespace Mane.BD
             }
             OnSave?.Invoke(this, new EventArgs());
         }
-       
+
 
         /// <summary>
         /// Elimina un registro
@@ -225,7 +221,8 @@ namespace Mane.BD
             try
             {
                 return Convert.ToInt32(idValue);
-            }catch(Exception)
+            }
+            catch (Exception)
             {
                 return 0;
             }
@@ -358,8 +355,8 @@ namespace Mane.BD
         {
             List<string> columnasDelModelo = new List<string>();
             columnasDelModelo.AddRange(Common.ObjectToKeyValue(m).Keys);
-            if(!string.IsNullOrEmpty(m.idName))
-            columnasDelModelo.Add(m.idName);
+            if (!string.IsNullOrEmpty(m.idName))
+                columnasDelModelo.Add(m.idName);
             if (incluirNombreTabla)
             {
                 var list = new List<string>();
@@ -384,7 +381,7 @@ namespace Mane.BD
             {
                 Tmodelo m = new Tmodelo();
                 string idRelacionado = ColumnaIdLocal == idName ? idValue?.ToString() : Common.GetPropValueByName(this, ColumnaIdLocal)?.ToString();
-                if(string.IsNullOrEmpty(idRelacionado))return null;
+                if (string.IsNullOrEmpty(idRelacionado)) return null;
                 var dt = Bd.Query(m.NombreTabla).Select(ColumnasDelModelo<Tmodelo>())
                     .Where(ColumnaIdForanea, idRelacionado).Get(m.ConnName);
 
@@ -461,7 +458,7 @@ namespace Mane.BD
         {
             if (!(obj is Modelo)) return false;
             var modelo = obj as Modelo;
-            if(IntId() == 0 && modelo.IntId() == 0)
+            if (IntId() == 0 && modelo.IntId() == 0)
             {
                 var thisType = GetType();
                 var objType = modelo.GetType();
@@ -475,7 +472,7 @@ namespace Mane.BD
                     {
                         var objProp = objProps.Find(p => p.Name == prop.Name);
                         if (objProp == null) return false;
-                        if (prop.GetValue(this)?.ToString() != objProp.GetValue(modelo)?.ToString() ) return false;
+                        if (prop.GetValue(this)?.ToString() != objProp.GetValue(modelo)?.ToString()) return false;
                     }
                 }
                 catch (Exception)
@@ -483,10 +480,11 @@ namespace Mane.BD
                     return false;
                 }
                 return true;
-            } else
-            return NombreTabla == modelo.NombreTabla &&
-                   ConnName == modelo.ConnName &&
-                   IntId() == modelo.IntId();
+            }
+            else
+                return NombreTabla == modelo.NombreTabla &&
+                       ConnName == modelo.ConnName &&
+                       IntId() == modelo.IntId();
         }
 
         internal void ModeloExceptionHandler(Exception e)

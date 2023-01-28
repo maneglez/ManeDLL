@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Mane.BD
 {
@@ -13,7 +10,7 @@ namespace Mane.BD
             return Convert.ToInt32(Bd.ExecuteEscalar(GetBuilder(NombreConexion).Count(), NombreConexion));
         }
 
-        public void Delete(string NombreConexion = "",bool forzar = false)
+        public void Delete(string NombreConexion = "", bool forzar = false)
         {
             if (Wheres.Count == 0 && !forzar) throw new QueryBuilderExeption("No puede ejecutar un delete sin condición");
             if (Tabla == "") throw new QueryBuilderExeption("No se eligió una tabla");
@@ -52,7 +49,7 @@ namespace Mane.BD
         {
             if (Tabla == "") throw new QueryBuilderExeption("No se eligió una tabla");
             object result = Bd.ExecuteEscalar(GetBuilder(NombreConexion).Insert(col_values), NombreConexion);
-             return result;
+            return result;
         }
 
         public QueryBuilder Join(QueryBuilder consulta, string alias, string col1, string col2)
@@ -62,7 +59,7 @@ namespace Mane.BD
 
         public QueryBuilder Join(QueryBuilder consulta, string alias, string col1, string col2, Func<QueryBuilder, QueryBuilder> otrasCondiciones)
         {
-           return CommonJoin(consulta, alias, col1, col2, "=", "INNER", otrasCondiciones);
+            return CommonJoin(consulta, alias, col1, col2, "=", "INNER", otrasCondiciones);
         }
 
         public QueryBuilder Join(string tabla, string col1, string col2)
@@ -77,7 +74,7 @@ namespace Mane.BD
 
         public QueryBuilder Join(string tabla, string col1, string col2, Func<QueryBuilder, QueryBuilder> extraCondicion, string operador = "=")
         {
-           return CommonJoin(tabla, col1, col2, extraCondicion, operador, "INNER");
+            return CommonJoin(tabla, col1, col2, extraCondicion, operador, "INNER");
         }
 
         public QueryBuilder LeftJoin(string tabla, string col1, string col2, string operador = "=")
@@ -160,7 +157,7 @@ namespace Mane.BD
 
         public QueryBuilder Select(QueryBuilder query, string alias)
         {
-            if(query == null || string.IsNullOrEmpty(alias)) throw new ArgumentNullException("query");
+            if (query == null || string.IsNullOrEmpty(alias)) throw new ArgumentNullException("query");
             _SelectSubquery.Add(alias, query);
             return this;
         }
@@ -171,7 +168,7 @@ namespace Mane.BD
             return this;
         }
 
-        public int Update(Dictionary<string, object> dic, string NombreConexion = "",bool forzar = false)
+        public int Update(Dictionary<string, object> dic, string NombreConexion = "", bool forzar = false)
         {
             if (dic == null) return 0;
             if (Wheres.Count == 0 && !forzar) throw new QueryBuilderExeption("No puede ejecutar un update sin condición");
@@ -179,9 +176,9 @@ namespace Mane.BD
             return Bd.ExecuteNonQuery(GetBuilder(NombreConexion).Update(dic), NombreConexion);
         }
 
-        public int Update(object objeto, string NombreConexion = "",bool forzar = false)
+        public int Update(object objeto, string NombreConexion = "", bool forzar = false)
         {
-            return Update(Common.ObjectToKeyValue(objeto), NombreConexion,forzar);
+            return Update(Common.ObjectToKeyValue(objeto), NombreConexion, forzar);
         }
 
         public QueryBuilder Where(Func<QueryBuilder, QueryBuilder> func)

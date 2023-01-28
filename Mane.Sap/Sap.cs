@@ -2,9 +2,6 @@
 using SAPbobsCOM;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Mane.Sap
 {
@@ -25,35 +22,35 @@ namespace Mane.Sap
         /// <returns></returns>
         public static void connect(string nombreConexion = "")
         {
-                if (comp == null) comp = new Company();
-                if (comp.Connected && ConexionActual?.Nombre == nombreConexion) return;
-                else
-                {
-                    disconnect();
-                }
-                if (Conexiones.Count == 0) throw new Exception("No hay ni una conexion configurada");
-                ConexionSap con;
-                if (nombreConexion == "") con = Conexiones[0];
-                else
-                {
-                    con = Conexiones.Find(nombreConexion);
-                    if (con == null) throw new Exception($"La conexion {nombreConexion} no existe");
-                }
-                ConexionActual = con;
-                comp.Server = con.Server;
-                if (con.LicenseServer != "")
-                    comp.LicenseServer = con.LicenseServer;
-                //if (con.SLDServer != "")
-                //    comp.SLDServer = con.SLDServer;
-                comp.CompanyDB = con.DbCompany;
-                comp.DbUserName = con.DbUser;
-                comp.DbPassword = con.DbPassword;
-                comp.UserName = con.User;
-                comp.Password = con.Password;
-                comp.DbServerType = (BoDataServerTypes)con.tipoServidor;
-                comp.language = BoSuppLangs.ln_Spanish_La;
-                comp.UseTrusted = false;
-                if (comp.Connect() != 0) throw new Exception(comp.GetLastErrorDescription());
+            if (comp == null) comp = new Company();
+            if (comp.Connected && ConexionActual?.Nombre == nombreConexion) return;
+            else
+            {
+                disconnect();
+            }
+            if (Conexiones.Count == 0) throw new Exception("No hay ni una conexion configurada");
+            ConexionSap con;
+            if (nombreConexion == "") con = Conexiones[0];
+            else
+            {
+                con = Conexiones.Find(nombreConexion);
+                if (con == null) throw new Exception($"La conexion {nombreConexion} no existe");
+            }
+            ConexionActual = con;
+            comp.Server = con.Server;
+            if (con.LicenseServer != "")
+                comp.LicenseServer = con.LicenseServer;
+            //if (con.SLDServer != "")
+            //    comp.SLDServer = con.SLDServer;
+            comp.CompanyDB = con.DbCompany;
+            comp.DbUserName = con.DbUser;
+            comp.DbPassword = con.DbPassword;
+            comp.UserName = con.User;
+            comp.Password = con.Password;
+            comp.DbServerType = (BoDataServerTypes)con.tipoServidor;
+            comp.language = BoSuppLangs.ln_Spanish_La;
+            comp.UseTrusted = false;
+            if (comp.Connect() != 0) throw new Exception(comp.GetLastErrorDescription());
 
         }
         /// <summary>
@@ -137,7 +134,7 @@ namespace Mane.Sap
                         if (c.Nombre == con.Nombre) throw new Exception("El nombre de la conexión ya existe");
                     }
                 base.Add(con);
-                
+
             }
             /// <summary>
             /// Obtiene la conexion por nombre
@@ -187,5 +184,5 @@ namespace Mane.Sap
         //}
     }
 
-   
+
 }

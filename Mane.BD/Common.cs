@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Mane.BD
 {
     public static class Common
     {
-     
+
         /// <summary>
         /// Obtiene arreglo con las columnas del modelo
         /// </summary>
@@ -28,8 +25,8 @@ namespace Mane.BD
             var props = obj.GetType().GetProperties();
             foreach (var prop in props)
             {
-                if(!prop.IsDefined(typeof(IgnorarPropAttribute), false))
-                dic.Add(prop.Name, prop.GetValue(obj));
+                if (!prop.IsDefined(typeof(IgnorarPropAttribute), false))
+                    dic.Add(prop.Name, prop.GetValue(obj));
             }
             return dic;
 
@@ -46,12 +43,12 @@ namespace Mane.BD
             var props = obj.GetType().GetProperties();
             foreach (var prop in props)
             {
-                if (prop.CanWrite && !prop.IsDefined(typeof(IgnorarPropAttribute),false))
+                if (prop.CanWrite && !prop.IsDefined(typeof(IgnorarPropAttribute), false))
                     prop.SetValue(obj, ConvertirATipo(prop.PropertyType, dic[prop.Name]));
             }
             return obj;
         }
-       
+
         /// <summary>
         /// Obtiene el valor de una propiedad En base al nombre
         /// </summary>

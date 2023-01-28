@@ -1,11 +1,8 @@
 ﻿using Mane.BD;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -74,7 +71,7 @@ namespace Mane.Helpers
             if (col.Contains("."))
             {
                 var aux = col.Split('.');
-               return aux[aux.Length - 1];
+                return aux[aux.Length - 1];
             }
             return col;
         }
@@ -97,7 +94,7 @@ namespace Mane.Helpers
             var dtFiltro = new DataTable();
             dtFiltro.Columns.Add(new DataColumn("value"));
             dtFiltro.Columns.Add(new DataColumn("name"));
-            
+
             if (queryColNames_DisplayColNames != null)
             {
                 this.query.Select(queryColNames_DisplayColNames.Keys.ToArray());
@@ -115,7 +112,7 @@ namespace Mane.Helpers
                         dtFiltro.Rows.Add(item, queryColNames_DisplayColNames[item]);
                     else if (FilterBy.Contains(item))
                         dtFiltro.Rows.Add(item, queryColNames_DisplayColNames[item]);
-                    
+
                 }
             }
             else

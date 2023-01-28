@@ -1,12 +1,5 @@
-﻿using Mane.BD.Executors;
-using System;
-using System.Collections.Generic;
-using System.Data;
+﻿using System.Data;
 using System.Data.Odbc;
-using System.Data.SQLite;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Mane.BD.Executors
 {
@@ -72,7 +65,7 @@ namespace Mane.BD.Executors
             }
             catch (OdbcException ex)
             {
-                Bd.bdExceptionHandler(ex,Query);
+                Bd.bdExceptionHandler(ex, Query);
             }
             Disconnect();
             return null;
@@ -87,7 +80,7 @@ namespace Mane.BD.Executors
             }
             catch (OdbcException ex)
             {
-                Bd.bdExceptionHandler(ex,Query);
+                Bd.bdExceptionHandler(ex, Query);
             }
             Disconnect();
             return 0;
@@ -104,7 +97,7 @@ namespace Mane.BD.Executors
             }
             catch (OdbcException ex)
             {
-                Bd.bdExceptionHandler(ex,Query);
+                Bd.bdExceptionHandler(ex, Query);
             }
             Disconnect();
             return dt;

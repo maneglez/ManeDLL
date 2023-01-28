@@ -1,16 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Mane.Helpers
 {
     public static class Archivos
     {
-        
+
         /// <summary>
         /// Guarda una cadena en un archivo
         /// </summary>
@@ -23,12 +19,12 @@ namespace Mane.Helpers
             {
                 string dir = Path.GetDirectoryName(path);
                 CrearCarpeta(dir);
-                if(!File.Exists(path) || sobreescribir)
+                if (!File.Exists(path) || sobreescribir)
                 {
                     using (FileStream fs = File.Create(path)) { }
                 }
-                    using (StreamWriter sw = new StreamWriter(path,true))
-                        sw.Write(data);
+                using (StreamWriter sw = new StreamWriter(path, true))
+                    sw.Write(data);
             }
             catch (UnauthorizedAccessException)
             {
@@ -66,9 +62,9 @@ namespace Mane.Helpers
             }
             catch (Exception)
             {
-                MessageBox.Show($"No se pudo crear el directorio '{carpeta}', ejecute la aplicación como administrador","Error",MessageBoxButtons.OK,MessageBoxIcon.Error);
+                MessageBox.Show($"No se pudo crear el directorio '{carpeta}', ejecute la aplicación como administrador", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-        
+
     }
 }

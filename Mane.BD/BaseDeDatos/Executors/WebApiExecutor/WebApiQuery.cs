@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Mane.BD.BaseDeDatos.Executors.WebApiExecutor
+﻿namespace Mane.BD.BaseDeDatos.Executors.WebApiExecutor
 {
     internal class WebApiQuery
     {

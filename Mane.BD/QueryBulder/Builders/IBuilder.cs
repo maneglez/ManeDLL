@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace Mane.BD.QueryBulder.Builders
 {
-   internal interface IBuilder
+    internal interface IBuilder
     {
         char[] ColumnDelimiters { get; set; }
         char[] ValueDelimiters { get; set; }

@@ -1,11 +1,9 @@
 ﻿using Mane.BD;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -35,7 +33,8 @@ namespace Mane.Helpers
         }
         public bool CerrarAlSeleccionar { get; set; }
         public bool MostrarBotonesDeSeleccionYCancelar
-        { set
+        {
+            set
             {
                 btnCancelar.Visible = value;
                 btnSeleccionar.Visible = value;

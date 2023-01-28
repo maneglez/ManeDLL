@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
+﻿using System.Data;
 using System.Data.SQLite;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace Mane.BD.Executors
 {
@@ -33,7 +27,7 @@ namespace Mane.BD.Executors
         }
         private bool autoDisconnect;
 
-        public SQLiteExecutor(string connString,bool autodisconnect = true)
+        public SQLiteExecutor(string connString, bool autodisconnect = true)
         {
             ConnString = connString;
             AutoDisconnect = autodisconnect;
@@ -75,7 +69,7 @@ namespace Mane.BD.Executors
             }
             catch (SQLiteException ex)
             {
-                Bd.bdExceptionHandler(ex,Query);
+                Bd.bdExceptionHandler(ex, Query);
             }
             Disconnect();
             return null;
@@ -90,7 +84,7 @@ namespace Mane.BD.Executors
             }
             catch (SQLiteException ex)
             {
-                Bd.bdExceptionHandler(ex,Query);
+                Bd.bdExceptionHandler(ex, Query);
             }
             Disconnect();
             return 0;
@@ -107,7 +101,7 @@ namespace Mane.BD.Executors
             }
             catch (SQLiteException ex)
             {
-                Bd.bdExceptionHandler(ex,Query);
+                Bd.bdExceptionHandler(ex, Query);
             }
             Disconnect();
             return dt;

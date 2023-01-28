@@ -1,18 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
+﻿using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Mane.BD.Executors
 {
     internal class SQLServerExecutor : IBdExecutor
     {
-      private SqlConnection conn = null;
-      private SqlCommand cmd = null;
-      private SqlDataReader reader = null;
+        private SqlConnection conn = null;
+        private SqlCommand cmd = null;
+        private SqlDataReader reader = null;
         public SQLServerExecutor(string connString, bool autodisconnect = true)
         {
             ConnString = connString;
@@ -20,7 +15,7 @@ namespace Mane.BD.Executors
         }
 
 
-    public string Query { get; set; }
+        public string Query { get; set; }
         public string ConnString { get; set; }
         public bool AutoDisconnect
         {
@@ -67,7 +62,7 @@ namespace Mane.BD.Executors
             }
             catch (SqlException ex)
             {
-                Bd.bdExceptionHandler(ex,Query);
+                Bd.bdExceptionHandler(ex, Query);
             }
             Disconnect();
             return null;
@@ -82,7 +77,7 @@ namespace Mane.BD.Executors
             }
             catch (SqlException ex)
             {
-                Bd.bdExceptionHandler(ex,Query);
+                Bd.bdExceptionHandler(ex, Query);
             }
             Disconnect();
             return 0;
@@ -94,12 +89,12 @@ namespace Mane.BD.Executors
             Connect();
             try
             {
-               reader = cmd.ExecuteReader();
-               dt.Load(reader);
+                reader = cmd.ExecuteReader();
+                dt.Load(reader);
             }
             catch (SqlException ex)
             {
-                Bd.bdExceptionHandler(ex,Query);
+                Bd.bdExceptionHandler(ex, Query);
             }
             Disconnect();
             return dt;

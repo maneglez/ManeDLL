@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Mane.BD
 {
-    public partial class Modelo<T> : Modelo where T : Modelo,new()
+    public partial class Modelo<T> : Modelo where T : Modelo, new()
     {
         /// <summary>
         /// Obtiene todos los modelos del tipo T (Maximo 1000)
@@ -22,7 +19,7 @@ namespace Mane.BD
         /// </summary>
         /// <typeparam name="T">Tipo de modelo</typeparam>
         /// <returns>Primer modelo de la tabla, o nulo si no hay registros</returns>
-        public static T First() 
+        public static T First()
         {
             var m = new T();
             var dt = Bd.Query(m.getNombreTabla())
@@ -38,7 +35,7 @@ namespace Mane.BD
         /// <typeparam name="T">Tipo de modelo que se desea encontrar</typeparam>
         /// <param name="id">Valor de la clave primaria que desea encontrar</param>
         /// <returns>Una nueva instancia del modelo que coincidio con el ID proporcionado, o nulo si no hubo coincidencias</returns>
-        public static T Find(object id) 
+        public static T Find(object id)
         {
             T m = new T();
             string[] columnas = ColumnasDelModelo(m);
@@ -67,7 +64,7 @@ namespace Mane.BD
             {
                 var info = tipo.GetProperty(item);
                 if (info != null && info.CanWrite)
-                        info.SetValue(this, Common.ConvertirATipo(info.PropertyType, dic[item]));
+                    info.SetValue(this, Common.ConvertirATipo(info.PropertyType, dic[item]));
             }
             Inicializando = false;
         }
@@ -87,14 +84,14 @@ namespace Mane.BD
         /// <typeparam name="T">Tipo de modelo</typeparam>
         /// <param name="dt">Tabla</param>
         /// <returns>Coleccion de modelos</returns>
-        public static ModeloCollection DataTableToModeloCollection(DataTable dt) 
+        public static ModeloCollection DataTableToModeloCollection(DataTable dt)
         {
             ModeloCollection mc = new ModeloCollection();
             if (dt.Rows.Count == 0) return mc;
             T m = new T();
             try
             {
-                
+
                 Dictionary<string, object> dicAux = Common.ObjectToKeyValue(m);
                 Dictionary<string, object> dic = new Dictionary<string, object>();
                 foreach (DataRow r in dt.Rows)

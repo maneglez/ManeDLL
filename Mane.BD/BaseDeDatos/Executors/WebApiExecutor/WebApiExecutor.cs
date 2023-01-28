@@ -4,9 +4,6 @@ using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Mane.BD.BaseDeDatos.Executors.WebApiExecutor
 {
@@ -14,11 +11,15 @@ namespace Mane.BD.BaseDeDatos.Executors.WebApiExecutor
     {
         private static List<WebApiToken> Tokens = new List<WebApiToken>();
 
-        private WebApiToken CurrentToken { get => Tokens.Find(t => t.ConnectionName == Conexion.Nombre); set {
+        private WebApiToken CurrentToken
+        {
+            get => Tokens.Find(t => t.ConnectionName == Conexion.Nombre); set
+            {
                 if (CurrentToken == null)
                     Tokens.Add(value);
                 else CurrentToken.Token = value.Token;
-            } }
+            }
+        }
         private Conexion Conexion;
 
         public WebApiExecutor(Conexion conexion)
@@ -30,7 +31,7 @@ namespace Mane.BD.BaseDeDatos.Executors.WebApiExecutor
         public string ConnString { get; set; }
         public string ConnectionName { get; set; }
         public bool AutoDisconnect { get; set; }
-        private WebApiResponse POST(string query,object body)
+        private WebApiResponse POST(string query, object body)
         {
             var cli = new RestClient(Conexion.Servidor + query);
             var req = new RestRequest(Method.POST);
@@ -44,13 +45,13 @@ namespace Mane.BD.BaseDeDatos.Executors.WebApiExecutor
                 throw new Exception(resp.ErrorMessage + resp.Content);
             return WebApiResponse.Parse(resp.Content);
         }
-       
+
         public void Connect()
         {
-           if(CurrentToken == null)
+            if (CurrentToken == null)
             {
                 var resp = POST("login", new { name = Conexion.Usuario, password = Conexion.Contrasena });
-               CurrentToken = new WebApiToken(Conexion.Nombre,resp.GetDataValue("user_token").ToString());
+                CurrentToken = new WebApiToken(Conexion.Nombre, resp.GetDataValue("user_token").ToString());
             }
         }
 
@@ -79,7 +80,7 @@ namespace Mane.BD.BaseDeDatos.Executors.WebApiExecutor
                     default:
                         break;
                 }
-                Query = Query.Trim().TrimEnd(new char[] {';'} );
+                Query = Query.Trim().TrimEnd(new char[] { ';' });
                 dt = POST("execute/query", new WebApiQuery(Query, "insert_id", Conexion.Nombre)).data.JsonToObject<DataTable>();
 
             }
@@ -103,13 +104,13 @@ namespace Mane.BD.BaseDeDatos.Executors.WebApiExecutor
                 tipo = "insert";
             if (string.IsNullOrEmpty(tipo))
                 throw new Exception("La consulta debe de ser del tipo delete o update: " + Query);
-           return Convert.ToInt32(POST("execute/query", new WebApiQuery(Query, tipo, Conexion.Nombre)).data);
+            return Convert.ToInt32(POST("execute/query", new WebApiQuery(Query, tipo, Conexion.Nombre)).data);
         }
 
         public DataTable ExecuteQuery()
         {
             return POST("execute/query", new WebApiQuery(Query, "select", Conexion.Nombre)).data.JsonToObject<DataTable>();
-           
+
         }
 
         public bool TestConnection()

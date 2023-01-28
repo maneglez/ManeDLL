@@ -1,41 +1,38 @@
 ﻿using Mane.BD.QueryBulder.Builders;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Mane.BD
 {
     public partial class QueryBuilder : IBuilder
     {
-         char[] IBuilder.ColumnDelimiters { get; set; }
-         char[] IBuilder.ValueDelimiters { get; set; }
+        char[] IBuilder.ColumnDelimiters { get; set; }
+        char[] IBuilder.ValueDelimiters { get; set; }
         QueryBuilder IBuilder.QueryBuilder { get; set; }
 
-         string IBuilder.SelectLastInsertedIndexQuery => throw new NotImplementedException();
+        string IBuilder.SelectLastInsertedIndexQuery => throw new NotImplementedException();
 
         string IBuilder.BuildGroupBy()
         {
             return GetBuilder()?.BuildGroupBy();
         }
 
-         string IBuilder.BuildJoins()
+        string IBuilder.BuildJoins()
         {
             return GetBuilder()?.BuildJoins();
         }
 
-         string IBuilder.BuildLimit()
+        string IBuilder.BuildLimit()
         {
             return GetBuilder()?.BuildLimit();
         }
 
-         string IBuilder.BuildOrderBy()
+        string IBuilder.BuildOrderBy()
         {
             return GetBuilder()?.BuildOrderBy();
         }
 
-         string IBuilder.BuildQuery()
+        string IBuilder.BuildQuery()
         {
             return GetBuilder()?.BuildQuery();
         }
@@ -44,54 +41,54 @@ namespace Mane.BD
             return GetBuilder(tipo)?.BuildQuery();
         }
 
-         string IBuilder.BuildSelect()
+        string IBuilder.BuildSelect()
         {
             return GetBuilder()?.BuildSelect();
         }
 
-         string IBuilder.BuildWeres()
+        string IBuilder.BuildWeres()
         {
             return GetBuilder()?.BuildWeres();
         }
 
-         string IBuilder.Count()
+        string IBuilder.Count()
         {
             return GetBuilder()?.Count();
         }
 
-         string IBuilder.Delete()
+        string IBuilder.Delete()
         {
             return GetBuilder()?.Delete();
         }
 
-         string IBuilder.FormatColumn(string columna)
+        string IBuilder.FormatColumn(string columna)
         {
             return GetBuilder()?.FormatColumn(columna);
         }
 
-         string IBuilder.FormatTable(string value)
+        string IBuilder.FormatTable(string value)
         {
             return GetBuilder()?.FormatTable(value);
         }
 
-         string IBuilder.FormatValue(object value)
+        string IBuilder.FormatValue(object value)
         {
             return GetBuilder()?.FormatValue(value);
         }
 
-         string IBuilder.Insert(object objeto)
+        string IBuilder.Insert(object objeto)
         {
             return GetBuilder()?.Insert(objeto);
         }
 
-         string IBuilder.Insert(Dictionary<string, object> diccionario)
+        string IBuilder.Insert(Dictionary<string, object> diccionario)
         {
             return GetBuilder()?.Insert(diccionario);
         }
 
-         string IBuilder.Update(Dictionary<string, object> diccionario)
+        string IBuilder.Update(Dictionary<string, object> diccionario)
         {
-          return  GetBuilder().Update(diccionario);
+            return GetBuilder().Update(diccionario);
         }
         private IBuilder GetBuilder(string NombreConexion = null)
         {
@@ -114,7 +111,7 @@ namespace Mane.BD
                 default:
                     return null;
             }
-            
+
         }
         internal IBuilder GetBuilder(Conexion c)
         {
@@ -126,7 +123,7 @@ namespace Mane.BD
                     return new BuilderSQLite(this);
                 case TipoDeBd.Hana:
                     //Requiere el nombre de la BD
-                    return new BuilderHana(this,c.NombreBD);
+                    return new BuilderHana(this, c.NombreBD);
                 case TipoDeBd.ApiWeb:
                     return GetBuilder(c.SubTipoDeBD);
                 default:
@@ -138,7 +135,7 @@ namespace Mane.BD
         string IBuilder.BuildExecProcedure(string ProcedureName, object[] ProcParameters = null)
         {
             return "";
-            
+
         }
     }
 }

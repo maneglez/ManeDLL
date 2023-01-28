@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Mane.BD.QueryBulder.Builders
+﻿namespace Mane.BD.QueryBulder.Builders
 {
     internal class BuilderSQLite : BuilderSQL
     {

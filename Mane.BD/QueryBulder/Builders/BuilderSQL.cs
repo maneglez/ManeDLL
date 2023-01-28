@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Mane.BD.QueryBulder.Builders
 {
@@ -50,7 +47,7 @@ namespace Mane.BD.QueryBulder.Builders
             return joins;
         }
 
-      virtual  public string BuildLimit()
+        virtual public string BuildLimit()
         {
             return QueryBuilder._Limit > 0 ? $"TOP({QueryBuilder._Limit})" : "";
         }
@@ -67,7 +64,7 @@ namespace Mane.BD.QueryBulder.Builders
             return orderBy;
         }
 
-       virtual public string BuildQuery()
+        virtual public string BuildQuery()
         {
             var q = QueryBuilder;
             if (q._RawQuery != null) return q._RawQuery;
@@ -105,7 +102,7 @@ namespace Mane.BD.QueryBulder.Builders
             return select;
         }
 
-       virtual public string BuildWeres()
+        virtual public string BuildWeres()
         {
             var where = "";
             var qb = QueryBuilder;
@@ -160,7 +157,7 @@ namespace Mane.BD.QueryBulder.Builders
 
         public string Count()
         {
-           return $"SELECT COUNT(*) AS [Count] FROM ({BuildQuery()}) AS [QueryBuilder_Count]";
+            return $"SELECT COUNT(*) AS [Count] FROM ({BuildQuery()}) AS [QueryBuilder_Count]";
         }
 
         public string Delete()
@@ -180,7 +177,7 @@ namespace Mane.BD.QueryBulder.Builders
 
         public string FormatValue(object value)
         {
-           return Common.FormatValue(value, ValueDelimiters);
+            return Common.FormatValue(value, ValueDelimiters);
         }
 
         public string Insert(object objeto)

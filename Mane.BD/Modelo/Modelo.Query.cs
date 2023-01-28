@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Mane.BD
 {
-    public  class ModeloQuery<Tmodelo> : IQuery<ModeloQuery<Tmodelo>> where Tmodelo : Modelo, new()
+    public class ModeloQuery<Tmodelo> : IQuery<ModeloQuery<Tmodelo>> where Tmodelo : Modelo, new()
     {
         private QueryBuilder query;
         private Tmodelo modelo;
@@ -193,12 +190,12 @@ namespace Mane.BD
 
         public int Update(Dictionary<string, object> dic, string NombreConexion = "", bool forzar = false)
         {
-           return query.Update(dic, modelo.getConnName());
+            return query.Update(dic, modelo.getConnName());
         }
 
         public int Update(object objeto, string NombreConexion = "", bool forzar = false)
         {
-           return query.Update(objeto, modelo.getConnName());
+            return query.Update(objeto, modelo.getConnName());
         }
 
         public ModeloQuery<Tmodelo> Where(Func<ModeloQuery<Tmodelo>, ModeloQuery<Tmodelo>> func)
