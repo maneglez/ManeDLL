@@ -90,7 +90,15 @@ namespace Mane.Helpers
         /// <returns>DataTenumable con 2 Columnas: "value","name"</returns>
         public static DataTable EnumToDataTable<Tenum>() where Tenum : Enum
         {
-            var tipo = typeof(Tenum);
+            return EnumToDataTable(typeof(Tenum));
+        }
+        /// <summary>
+        /// Convierte un enum a un datatable("value","name")
+        /// </summary>
+        /// <param name="tipo">Tipo de enum</param>
+        /// <returns>DataTenumable con 2 Columnas: "value","name"</returns>
+        public static DataTable EnumToDataTable(Type tipo)
+        {
             var values = Enum.GetValues(tipo);
             DataTable dt = new DataTable();
             dt.Columns.Add(new DataColumn("value"));
@@ -99,27 +107,14 @@ namespace Mane.Helpers
             foreach (var value in values)
             {
                 r = dt.NewRow();
-                r[0] = (int)value;
+                r[0] = value;
                 r[1] = value.GetDescriptionAttr();
                 dt.Rows.Add(r);
             }
             return dt;
         }
 
-        /// <summary>
-        /// Convierte un enum a un diccionario
-        /// </summary>
-        /// <typeparam name="Tenum">Tipo de Enum</typeparam>
-        /// <returns>Diccionario</returns>
-        public static Dictionary<string, Tenum> EnumToDictionary<Tenum>() where Tenum : Enum
-        {
-            var tipo = typeof(Tenum);
-            var values = Enum.GetValues(tipo);
-            var dic = new Dictionary<string, Tenum>();
-            foreach (Tenum value in values)
-                dic.Add(value.GetDescriptionAttr(), value);
-            return dic;
-        }
+       
         /// <summary>
         /// Asigna todos los valores de un enum a un combobox
         /// </summary>
@@ -127,9 +122,17 @@ namespace Mane.Helpers
         /// <param name="cb">Combobox</param>
         public static void EnumToComboBox<Tenum>(ComboBox cb) where Tenum : Enum
         {
-            cb.DataSource = new BindingSource(EnumToDictionary<Tenum>(), null);
-            cb.DisplayMember = "Key";
-            cb.ValueMember = "Value";
+            EnumToComboBox(cb, typeof(Tenum));
+        }
+        /// <summary>
+        /// Asigna todos los valores de un enum a un combobox
+        /// </summary>
+        /// <param name="cb">Combobox</param>
+        public static void EnumToComboBox(ComboBox cb,Type tipoEnum)
+        {
+            cb.DataSource = EnumToDataTable(tipoEnum);
+            cb.DisplayMember = "name";
+            cb.ValueMember = "value";
         }
         /// <summary>
         /// Obtiene la descripción del decorador Descripcion
