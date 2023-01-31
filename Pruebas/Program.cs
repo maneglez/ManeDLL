@@ -11,15 +11,40 @@ namespace Pruebas
     {
         static void Main(string[] args)
         {
-           var q = Bd.Query("tabla1 t1").Where("columa", "34")
-                .Join("tabla2 t2", "t1.fk", "t2.pk").Limit(3);
-            foreach (TipoDeBd tipo in Enum.GetValues(typeof(TipoDeBd)))
+            do
             {
-                Console.WriteLine(q.BuildQuery(tipo) + "  " + tipo.ToString());
+                Prueba();
+                Console.WriteLine();
+                Console.Write("Presione enter para volver a probar:");
+                Console.ReadLine();
+            } while (true);
+        }
+
+        static void Prueba()
+        {
+            if(Bd.Conexiones.Count == 0)
+            {
+                var conn = new Conexion
+                {
+                    Servidor = "https://localhost:44380/ManeBdWebService.asmx",
+                    TipoDeBaseDeDatos = TipoDeBd.ApiWeb,
+                    SubTipoDeBD = TipoDeBd.SqlServer,
+                    Usuario = "mane",
+                    Contrasena = "1234",
+                    Nombre = "sap",
+                    TimeOut = 60
+                };
+                Bd.Conexiones.Add(conn);
             }
-            
-            Console.Read();
-                
+            try
+            {
+                var result = "Resultado: " + Bd.Query("OCRD").Select("CardName").Limit(1).GetScalar()?.ToString();
+                Console.WriteLine(result);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
     }
 }
