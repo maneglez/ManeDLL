@@ -30,8 +30,13 @@ namespace Mane.BD.WebApi
             Context.Response.StatusCode = (int)statusCode;
             Context.ApplicationInstance.CompleteRequest();
         }
-        private bool VerifyUser(Usuario User)
+        private bool VerifyUser()
         {
+            if(User == null)
+            {
+                ServiceExceptionHandler("Usuario o contrasena incorrectos", HttpStatusCode.Unauthorized);
+                return false;
+            }
             try
             {
                 if (UsuarioModel.Query().Where("UserName", User.UserName).Where("Password", User.Password).Exists())
@@ -45,11 +50,12 @@ namespace Mane.BD.WebApi
                 return false;
             }
         }
-        [SoapHeader("Usuario")]
+        [SoapHeader("User")]
         [WebMethod]
         public DataTable ExecuteQuery(string Query,string ConnName)
         {
-            if(!VerifyUser())
+            if (!VerifyUser())
+                return new DataTable();
             try
             {
                 var conn = FindConnection(ConnName);
@@ -64,10 +70,12 @@ namespace Mane.BD.WebApi
             }
             return new DataTable();
         }
-        [SoapHeader("Usuario")]
+        [SoapHeader("User")]
         [WebMethod]
         public int ExecuteNonQuery(string Query, string ConnName)
         {
+            if (!VerifyUser())
+                return 0;
             try
             {
                 var conn = FindConnection(ConnName);
@@ -82,10 +90,12 @@ namespace Mane.BD.WebApi
             }
             return 0;
         }
-        [SoapHeader("Usuario")]
+        [SoapHeader("User")]
         [WebMethod]
         public object ExecuteEscalar(string Query, string ConnName)
         {
+            if (!VerifyUser())
+                return null;
             try
             {
                 var conn = FindConnection(ConnName);
