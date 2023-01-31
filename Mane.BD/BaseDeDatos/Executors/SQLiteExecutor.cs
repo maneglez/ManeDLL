@@ -1,10 +1,12 @@
-﻿using System.Data;
+﻿
+using System.Data;
 using System.Data.SQLite;
 
 namespace Mane.BD.Executors
 {
     internal class SQLiteExecutor : IBdExecutor
     {
+        private bool ConnIsDisposed;
         private SQLiteConnection conn = null;
         private SQLiteCommand cmd = null;
         private SQLiteDataReader reader = null;
@@ -35,12 +37,14 @@ namespace Mane.BD.Executors
 
         public void Connect()
         {
+            if(!ConnIsDisposed)
+            if (conn?.State == ConnectionState.Open)
+                Disconnect();
             try
             {
-                if (conn?.State == ConnectionState.Open)
-                    Disconnect();
-                else
-                    conn = new SQLiteConnection(ConnString);
+                conn = new SQLiteConnection(ConnString);
+                ConnIsDisposed = false;
+                conn.Disposed += (s, e) => ConnIsDisposed = true;
                 cmd = conn.CreateCommand();
                 cmd.CommandText = Query;
                 conn.Open();
@@ -112,6 +116,8 @@ namespace Mane.BD.Executors
             {
                 conn = new SQLiteConnection(ConnString);
                 conn.Open();
+                conn.Close();
+
             }
             catch (SQLiteException)
             {

@@ -1,9 +1,10 @@
 ﻿using Mane.BD.BaseDeDatos.Executors.WebApiExecutor;
 using Mane.BD.Executors;
+using System.Data.SQLite;
 using System;
 using System.Data.Odbc;
 using System.Data.SqlClient;
-using System.Data.SQLite;
+
 
 namespace Mane.BD
 {
@@ -73,8 +74,10 @@ namespace Mane.BD
                             return "";
                         }
                     case TipoDeBd.SQLite:
-                        var b = new SQLiteConnectionStringBuilder();
-                        b.DataSource = Servidor;
+                        var b = new SQLiteConnectionStringBuilder
+                        {
+                            DataSource = Servidor
+                        };
                         if (!string.IsNullOrEmpty(Contrasena))
                             b.Password = Contrasena;
                         return b.ConnectionString;

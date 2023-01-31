@@ -30,6 +30,7 @@ namespace Mane.BD.Executors
 
         public void Connect()
         {
+
             if (conn?.State == ConnectionState.Open)
                 Disconnect();
             try

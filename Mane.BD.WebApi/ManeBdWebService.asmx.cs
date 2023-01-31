@@ -1,9 +1,11 @@
-﻿using System;
+﻿using Mane.BD.Executors;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Net;
 using System.Web;
+using System.Web.Hosting;
 using System.Web.Services;
 using System.Web.Services.Protocols;
 
@@ -19,14 +21,31 @@ namespace Mane.BD.WebApi
     // [System.Web.Script.Services.ScriptService]
     public class ApiWebService : WebService
     {
+        
         public Usuario User;
         private void ServiceExceptionHandler(Exception ex, HttpStatusCode statusCode = HttpStatusCode.InternalServerError)
         {
             ServiceExceptionHandler(ex?.Message, statusCode);            
         }
+        private void VerificarConexiones()
+        {
+            if (Bd.Conexiones.Count > 0) return;
+            var c = new Conexion
+            {
+                Servidor = HostingEnvironment.MapPath(@"~\bin\data\database.db"),
+                TipoDeBaseDeDatos = TipoDeBd.SQLite,
+                Nombre = NombreConexion.Local
+            };
+            Bd.Conexiones.Add(c);
+            var all = ConexionModel.All();
+            foreach (var con in all)
+            {
+                Bd.Conexiones.Add(con.ToConexion());
+            }
+        }
         private void ServiceExceptionHandler(string message, HttpStatusCode statusCode)
         {
-            Context.Response.Status = message;
+            Context.Response.StatusDescription = message;
             Context.Response.StatusCode = (int)statusCode;
             Context.ApplicationInstance.CompleteRequest();
         }
@@ -39,6 +58,7 @@ namespace Mane.BD.WebApi
             }
             try
             {
+                VerificarConexiones();
                 if (UsuarioModel.Query().Where("UserName", User.UserName).Where("Password", User.Password).Exists())
                     return true;
                 ServiceExceptionHandler("Usuario o contrasena incorrectos", HttpStatusCode.Unauthorized);
@@ -129,6 +149,15 @@ namespace Mane.BD.WebApi
                 ServiceExceptionHandler(e);
             }
             return conn;
+        }
+        [SoapHeader("User")]
+        [WebMethod]
+        public bool TestConnection(string ConnName)
+        {
+            if (!VerifyUser()) return false;
+            var conn = FindConnection(ConnName);
+            if (conn == null) return false;
+            return conn.Executor.TestConnection();
         }
     }
 }
