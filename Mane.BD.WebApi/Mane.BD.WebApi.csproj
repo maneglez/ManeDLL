@@ -88,6 +88,7 @@
     </Compile>
     <Compile Include="ConexionModel.cs" />
     <Compile Include="NombreConexion.cs" />
+    <Compile Include="PermisosConexionModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Usuario.cs" />
     <Compile Include="UsuarioModel.cs" />

@@ -19,10 +19,12 @@ namespace Mane.BD.WebApi
     [System.ComponentModel.ToolboxItem(false)]
     // Para permitir que se llame a este servicio web desde un script, usando ASP.NET AJAX, quite la marca de comentario de la línea siguiente. 
     // [System.Web.Script.Services.ScriptService]
+
     public class ApiWebService : WebService
     {
         
         public Usuario User;
+        private ConexionModel.ModeloCollection Conexiones;
         private void ServiceExceptionHandler(Exception ex, HttpStatusCode statusCode = HttpStatusCode.InternalServerError)
         {
             ServiceExceptionHandler(ex?.Message, statusCode);            
@@ -37,8 +39,8 @@ namespace Mane.BD.WebApi
                 Nombre = NombreConexion.Local
             };
             Bd.Conexiones.Add(c);
-            var all = ConexionModel.All();
-            foreach (var con in all)
+            Conexiones = ConexionModel.All();
+            foreach (var con in Conexiones)
             {
                 Bd.Conexiones.Add(con.ToConexion());
             }
