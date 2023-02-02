@@ -30,7 +30,16 @@ namespace Mane.Licenciamiento
         }
         private void ImportarLicencia()
         {
-            Licencia.Import();
+            if (Licencia.Import())
+            {
+                Licencia.ValidarLicencia(true);
+                Cursor = Cursors.WaitCursor;
+                tbAppId.Text = ManeApp.AppId;
+                tbHk.Text = Licencia.GetHardwareKey();
+                tbExpiracion.Text = Licencia.Expiracion.ToString("d");
+                Cursor = Cursors.Default;
+            }
+                
         }
         private void button1_Click(object sender, EventArgs e)
         {

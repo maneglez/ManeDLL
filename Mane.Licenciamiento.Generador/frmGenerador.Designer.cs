@@ -30,7 +30,6 @@
         {
             this.dtpExp = new System.Windows.Forms.DateTimePicker();
             this.tbHk = new System.Windows.Forms.TextBox();
-            this.bdWebService1 = new Mane.BD.WebServiceBd.BdWebService();
             this.tbAppCve = new System.Windows.Forms.TextBox();
             this.tbAppId = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -53,13 +52,6 @@
             this.tbHk.Name = "tbHk";
             this.tbHk.Size = new System.Drawing.Size(200, 20);
             this.tbHk.TabIndex = 1;
-            // 
-            // bdWebService1
-            // 
-            this.bdWebService1.Credentials = null;
-            this.bdWebService1.Url = "https://localhost:44380/ManeBdWebService.asmx";
-            this.bdWebService1.UseDefaultCredentials = false;
-            this.bdWebService1.UsuarioValue = null;
             // 
             // tbAppCve
             // 
@@ -146,7 +138,6 @@
 
         private System.Windows.Forms.DateTimePicker dtpExp;
         private System.Windows.Forms.TextBox tbHk;
-        private BD.WebServiceBd.BdWebService bdWebService1;
         private System.Windows.Forms.TextBox tbAppCve;
         private System.Windows.Forms.TextBox tbAppId;
         private System.Windows.Forms.Label label1;
