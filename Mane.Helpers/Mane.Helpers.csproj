@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Archivos.cs" />
+    <Compile Include="Crypto.cs" />
     <Compile Include="Extensiones.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="Utils.cs" />

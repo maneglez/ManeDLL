@@ -4,17 +4,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{C639E0F3-F989-4B2F-8BEE-9C19733B3E7B}</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <RootNamespace>Pruebas</RootNamespace>
-    <AssemblyName>Pruebas</AssemblyName>
+    <ProjectGuid>{355F57EA-E8C5-41A8-9A30-118F0FD316E9}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Mane.Licenciamiento</RootNamespace>
+    <AssemblyName>Mane.Licenciamiento</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -22,10 +21,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -36,7 +33,9 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Management" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -45,17 +44,26 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="InfoDeLicencia.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="InfoDeLicencia.Designer.cs">
+      <DependentUpon>InfoDeLicencia.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Licencia.cs" />
+    <Compile Include="ManeApp.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <ProjectReference Include="..\Mane.Helpers\Mane.Helpers.csproj">
+      <Project>{6344b9e2-f825-4165-b506-ab3e2f822a49}</Project>
+      <Name>Mane.Helpers</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Mane.Licenciamiento\Mane.Licenciamiento.csproj">
-      <Project>{355F57EA-E8C5-41A8-9A30-118F0FD316E9}</Project>
-      <Name>Mane.Licenciamiento</Name>
-    </ProjectReference>
+    <EmbeddedResource Include="InfoDeLicencia.resx">
+      <DependentUpon>InfoDeLicencia.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
