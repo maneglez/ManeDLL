@@ -75,7 +75,8 @@ namespace Mane.Licenciamiento
         /// </summary>
         public static string Error;
         private static string rutaLicenciaDefault = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+            Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
+            "TIE",
             ManeApp.AppId,
             "Licencia.xml"
             );
@@ -87,6 +88,14 @@ namespace Mane.Licenciamiento
         public static EstatusDeLicencia Check()
         {
             return Check(RutaLicenciaDefault,ManeApp.AppId,ManeApp.ClaveCifrado);
+        }
+        /// <summary>
+        /// Verifica el estatus actual de la licencia
+        /// </summary>
+        /// <returns>El estatus actual de la licencia</returns>
+        public static EstatusDeLicencia Check(string rutaDeLicencia)
+        {
+            return Check(rutaDeLicencia, ManeApp.AppId, ManeApp.ClaveCifrado);
         }
         /// <summary>
         /// Verifica una licencia expecíficada y opcionalmente muestra un mensaje de validación
@@ -233,7 +242,7 @@ namespace Mane.Licenciamiento
             { }
         }
         /// <summary>
-        /// Elimina la licencia anteriormente instalada y la reemplaza por una nueva
+        /// Elimina la licencia anteriormente instalada y la reemplaza por una nueva, abre un cuadro de dialogo para seleccionar la licencia
         /// </summary>
         /// <param name="rutaDestino">Ruta donde se guardará la nueva licencia, por defecto lo guarda en la ruta predeterminada</param>
         public static bool Import(string rutaDestino = "")

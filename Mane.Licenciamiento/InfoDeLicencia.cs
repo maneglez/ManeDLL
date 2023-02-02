@@ -1,0 +1,46 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace Mane.Licenciamiento
+{
+    public partial class InfoDeLicencia : Form
+    {
+       
+        public InfoDeLicencia()
+        {
+            InitializeComponent();
+
+        }
+
+        private void InfoDeLicencia_Load(object sender, EventArgs e)
+        {
+            Cursor = Cursors.WaitCursor;
+                Licencia.Check();
+            tbAppId.Text = ManeApp.AppId;
+            tbHk.Text = Licencia.GetHardwareKey();
+            tbExpiracion.Text = Licencia.Expiracion.ToString("d");
+            Cursor = Cursors.Default;
+        }
+        private void ImportarLicencia()
+        {
+            Licencia.Import();
+        }
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Clipboard.SetText(tbHk.Text);
+            MessageBox.Show("Copiado!");
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            ImportarLicencia();
+        }
+    }
+}

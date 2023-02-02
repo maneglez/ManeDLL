@@ -33,6 +33,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Management" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
@@ -43,6 +44,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="InfoDeLicencia.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="InfoDeLicencia.Designer.cs">
+      <DependentUpon>InfoDeLicencia.cs</DependentUpon>
+    </Compile>
     <Compile Include="Licencia.cs" />
     <Compile Include="ManeApp.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -52,6 +59,11 @@
       <Project>{6344b9e2-f825-4165-b506-ab3e2f822a49}</Project>
       <Name>Mane.Helpers</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="InfoDeLicencia.resx">
+      <DependentUpon>InfoDeLicencia.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
