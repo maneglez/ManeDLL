@@ -52,6 +52,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Mane.BD\Mane.BD.csproj">
+      <Project>{1698B67F-99AC-4A51-A19C-000C170B54B5}</Project>
+      <Name>Mane.BD</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Mane.Licenciamiento\Mane.Licenciamiento.csproj">
       <Project>{355F57EA-E8C5-41A8-9A30-118F0FD316E9}</Project>
       <Name>Mane.Licenciamiento</Name>

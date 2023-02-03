@@ -85,6 +85,8 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Log.cs" />
+    <Compile Include="LogStr.cs" />
     <Compile Include="ManeBdWebService.asmx.cs">
       <DependentUpon>ManeBdWebService.asmx</DependentUpon>
       <SubType>Component</SubType>
@@ -97,13 +99,7 @@
     <Compile Include="UsuarioModel.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include=".dockerignore">
-      <DependentUpon>Dockerfile</DependentUpon>
-    </None>
-    <None Include="data\database.db">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Dockerfile" />
+    <None Include="data\database.db" />
     <None Include="packages.config" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

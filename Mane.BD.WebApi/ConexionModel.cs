@@ -32,5 +32,10 @@ namespace Mane.BD.WebApi
                 NombreBD = NombreBD
             };
         }
+
+        public PermisosConexionModel Permisos()
+        {
+            return oneToOne<PermisosConexionModel>("id", "Conexion_id");
+        }
     }
 }

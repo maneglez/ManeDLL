@@ -24,10 +24,41 @@ namespace Mane.BD.WebApi
     {
         
         public Usuario User;
-        private ConexionModel.ModeloCollection Conexiones;
+        private static ConexionModel.ModeloCollection Conexiones;
+        private static Dictionary<string, PermisosConexionModel> PermisoConexion;
         private void ServiceExceptionHandler(Exception ex, HttpStatusCode statusCode = HttpStatusCode.InternalServerError)
         {
+            LogStr.Add(ex.ToString());
             ServiceExceptionHandler(ex?.Message, statusCode);            
+        }
+        private bool VerificarConsulta(string query,string connName)
+        {
+            try
+            {
+                bool verificar()
+                {
+                    var permiso = PermisoConexion[connName];
+                    var lower = query.ToLower();
+                    if (lower.Contains("truncate table")) return false;
+                    if (permiso.PUpdate == 1 && permiso.PDelete == 1 && permiso.PInsert == 1) return true;
+                    if (lower.Contains("update ") && permiso.PUpdate == 0) return false;
+                    if (lower.Contains("delete from") && permiso.PDelete == 0) return false;
+                    if (lower.Contains("insert into") && permiso.PInsert == 0) return false;
+                    return true;
+                }
+                if (!verificar())
+                {
+                    ServiceExceptionHandler("Consulta no permitida", HttpStatusCode.Forbidden);
+                    return false;
+                }
+                else return true;
+
+            }
+            catch (Exception e)
+            {
+                ServiceExceptionHandler(e);
+                return false;
+            }
         }
         private void VerificarConexiones()
         {
@@ -40,8 +71,10 @@ namespace Mane.BD.WebApi
             };
             Bd.Conexiones.Add(c);
             Conexiones = ConexionModel.All();
+            PermisoConexion = new Dictionary<string, PermisosConexionModel>();
             foreach (var con in Conexiones)
             {
+                PermisoConexion.Add(con.Nombre, con.Permisos());
                 Bd.Conexiones.Add(con.ToConexion());
             }
         }
@@ -72,25 +105,35 @@ namespace Mane.BD.WebApi
                 return false;
             }
         }
+        private static DataTable ParsetTable(DataTable dataTable = null)
+        {
+            if (dataTable == null)
+                dataTable = new DataTable("tablita");
+            else dataTable.TableName = "tablita";
+            return dataTable;
+        }
         [SoapHeader("User")]
         [WebMethod]
         public DataTable ExecuteQuery(string Query,string ConnName)
         {
             if (!VerifyUser())
-                return new DataTable();
+                return ParsetTable();
             try
             {
                 var conn = FindConnection(ConnName);
-                if (conn == null) return new DataTable();
+                if (conn == null) return ParsetTable();
+                if (!VerificarConsulta(Query, ConnName))
+                    return ParsetTable();
+                
                 var executor = conn.Executor;
                 executor.Query = Query;
-                return executor.ExecuteQuery();
+                return ParsetTable(executor.ExecuteQuery());
             }
             catch (Exception e)
             {
                 ServiceExceptionHandler(e);
             }
-            return new DataTable();
+            return ParsetTable();
         }
         [SoapHeader("User")]
         [WebMethod]
@@ -102,6 +145,8 @@ namespace Mane.BD.WebApi
             {
                 var conn = FindConnection(ConnName);
                 if (conn == null) return 0;
+                if (!VerificarConsulta(Query, ConnName))
+                    return 0;
                 var executor = conn.Executor;
                 executor.Query = Query;
                 return executor.ExecuteNonQuery();
@@ -122,6 +167,8 @@ namespace Mane.BD.WebApi
             {
                 var conn = FindConnection(ConnName);
                 if (conn == null) return null;
+                if (!VerificarConsulta(Query, ConnName))
+                    return 0;
                 var executor = conn.Executor;
                 executor.Query = Query;
                 return executor.ExecuteEscalar();
