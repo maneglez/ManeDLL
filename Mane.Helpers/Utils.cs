@@ -7,6 +7,17 @@ using System.Windows.Forms;
 
 namespace Mane.Helpers
 {
+    public class EnumObj
+    {
+        public EnumObj(object value, string name)
+        {
+            this.Value = value;
+            this.Name = name;
+        }
+
+        public object Value { get; set; }
+        public string Name { get; set; }
+    }
     public static class Utils
     {
         /// <summary>
@@ -107,13 +118,25 @@ namespace Mane.Helpers
             foreach (var value in values)
             {
                 r = dt.NewRow();
-                r[0] = value;
+                r[0] = (int)value;
                 r[1] = value.GetDescriptionAttr();
                 dt.Rows.Add(r);
             }
             return dt;
         }
 
+        public static List<EnumObj> EnumToList(Type tipo)
+        {
+            var list = new List<EnumObj>();
+                var values = Enum.GetValues(tipo);
+                foreach (var value in values)
+                {
+                list.Add(new EnumObj(value, value.GetDescriptionAttr()));
+                    
+                }
+                return list;
+            
+        }
        
         /// <summary>
         /// Asigna todos los valores de un enum a un combobox
@@ -130,9 +153,9 @@ namespace Mane.Helpers
         /// <param name="cb">Combobox</param>
         public static void EnumToComboBox(ComboBox cb,Type tipoEnum)
         {
-            cb.DataSource = EnumToDataTable(tipoEnum);
-            cb.DisplayMember = "name";
-            cb.ValueMember = "value";
+            cb.DataSource = EnumToList(tipoEnum);
+            cb.DisplayMember = "Name";
+            cb.ValueMember = "Value";
         }
         /// <summary>
         /// Obtiene la descripción del decorador Descripcion

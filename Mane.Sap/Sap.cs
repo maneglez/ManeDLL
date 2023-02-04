@@ -9,12 +9,10 @@ namespace Mane.Sap
     {
         private static ConexionSap ConexionActual;
         private const string NombreConexionBd = "Mane.Sap_Connection";
-        public static bool AutoDisconect { get; set; } = true;
         private static Company comp;
         public static Company Company => comp;
         public static ConexionSapCollection Conexiones = new ConexionSapCollection();
         public static string LastError { get; private set; }
-        public static string NewObjectKey { get; private set; }
         /// <summary>
         /// Inicia una conexión con SAP
         /// </summary>
