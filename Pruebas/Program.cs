@@ -1,14 +1,5 @@
-﻿using Mane.BD;
-using Mane.Licenciamiento;
-using Microsoft.Win32;
+﻿using Mane.CrystalReports;
 using System;
-using System.CodeDom;
-using System.Collections.Generic;
-using System.Linq;
-using System.Management;
-using System.Net.NetworkInformation;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Pruebas
 {
@@ -27,24 +18,18 @@ namespace Pruebas
 
         static void Prueba()
         {
-            if (Bd.Conexiones.Count == 0)
-            {
-                var conn = new Conexion
-                {
-                    Servidor = "https://localhost:44380/ManeBdWebService.asmx",
-                    TipoDeBaseDeDatos = TipoDeBd.ApiWeb,
-                    SubTipoDeBD = TipoDeBd.SqlServer,
-                    Usuario = "mane",
-                    Contrasena = "1234",
-                    Nombre = "sap",
-                    TimeOut = 60
-                };
-                Bd.Conexiones.Add(conn);
-            }
+            var rutaRpt = @"C:\Users\Mane\Documents\chamba\prueba.rpt";
+            //var rutaPdf = @"C:\Users\Mane\Documents\chamba\prueba.pdf";
             try
             {
-                var result = "Resultado: " + Bd.Query("OCRD").Select("CardName").Limit(1).GetScalar()?.ToString();
-                Console.WriteLine(result);
+              var tiempo =  Mane.Helpers.Utils.CuantoTiempoTarda(() =>
+                {
+                    var rpt = new ReportDocument();
+                    rpt.Load(rutaRpt);
+                    rpt.Show();
+                });
+                Console.WriteLine($"t = {tiempo:n2} ms");
+          
             }
             catch (Exception e)
             {
