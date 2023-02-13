@@ -4,7 +4,7 @@ using System.Data.SQLite;
 using System;
 using System.Data.Odbc;
 using System.Data.SqlClient;
-
+using Newtonsoft.Json;
 
 namespace Mane.BD
 {
@@ -17,7 +17,6 @@ namespace Mane.BD
         private string usuario;
         private string contrasena;
         private string driver;
-
         public IBdExecutor Executor
         {
             get

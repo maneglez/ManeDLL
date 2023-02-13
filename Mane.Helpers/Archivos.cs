@@ -44,6 +44,7 @@ namespace Mane.Helpers
         public static string LeerArchivo(string ruta)
         {
             string data = "";
+            if (!File.Exists(ruta)) return "";
             using (var sr = new StreamReader(ruta))
                 data = sr.ReadToEnd();
             return data;

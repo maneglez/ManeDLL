@@ -18,6 +18,10 @@ namespace Mane.CrystalReports
         }
         public void Load(string rutaRpt) =>
             Rpt.Load(rutaRpt);
+        public void Refresh()
+        {
+            Rpt.Refresh();
+        }
         public void SetParameterValue(int index,object val)
         {
             Rpt.SetParameterValue(index, val);
@@ -25,6 +29,10 @@ namespace Mane.CrystalReports
         public void SetParameterValue(string name,object val)
         {
             Rpt.SetParameterValue(name, val);
+        }
+        public void SetDatabaseLogon(string user, string password)
+        {
+            Rpt.SetDatabaseLogon(user, password);
         }
         public void SetDatabaseLogon(string user, string password, string server, string database)
         {
@@ -41,7 +49,7 @@ namespace Mane.CrystalReports
         public void ExportToDisk(CrystalExportFormat format,string ruta)
         {
             var tipo = (dynamic)Enum.Parse(Dependencias.ExportFormatType, format.ToString());
-           //Rpt.ExportToDisk(tipo, ruta);
+           Rpt.ExportToDisk(tipo, ruta);
         }
         public void Show()
         {
