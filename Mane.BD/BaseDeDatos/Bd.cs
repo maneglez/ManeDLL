@@ -107,7 +107,7 @@ namespace Mane.BD
                 throw ex;
             else OnException.Invoke(null, new BdExeptionEventArgs(ex));
         }
-        private static void bdExceptionHandler(Exception e, string query = "")
+        internal static void bdExceptionHandler(Exception e, string query = "")
         {
             LastErrorDescription = e.Message;
             var ex = new BdException(e.Message, query);

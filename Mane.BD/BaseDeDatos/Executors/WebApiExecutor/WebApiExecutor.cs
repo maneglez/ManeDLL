@@ -3,19 +3,19 @@ using Mane.BD.QueryBulder.Builders;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Runtime.InteropServices;
 
 namespace Mane.BD.BaseDeDatos.Executors.WebApiExecutor
 {
     internal class WebApiExecutor : IBdExecutor
     {
-
-
         private Conexion Conexion;
-        WebServiceBd.BdWebService Client;
+        WebServiceBd.ApiWebService Client;
         public WebApiExecutor(Conexion conexion)
         {
             Conexion = conexion;
-            Client = new WebServiceBd.BdWebService
+            if (Conexion.TimeOut < 15) Conexion.TimeOut = 15;
+            Client = new WebServiceBd.ApiWebService
             {
                 Timeout = Conexion.TimeOut * 1000,
                 UsuarioValue = new WebServiceBd.Usuario
@@ -25,6 +25,7 @@ namespace Mane.BD.BaseDeDatos.Executors.WebApiExecutor
                 },
                 Url = conexion.Servidor
             };
+            
         }
 
         public string Query { get; set; }
@@ -44,22 +45,71 @@ namespace Mane.BD.BaseDeDatos.Executors.WebApiExecutor
 
         public object ExecuteEscalar()
         {
-            return Client.ExecuteEscalar(Query, Conexion.Nombre); 
+            try
+            {
+                return ValidarResponse<object>(Client.ExecuteEscalar(Query, Conexion.Nombre));
+            }
+            catch (Exception e)
+            {
+                Bd.bdExceptionHandler(e, Query);
+            }
+            return null;
         }
 
         public int ExecuteNonQuery()
         {
-            return Client.ExecuteNonQuery(Query, Conexion.Nombre); ;
+            try
+            {
+                return ValidarResponse<int>(Client.ExecuteNonQuery(Query, Conexion.Nombre));
+                
+            }
+            catch (Exception e)
+            {
+                Bd.bdExceptionHandler(e, Query);
+            }
+            return 0;
         }
 
         public DataTable ExecuteQuery()
         {
-            return Client.ExecuteQuery(Query, Conexion.Nombre); ;
+            try
+            {
+                var resp = Client.ExecuteQuery(Query, Conexion.Nombre);
+                if (resp.EstatusCode == WebServiceBd.HttpStatusCode.OK)
+                    return resp.DataTable;
+                else throw new Exception($"{(int)resp.EstatusCode} - {resp.Message}");
+            }
+            catch (Exception e)
+            {
+                Bd.bdExceptionHandler(e, Query);
+            }
+            return new DataTable();
         }
 
         public bool TestConnection()
         {            
-            return Client.TestConnection(Conexion.Nombre);
+            try
+            {
+                var response = Client.TestConnection(Conexion.Nombre);
+                var result = ValidarResponse<bool>(response);
+                if (!result)
+                {
+                    Bd.LastErrorCode = (int)response.EstatusCode;
+                    Bd.LastErrorDescription = response.Message;
+                }
+                return result;
+            }
+            catch (Exception e)
+            {
+                Bd.bdExceptionHandler(e, Query);
+            }
+            return false;
+        }
+        private T ValidarResponse<T>(WebServiceBd.WebApiResponse resp)
+        {
+            if (resp.EstatusCode == WebServiceBd.HttpStatusCode.OK)
+                return (T)resp.Data;
+            else throw new Exception($"{(int)resp.EstatusCode} - {resp.Message}");
         }
     }
 }

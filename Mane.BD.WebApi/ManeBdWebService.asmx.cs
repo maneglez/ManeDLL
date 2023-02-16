@@ -1,5 +1,7 @@
-﻿using Mane.BD.Executors;
+﻿using Mane.BD.BaseDeDatos.Executors.WebApiExecutor;
+using Mane.BD.Executors;
 using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -26,39 +28,29 @@ namespace Mane.BD.WebApi
         public Usuario User;
         private static ConexionModel.ModeloCollection Conexiones;
         private static Dictionary<string, PermisosConexionModel> PermisoConexion;
-        private void ServiceExceptionHandler(Exception ex, HttpStatusCode statusCode = HttpStatusCode.InternalServerError)
+        private WebApiResponse ServiceExceptionHandler(Exception ex, HttpStatusCode statusCode = HttpStatusCode.InternalServerError)
         {
             LogStr.Add(ex.ToString());
-            ServiceExceptionHandler(ex?.Message, statusCode);            
+           return ServiceExceptionHandler(ex?.ToString(), statusCode);            
         }
-        private bool VerificarConsulta(string query,string connName)
+        private void VerificarConsulta(string query, string connName)
         {
-            try
+            bool verificar()
             {
-                bool verificar()
-                {
-                    var permiso = PermisoConexion[connName];
-                    var lower = query.ToLower();
-                    if (lower.Contains("truncate table")) return false;
-                    if (permiso.PUpdate == 1 && permiso.PDelete == 1 && permiso.PInsert == 1) return true;
-                    if (lower.Contains("update ") && permiso.PUpdate == 0) return false;
-                    if (lower.Contains("delete from") && permiso.PDelete == 0) return false;
-                    if (lower.Contains("insert into") && permiso.PInsert == 0) return false;
-                    return true;
-                }
-                if (!verificar())
-                {
-                    ServiceExceptionHandler("Consulta no permitida", HttpStatusCode.Forbidden);
-                    return false;
-                }
-                else return true;
+                var permiso = PermisoConexion[connName];
+                var lower = query.ToLower();
+                if (lower.Contains("truncate table")) return false;
+                if (permiso.PUpdate == 1 && permiso.PDelete == 1 && permiso.PInsert == 1) return true;
+                if (lower.Contains("update ") && permiso.PUpdate == 0) return false;
+                if (lower.Contains("delete from") && permiso.PDelete == 0) return false;
+                if (lower.Contains("insert into") && permiso.PInsert == 0) return false;
+                return true;
+            }
+            if (!verificar())
+            {
+                throw new Exception("Consulta no permitida");
+            }
 
-            }
-            catch (Exception e)
-            {
-                ServiceExceptionHandler(e);
-                return false;
-            }
         }
         private void VerificarConexiones()
         {
@@ -78,34 +70,21 @@ namespace Mane.BD.WebApi
                 Bd.Conexiones.Add(con.ToConexion());
             }
         }
-        private void ServiceExceptionHandler(string message, HttpStatusCode statusCode)
+        private WebApiResponse ServiceExceptionHandler(string message, HttpStatusCode statusCode)
         {
-            Context.Response.StatusDescription = message;
-            Context.Response.StatusCode = (int)statusCode;
-            Context.ApplicationInstance.CompleteRequest();
+            return new WebApiResponse(null,statusCode,message);
         }
-        private bool VerifyUser()
+        private void VerifyUser()
         {
-            if(User == null)
+            if (User == null)
             {
-                ServiceExceptionHandler("Usuario o contrasena incorrectos", HttpStatusCode.Unauthorized);
-                return false;
+                throw new Exception("Usuario o contraseña incorrectos");
             }
-            try
-            {
-                VerificarConexiones();
-                if (UsuarioModel.Query().Where("UserName", User.UserName).Where("Password", User.Password).Exists())
-                    return true;
-                ServiceExceptionHandler("Usuario o contrasena incorrectos", HttpStatusCode.Unauthorized);
-                return false;
-            }
-            catch (Exception e)
-            {
-                ServiceExceptionHandler(e);
-                return false;
-            }
+            VerificarConexiones();
+            if (!UsuarioModel.Query().Where("UserName", User.UserName).Where("Password", User.Password).Exists())
+                throw new Exception("Usuario o contraseña incorrectos");
         }
-        private static DataTable ParsetTable(DataTable dataTable = null)
+        private static DataTable ParseTable(DataTable dataTable = null)
         {
             if (dataTable == null)
                 dataTable = new DataTable("tablita");
@@ -114,76 +93,107 @@ namespace Mane.BD.WebApi
         }
         [SoapHeader("User")]
         [WebMethod]
-        public DataTable ExecuteQuery(string Query,string ConnName)
+        public WebApiResponse ExecuteQuery(string Query,string ConnName)
         {
-            if (!VerifyUser())
-                return ParsetTable();
+            try
+            {
+                VerifyUser(); 
+            }
+            catch (Exception e)
+            {
+                return ServiceExceptionHandler(e.Message, HttpStatusCode.Unauthorized);
+            }
             try
             {
                 var conn = FindConnection(ConnName);
-                if (conn == null) return ParsetTable();
-                if (!VerificarConsulta(Query, ConnName))
-                    return ParsetTable();
+                try
+                {
+                    VerificarConsulta(Query, ConnName);
+                }
+                catch (Exception e)
+                {
+                    return ServiceExceptionHandler(e.Message, HttpStatusCode.Forbidden);
+                }
                 
                 var executor = conn.Executor;
                 executor.Query = Query;
-                return ParsetTable(executor.ExecuteQuery());
+                var response = new WebApiResponse(null);
+                response.DataTable = ParseTable(executor.ExecuteQuery());
+                return response;
             }
             catch (Exception e)
             {
-                ServiceExceptionHandler(e);
+               return ServiceExceptionHandler(e);
             }
-            return ParsetTable();
         }
         [SoapHeader("User")]
         [WebMethod]
-        public int ExecuteNonQuery(string Query, string ConnName)
+        public WebApiResponse ExecuteNonQuery(string Query, string ConnName)
         {
-            if (!VerifyUser())
-                return 0;
             try
             {
-                var conn = FindConnection(ConnName);
-                if (conn == null) return 0;
-                if (!VerificarConsulta(Query, ConnName))
-                    return 0;
-                var executor = conn.Executor;
-                executor.Query = Query;
-                return executor.ExecuteNonQuery();
+                VerifyUser();
             }
             catch (Exception e)
             {
-                ServiceExceptionHandler(e);
+                return ServiceExceptionHandler(e.Message, HttpStatusCode.Unauthorized);
             }
-            return 0;
+            try
+            {
+                var conn = FindConnection(ConnName);
+                try
+                {
+                    VerificarConsulta(Query, ConnName);
+                }
+                catch (Exception e)
+                {
+                    return ServiceExceptionHandler(e.Message, HttpStatusCode.Forbidden);
+                }
+                var executor = conn.Executor;
+                executor.Query = Query;
+                return new WebApiResponse(executor.ExecuteNonQuery());
+            }
+            catch (Exception e)
+            {
+               return ServiceExceptionHandler(e);
+            }
         }
         [SoapHeader("User")]
         [WebMethod]
-        public object ExecuteEscalar(string Query, string ConnName)
+        public WebApiResponse ExecuteEscalar(string Query, string ConnName)
         {
-            if (!VerifyUser())
-                return null;
             try
             {
-                var conn = FindConnection(ConnName);
-                if (conn == null) return null;
-                if (!VerificarConsulta(Query, ConnName))
-                    return 0;
-                var executor = conn.Executor;
-                executor.Query = Query;
-                return executor.ExecuteEscalar();
+                VerifyUser();
             }
             catch (Exception e)
             {
-                ServiceExceptionHandler(e);
+                return ServiceExceptionHandler(e.Message, HttpStatusCode.Unauthorized);
             }
-            return null;
+            try
+            {
+                var conn = FindConnection(ConnName);
+                try
+                {
+                    VerificarConsulta(Query, ConnName);
+                }
+                catch (Exception e)
+                {
+                    return ServiceExceptionHandler(e.Message, HttpStatusCode.Forbidden);
+                }
+                var executor = conn.Executor;
+                executor.Query = Query;
+                return new WebApiResponse(executor.ExecuteEscalar());
+            }
+            catch (Exception e)
+            {
+               return ServiceExceptionHandler(e);
+            }
+            
         }
         private Conexion FindConnection(string ConnName)
         {
             var conn = Bd.Conexiones.Find(ConnName);
-            try
-            {
                 if (conn == null)
                 {
                     var connM = ConexionModel.Query().Where("Nombre", ConnName).First();
@@ -192,21 +202,24 @@ namespace Mane.BD.WebApi
                     conn = connM.ToConexion();
                     Bd.Conexiones.Add(conn);
                 }
-            }
-            catch (Exception e)
-            {
-                ServiceExceptionHandler(e);
-            }
+
             return conn;
         }
         [SoapHeader("User")]
         [WebMethod]
-        public bool TestConnection(string ConnName)
+        public WebApiResponse TestConnection(string ConnName)
         {
-            if (!VerifyUser()) return false;
+            try
+            {
+                VerifyUser();
+            }
+            catch (Exception e)
+            {
+                return new WebApiResponse(false, HttpStatusCode.Unauthorized, e.Message);
+            }
             var conn = FindConnection(ConnName);
-            if (conn == null) return false;
-            return conn.Executor.TestConnection();
+            if (conn == null) return new WebApiResponse(false,HttpStatusCode.OK,$"La conexión {ConnName} no se encuentra registrada");
+            return new WebApiResponse(conn.Executor.TestConnection());
         }
     }
 }

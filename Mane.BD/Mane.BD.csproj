@@ -95,7 +95,8 @@
     <Compile Include="BaseDeDatos\Executors\SQLiteExecutor.cs" />
     <Compile Include="BaseDeDatos\Executors\SQLServerExecutor.cs" />
     <Compile Include="BaseDeDatos\Executors\WebApiExecutor\WebApiExecutor.cs" />
-    <Compile Include="BaseDeDatos\Executors\WebApiExecutor\BdWebService.cs" />
+    <Compile Include="BaseDeDatos\Executors\WebApiExecutor\ApiWebService.cs" />
+    <Compile Include="BaseDeDatos\Executors\WebApiExecutor\WebApiResponse.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Common.cs" />
     <Compile Include="Extensiones.cs" />

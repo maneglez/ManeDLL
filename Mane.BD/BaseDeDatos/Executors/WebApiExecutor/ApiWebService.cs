@@ -20,7 +20,6 @@ using System.Xml.Serialization;
 // Este código fuente fue generado automáticamente por wsdl, Versión=4.8.3928.0.
 // 
 
-
 namespace Mane.BD.WebServiceBd
 {
     /// <remarks/>
@@ -28,7 +27,7 @@ namespace Mane.BD.WebServiceBd
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Web.Services.WebServiceBindingAttribute(Name = "ApiWebServiceSoap", Namespace = "http://tempuri.org/")]
-    public partial class BdWebService : System.Web.Services.Protocols.SoapHttpClientProtocol
+    public partial class ApiWebService : System.Web.Services.Protocols.SoapHttpClientProtocol
     {
 
         private Usuario usuarioValueField;
@@ -42,7 +41,7 @@ namespace Mane.BD.WebServiceBd
         private System.Threading.SendOrPostCallback TestConnectionOperationCompleted;
 
         /// <remarks/>
-        public BdWebService()
+        public ApiWebService()
         {
             this.Url = "https://localhost:44380/ManeBdWebService.asmx";
         }
@@ -74,12 +73,12 @@ namespace Mane.BD.WebServiceBd
         /// <remarks/>
         [System.Web.Services.Protocols.SoapHeaderAttribute("UsuarioValue")]
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://tempuri.org/ExecuteQuery", RequestNamespace = "http://tempuri.org/", ResponseNamespace = "http://tempuri.org/", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
-        public System.Data.DataTable ExecuteQuery(string Query, string ConnName)
+        public WebApiResponse ExecuteQuery(string Query, string ConnName)
         {
             object[] results = this.Invoke("ExecuteQuery", new object[] {
                     Query,
                     ConnName});
-            return ((System.Data.DataTable)(results[0]));
+            return ((WebApiResponse)(results[0]));
         }
 
         /// <remarks/>
@@ -91,10 +90,10 @@ namespace Mane.BD.WebServiceBd
         }
 
         /// <remarks/>
-        public System.Data.DataTable EndExecuteQuery(System.IAsyncResult asyncResult)
+        public WebApiResponse EndExecuteQuery(System.IAsyncResult asyncResult)
         {
             object[] results = this.EndInvoke(asyncResult);
-            return ((System.Data.DataTable)(results[0]));
+            return ((WebApiResponse)(results[0]));
         }
 
         /// <remarks/>
@@ -127,12 +126,12 @@ namespace Mane.BD.WebServiceBd
         /// <remarks/>
         [System.Web.Services.Protocols.SoapHeaderAttribute("UsuarioValue")]
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://tempuri.org/ExecuteNonQuery", RequestNamespace = "http://tempuri.org/", ResponseNamespace = "http://tempuri.org/", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
-        public int ExecuteNonQuery(string Query, string ConnName)
+        public WebApiResponse ExecuteNonQuery(string Query, string ConnName)
         {
             object[] results = this.Invoke("ExecuteNonQuery", new object[] {
                     Query,
                     ConnName});
-            return ((int)(results[0]));
+            return ((WebApiResponse)(results[0]));
         }
 
         /// <remarks/>
@@ -144,10 +143,10 @@ namespace Mane.BD.WebServiceBd
         }
 
         /// <remarks/>
-        public int EndExecuteNonQuery(System.IAsyncResult asyncResult)
+        public WebApiResponse EndExecuteNonQuery(System.IAsyncResult asyncResult)
         {
             object[] results = this.EndInvoke(asyncResult);
-            return ((int)(results[0]));
+            return ((WebApiResponse)(results[0]));
         }
 
         /// <remarks/>
@@ -180,12 +179,12 @@ namespace Mane.BD.WebServiceBd
         /// <remarks/>
         [System.Web.Services.Protocols.SoapHeaderAttribute("UsuarioValue")]
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://tempuri.org/ExecuteEscalar", RequestNamespace = "http://tempuri.org/", ResponseNamespace = "http://tempuri.org/", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
-        public object ExecuteEscalar(string Query, string ConnName)
+        public WebApiResponse ExecuteEscalar(string Query, string ConnName)
         {
             object[] results = this.Invoke("ExecuteEscalar", new object[] {
                     Query,
                     ConnName});
-            return ((object)(results[0]));
+            return ((WebApiResponse)(results[0]));
         }
 
         /// <remarks/>
@@ -197,10 +196,10 @@ namespace Mane.BD.WebServiceBd
         }
 
         /// <remarks/>
-        public object EndExecuteEscalar(System.IAsyncResult asyncResult)
+        public WebApiResponse EndExecuteEscalar(System.IAsyncResult asyncResult)
         {
             object[] results = this.EndInvoke(asyncResult);
-            return ((object)(results[0]));
+            return ((WebApiResponse)(results[0]));
         }
 
         /// <remarks/>
@@ -233,11 +232,11 @@ namespace Mane.BD.WebServiceBd
         /// <remarks/>
         [System.Web.Services.Protocols.SoapHeaderAttribute("UsuarioValue")]
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://tempuri.org/TestConnection", RequestNamespace = "http://tempuri.org/", ResponseNamespace = "http://tempuri.org/", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
-        public bool TestConnection(string ConnName)
+        public WebApiResponse TestConnection(string ConnName)
         {
             object[] results = this.Invoke("TestConnection", new object[] {
                     ConnName});
-            return ((bool)(results[0]));
+            return ((WebApiResponse)(results[0]));
         }
 
         /// <remarks/>
@@ -248,10 +247,10 @@ namespace Mane.BD.WebServiceBd
         }
 
         /// <remarks/>
-        public bool EndTestConnection(System.IAsyncResult asyncResult)
+        public WebApiResponse EndTestConnection(System.IAsyncResult asyncResult)
         {
             object[] results = this.EndInvoke(asyncResult);
-            return ((bool)(results[0]));
+            return ((WebApiResponse)(results[0]));
         }
 
         /// <remarks/>
@@ -346,6 +345,224 @@ namespace Mane.BD.WebServiceBd
 
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.8.3928.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://tempuri.org/")]
+    public partial class WebApiResponse
+    {
+
+        private HttpStatusCode estatusCodeField;
+
+        private string messageField;
+
+        private object dataField;
+
+        private DataTable dataTableField;
+
+        /// <remarks/>
+        public HttpStatusCode EstatusCode
+        {
+            get
+            {
+                return this.estatusCodeField;
+            }
+            set
+            {
+                this.estatusCodeField = value;
+            }
+        }
+
+        /// <remarks/>
+        public string Message
+        {
+            get
+            {
+                return this.messageField;
+            }
+            set
+            {
+                this.messageField = value;
+            }
+        }
+
+        /// <remarks/>
+        public object Data
+        {
+            get
+            {
+                return this.dataField;
+            }
+            set
+            {
+                this.dataField = value;
+            }
+        }
+        /// <remarks/>
+        public DataTable DataTable
+        {
+            get
+            {
+                return this.dataTableField;
+            }
+            set
+            {
+                this.dataTableField = value;
+            }
+        }
+    }
+
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.8.3928.0")]
+    [System.SerializableAttribute()]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://tempuri.org/")]
+    public enum HttpStatusCode
+    {
+
+        /// <remarks/>
+        Continue,
+
+        /// <remarks/>
+        SwitchingProtocols,
+
+        /// <remarks/>
+        OK,
+
+        /// <remarks/>
+        Created,
+
+        /// <remarks/>
+        Accepted,
+
+        /// <remarks/>
+        NonAuthoritativeInformation,
+
+        /// <remarks/>
+        NoContent,
+
+        /// <remarks/>
+        ResetContent,
+
+        /// <remarks/>
+        PartialContent,
+
+        /// <remarks/>
+        MultipleChoices,
+
+        /// <remarks/>
+        Ambiguous,
+
+        /// <remarks/>
+        MovedPermanently,
+
+        /// <remarks/>
+        Moved,
+
+        /// <remarks/>
+        Found,
+
+        /// <remarks/>
+        Redirect,
+
+        /// <remarks/>
+        SeeOther,
+
+        /// <remarks/>
+        RedirectMethod,
+
+        /// <remarks/>
+        NotModified,
+
+        /// <remarks/>
+        UseProxy,
+
+        /// <remarks/>
+        Unused,
+
+        /// <remarks/>
+        TemporaryRedirect,
+
+        /// <remarks/>
+        RedirectKeepVerb,
+
+        /// <remarks/>
+        BadRequest,
+
+        /// <remarks/>
+        Unauthorized,
+
+        /// <remarks/>
+        PaymentRequired,
+
+        /// <remarks/>
+        Forbidden,
+
+        /// <remarks/>
+        NotFound,
+
+        /// <remarks/>
+        MethodNotAllowed,
+
+        /// <remarks/>
+        NotAcceptable,
+
+        /// <remarks/>
+        ProxyAuthenticationRequired,
+
+        /// <remarks/>
+        RequestTimeout,
+
+        /// <remarks/>
+        Conflict,
+
+        /// <remarks/>
+        Gone,
+
+        /// <remarks/>
+        LengthRequired,
+
+        /// <remarks/>
+        PreconditionFailed,
+
+        /// <remarks/>
+        RequestEntityTooLarge,
+
+        /// <remarks/>
+        RequestUriTooLong,
+
+        /// <remarks/>
+        UnsupportedMediaType,
+
+        /// <remarks/>
+        RequestedRangeNotSatisfiable,
+
+        /// <remarks/>
+        ExpectationFailed,
+
+        /// <remarks/>
+        UpgradeRequired,
+
+        /// <remarks/>
+        InternalServerError,
+
+        /// <remarks/>
+        NotImplemented,
+
+        /// <remarks/>
+        BadGateway,
+
+        /// <remarks/>
+        ServiceUnavailable,
+
+        /// <remarks/>
+        GatewayTimeout,
+
+        /// <remarks/>
+        HttpVersionNotSupported,
+    }
+
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.8.3928.0")]
     public delegate void ExecuteQueryCompletedEventHandler(object sender, ExecuteQueryCompletedEventArgs e);
 
     /// <remarks/>
@@ -364,12 +581,12 @@ namespace Mane.BD.WebServiceBd
         }
 
         /// <remarks/>
-        public System.Data.DataTable Result
+        public WebApiResponse Result
         {
             get
             {
                 this.RaiseExceptionIfNecessary();
-                return ((System.Data.DataTable)(this.results[0]));
+                return ((WebApiResponse)(this.results[0]));
             }
         }
     }
@@ -394,12 +611,12 @@ namespace Mane.BD.WebServiceBd
         }
 
         /// <remarks/>
-        public int Result
+        public WebApiResponse Result
         {
             get
             {
                 this.RaiseExceptionIfNecessary();
-                return ((int)(this.results[0]));
+                return ((WebApiResponse)(this.results[0]));
             }
         }
     }
@@ -424,12 +641,12 @@ namespace Mane.BD.WebServiceBd
         }
 
         /// <remarks/>
-        public object Result
+        public WebApiResponse Result
         {
             get
             {
                 this.RaiseExceptionIfNecessary();
-                return ((object)(this.results[0]));
+                return ((WebApiResponse)(this.results[0]));
             }
         }
     }
@@ -454,13 +671,14 @@ namespace Mane.BD.WebServiceBd
         }
 
         /// <remarks/>
-        public bool Result
+        public WebApiResponse Result
         {
             get
             {
                 this.RaiseExceptionIfNecessary();
-                return ((bool)(this.results[0]));
+                return ((WebApiResponse)(this.results[0]));
             }
         }
     }
 }
+
