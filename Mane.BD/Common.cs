@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.Remoting.Metadata.W3cXsd2001;
 
 namespace Mane.BD
 {
@@ -29,7 +30,6 @@ namespace Mane.BD
                     dic.Add(prop.Name, prop.GetValue(obj));
             }
             return dic;
-
         }
         /// <summary>
         /// 
@@ -82,6 +82,7 @@ namespace Mane.BD
                     case "Double": return value == DBNull.Value ? 0 : double.Parse(value.ToString());
                     case "Int32": return value == DBNull.Value ? 0 : int.Parse(value.ToString());
                     case "Decimal": return value == DBNull.Value ? 0 : decimal.Parse(value.ToString());
+                    case "Byte[]": return value == DBNull.Value ? new byte[] { } : SoapHexBinary.Parse(value.ToString()).Value;
                 }
                 if (t.BaseType == typeof(Enum)) return Convert.ToInt16(value == DBNull.Value ? null : value);
 

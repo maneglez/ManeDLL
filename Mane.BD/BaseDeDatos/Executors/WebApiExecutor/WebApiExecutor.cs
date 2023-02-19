@@ -14,7 +14,7 @@ namespace Mane.BD.BaseDeDatos.Executors.WebApiExecutor
         public WebApiExecutor(Conexion conexion)
         {
             Conexion = conexion;
-            if (Conexion.TimeOut < 15) Conexion.TimeOut = 15;
+            if (Conexion.TimeOut < 30) Conexion.TimeOut = 30;
             Client = new WebServiceBd.ApiWebService
             {
                 Timeout = Conexion.TimeOut * 1000,

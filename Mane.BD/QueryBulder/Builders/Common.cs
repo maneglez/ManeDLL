@@ -24,6 +24,9 @@ namespace Mane.BD.QueryBulder.Builders
                 return Delimit(Bd.ToDateTimeSqlFormat((DateTime)value), delimiters);
             if (value.GetType().IsEnum)
                 return Delimit(((int)value).ToString(), delimiters);
+            if(value is byte[] bytes)//Convertir arreglo de bytes en string sql binary
+                return "0x" + string.Join("", bytes.Select(b => b.ToString("x2")));
+            
             return Delimit(value.ToString(), delimiters);
         }
         public static string FormatColumn(string columna, char[] delimiters)
