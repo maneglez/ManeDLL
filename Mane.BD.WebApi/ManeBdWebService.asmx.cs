@@ -183,7 +183,8 @@ namespace Mane.BD.WebApi
                 }
                 var executor = conn.Executor;
                 executor.Query = Query;
-                return new WebApiResponse(executor.ExecuteEscalar());
+                var result = executor.ExecuteEscalar();
+                return new WebApiResponse(result == DBNull.Value ? null : result);
             }
             catch (Exception e)
             {
