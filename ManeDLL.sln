@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.2.32526.322
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32510.428
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mane.BD", "Mane.BD\Mane.BD.csproj", "{1698B67F-99AC-4A51-A19C-000C170B54B5}"
 EndProject
@@ -20,6 +20,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mane.Licenciamiento.Generador", "Mane.Licenciamiento.Generador\Mane.Licenciamiento.Generador.csproj", "{150B19A7-F1C2-47F4-AA0B-F4592FBFA191}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mane.CrystalReports", "Mane.CrystalReports\Mane.CrystalReports.csproj", "{9F07B1D9-F2D1-4029-B9DB-9D612F37A170}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mane.Sap.Service.Layer", "Mane.Sap.ServiceLayer\Mane.Sap.Service.Layer.csproj", "{37E700FC-2D9B-488A-B524-DBA67B98CFFC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -63,6 +65,10 @@ Global
 		{9F07B1D9-F2D1-4029-B9DB-9D612F37A170}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9F07B1D9-F2D1-4029-B9DB-9D612F37A170}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9F07B1D9-F2D1-4029-B9DB-9D612F37A170}.Release|Any CPU.Build.0 = Release|Any CPU
+		{37E700FC-2D9B-488A-B524-DBA67B98CFFC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{37E700FC-2D9B-488A-B524-DBA67B98CFFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{37E700FC-2D9B-488A-B524-DBA67B98CFFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{37E700FC-2D9B-488A-B524-DBA67B98CFFC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

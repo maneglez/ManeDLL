@@ -1,10 +1,12 @@
-﻿using Mane.CrystalReports;
+﻿using Mane.Sap.ServiceLayer;
 using System;
+using System.Windows.Forms;
 
 namespace Pruebas
 {
     internal class Program
     {
+        [STAThread]
         static void Main(string[] args)
         {
             do
@@ -18,24 +20,31 @@ namespace Pruebas
 
         static void Prueba()
         {
-            var rutaRpt = @"C:\Users\Mane\Documents\chamba\prueba.rpt";
-            //var rutaPdf = @"C:\Users\Mane\Documents\chamba\prueba.pdf";
+           if(SapSrvLayer.Conexiones.Count == 0)
+            {
+                var c = new ConexionSrvLayer
+                {
+                    CompanyDB = "XML",
+                    User = "manager",
+                    Password = "1234",
+                    Server = "localhost",
+                    Port = 50000
+                };
+                SapSrvLayer.Conexiones.Add(c);
+            }
+            Console.WriteLine("Ingrese una consulta para service layer: ");
             try
             {
-              var tiempo =  Mane.Helpers.Utils.CuantoTiempoTarda(() =>
-                {
-                    var rpt = new ReportDocument();
-                    rpt.Load(rutaRpt);
-                    rpt.Show();
-                });
-                Console.WriteLine($"t = {tiempo:n2} ms");
-          
+               var result = SapSrvLayer.GET(Console.ReadLine());
+                Console.WriteLine("Resultado:");
+                Console.WriteLine(result.Content);
+                Clipboard.SetText(result.Content);
+                Console.WriteLine("Copiado al portapapeles");
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                Console.WriteLine("Ocurrió un error: " + e.Message);
             }
-
 
         }
         

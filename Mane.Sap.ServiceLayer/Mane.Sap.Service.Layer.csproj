@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{37E700FC-2D9B-488A-B524-DBA67B98CFFC}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Mane.Sap.ServiceLayer</RootNamespace>
+    <AssemblyName>Mane.Sap.ServiceLayer</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="RestSharp, Version=106.15.0.0, Culture=neutral, PublicKeyToken=598062e77f915f75, processorArchitecture=MSIL">
+      <HintPath>..\packages\RestSharp.106.15.0\lib\net452\RestSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Web" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ConexionSrvLayer.cs" />
+    <Compile Include="ConexionSrvLayerCollection.cs" />
+    <Compile Include="Enums.cs" />
+    <Compile Include="Extensiones.cs" />
+    <Compile Include="Interfaces\IAddressExtensionSap.cs" />
+    <Compile Include="Interfaces\IBatchNumbersSap.cs" />
+    <Compile Include="Interfaces\ICCDNumbersSap.cs" />
+    <Compile Include="Interfaces\IDocumentLineSap.cs" />
+    <Compile Include="Interfaces\IDocumentsAdditionalExpensesSap.cs" />
+    <Compile Include="Interfaces\IDocumentSap.cs" />
+    <Compile Include="Interfaces\IDocument_ApprovalRequestsSap.cs" />
+    <Compile Include="Interfaces\IDocument_DocumentReferencesSap.cs" />
+    <Compile Include="Interfaces\IDocument_EWayBillDetailsSap.cs" />
+    <Compile Include="Interfaces\IDocument_InstallmentsSap.cs" />
+    <Compile Include="Interfaces\IDocument_LinesAdditionalExpensesSap.cs" />
+    <Compile Include="Interfaces\IDocument_SpecialLinesSap.cs" />
+    <Compile Include="Interfaces\IDownPaymentsToDrawDetailsSap.cs" />
+    <Compile Include="Interfaces\IDownPaymentsToDrawSap.cs" />
+    <Compile Include="Interfaces\IEBooks_Doc_DetailsSap.cs" />
+    <Compile Include="Interfaces\IElectronicProtocolsSap.cs" />
+    <Compile Include="Interfaces\IGeneratedAssetsSap.cs" />
+    <Compile Include="Interfaces\IImportProcessesSap.cs" />
+    <Compile Include="Interfaces\IRelatedDocumentsSap.cs" />
+    <Compile Include="Interfaces\ISerialNumbersSap.cs" />
+    <Compile Include="Interfaces\ITaxExtensionSap.cs" />
+    <Compile Include="Interfaces\ITaxJurisdictionsSap.cs" />
+    <Compile Include="Interfaces\IWithholdingTaxDataSap.cs" />
+    <Compile Include="Interfaces\IWithholdingTaxDataWTXSap.cs" />
+    <Compile Include="Interfaces\IWithholdingTaxLinesSap.cs" />
+    <Compile Include="Interfaces\prueba.cs" />
+    <Compile Include="Interfaces\SapEnums.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SLResponse.cs" />
+    <Compile Include="SapSrvLayer.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
