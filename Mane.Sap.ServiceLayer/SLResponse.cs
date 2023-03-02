@@ -1,6 +1,9 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Mane.Sap.ServiceLayer.Interfaces;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using RestSharp;
 using System;
+using System.Linq;
 using System.Net;
 
 namespace Mane.Sap.ServiceLayer
@@ -36,10 +39,11 @@ namespace Mane.Sap.ServiceLayer
         public T GetObjectResult<T>() where T : class
         {
             if (string.IsNullOrEmpty(Content))
-                return null;
+                return null;            
             try
             {
-                return JObject.Parse(Content).ToObject<T>();
+                var jOb = JObject.Parse(Content);
+                return jOb.ToObject<T>();
             }
             catch (Exception)
             {

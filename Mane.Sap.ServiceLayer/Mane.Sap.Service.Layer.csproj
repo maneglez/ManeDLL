@@ -45,12 +45,17 @@
     <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Clases\Documento.cs" />
+    <Compile Include="Clases\ObjetoSapBase.cs" />
     <Compile Include="ConexionSrvLayer.cs" />
     <Compile Include="ConexionSrvLayerCollection.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Extensiones.cs" />
+    <Compile Include="Helper.cs" />
     <Compile Include="Interfaces\IAddressExtensionSap.cs" />
+    <Compile Include="Interfaces\IAgregarViaServiceLayer.cs" />
     <Compile Include="Interfaces\IBatchNumbersSap.cs" />
+    <Compile Include="Interfaces\ICamposDeUsuario.cs" />
     <Compile Include="Interfaces\ICCDNumbersSap.cs" />
     <Compile Include="Interfaces\IDocumentLineSap.cs" />
     <Compile Include="Interfaces\IDocumentsAdditionalExpensesSap.cs" />

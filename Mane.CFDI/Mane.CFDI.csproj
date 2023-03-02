@@ -42,10 +42,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CFDI4\CFDI4.cs" />
-    <Compile Include="CFDI4\Cfdi4Base.cs" />
     <Compile Include="Cfdi.cs" />
+    <Compile Include="Complementos\TimbreFiscalDigital\v1_1\TimbreFiscalDigital.cs" />
+    <Compile Include="Extensiones.cs" />
+    <Compile Include="Complementos\Pago\v2\Pagos.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="v4\Catalogos.cs" />
+    <Compile Include="v4\Comprobante.cs" />
+    <Compile Include="v4\ComprobanteStatic.cs" />
     <Compile Include="XmlObj.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

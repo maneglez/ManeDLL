@@ -118,6 +118,7 @@
     <Compile Include="QueryBulder\QueryBuilder.Query.cs" />
     <Compile Include="QueryBulder\QueryBuilderExeption.cs" />
     <Compile Include="QueryBulder\QueryBuilder.cs" />
+    <Compile Include="QueryUtils.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Modelo\Modelo.Generic.ModeloCollection.cs" />

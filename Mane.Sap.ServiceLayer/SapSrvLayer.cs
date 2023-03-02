@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Runtime.Remoting.Messaging;
@@ -68,6 +69,12 @@ namespace Mane.Sap.ServiceLayer
         public static SLResponse PATCH(string query, object body, string connName = "")
         {
             return ExecuteQuery(query, SLMethod.PATCH, connName, body);
+        }
+
+        public static SLResponse UpdateObject(BoObjectTypes tipoObjeto,object objectID,Dictionary<string,object> values,string connName = "")
+        {
+            
+            return PATCH(Helper.GetObjectQuery(tipoObjeto,objectID), values, connName);
         }
 
         /// <summary>

@@ -64,6 +64,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Mane.CFDI\Mane.CFDI.csproj">
+      <Project>{9c522906-4448-463d-9c5f-6b5b33097012}</Project>
+      <Name>Mane.CFDI</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Mane.Helpers\Mane.Helpers.csproj">
       <Project>{6344b9e2-f825-4165-b506-ab3e2f822a49}</Project>
       <Name>Mane.Helpers</Name>

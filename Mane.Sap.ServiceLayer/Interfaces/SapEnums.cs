@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Mane.Sap.ServiceLayer.Interfaces
+namespace Mane.Sap.ServiceLayer
 {
     public enum CommissionTradeTypeEnum
     {

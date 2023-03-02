@@ -19,7 +19,7 @@ namespace Mane.Sap.ServiceLayer
         /// <summary>
         /// Nombre o ip del servidor
         /// </summary>
-        public string Server { get; set; } = "127.0.0.1";
+        public string Server { get; set; } = "localhost";
         /// <summary>
         /// Puerto, Por defecto 50000
         /// </summary>

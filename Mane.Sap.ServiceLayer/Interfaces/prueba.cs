@@ -2,7 +2,7 @@
 
 namespace Mane.Sap.ServiceLayer.Interfaces
 {
-    public class Pruebita : IRelatedDocumentsSap
+    public class Pruebita 
     {
 
 

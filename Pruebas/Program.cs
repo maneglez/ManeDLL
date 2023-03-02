@@ -1,6 +1,7 @@
 ﻿using Mane.Sap.ServiceLayer;
 using System;
 using System.Windows.Forms;
+using System.Collections.Generic;
 
 namespace Pruebas
 {
@@ -20,6 +21,9 @@ namespace Pruebas
 
         static void Prueba()
         {
+            var cfdi =  Mane.CFDI.v4.Comprobante.CargarDesdeArchivo(@"C:\Users\TIE\Desktop\mane\Nutryplus\PO01-2023-1400005738.xml");
+            Console.WriteLine(cfdi.Complemento.PagosV2.Pago[0].Monto.ToString("c"));
+            return;
            if(SapSrvLayer.Conexiones.Count == 0)
             {
                 var c = new ConexionSrvLayer
@@ -27,24 +31,13 @@ namespace Pruebas
                     CompanyDB = "XML",
                     User = "manager",
                     Password = "1234",
-                    Server = "localhost",
-                    Port = 50000
+                    //por defecto el puerto es 50000
+                    //el server es localhost
+                    //y el protocol es https
                 };
                 SapSrvLayer.Conexiones.Add(c);
             }
-            Console.WriteLine("Ingrese una consulta para service layer: ");
-            try
-            {
-               var result = SapSrvLayer.GET(Console.ReadLine());
-                Console.WriteLine("Resultado:");
-                Console.WriteLine(result.Content);
-                Clipboard.SetText(result.Content);
-                Console.WriteLine("Copiado al portapapeles");
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Ocurrió un error: " + e.Message);
-            }
+
 
         }
         
