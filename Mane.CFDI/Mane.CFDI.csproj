@@ -50,7 +50,6 @@
     <Compile Include="v4\Catalogos.cs" />
     <Compile Include="v4\Comprobante.cs" />
     <Compile Include="v4\ComprobanteStatic.cs" />
-    <Compile Include="XmlObj.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

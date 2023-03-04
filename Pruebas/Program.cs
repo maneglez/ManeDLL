@@ -21,8 +21,8 @@ namespace Pruebas
 
         static void Prueba()
         {
-            var cfdi =  Mane.CFDI.v4.Comprobante.CargarDesdeArchivo(@"C:\Users\TIE\Desktop\mane\Nutryplus\PO01-2023-1400005738.xml");
-            Console.WriteLine(cfdi.Complemento.PagosV2.Pago[0].Monto.ToString("c"));
+            var cfdi =  Mane.CFDI.v4.Comprobante.CargarDesdeArchivo(@"C:\Users\TIE\Desktop\mane\CAMPANARIO\05 Mayo Xml Egresos\1de0d5d9-4edc-4d0a-8738-cbca64912bd8.xml");
+            Console.WriteLine(cfdi.Total.ToString("c"));
             return;
            if(SapSrvLayer.Conexiones.Count == 0)
             {
