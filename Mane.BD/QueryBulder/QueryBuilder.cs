@@ -68,7 +68,7 @@ namespace Mane.BD
         /// <returns>Retorna nulo si no encuentra nada</returns>
         public object GetScalar(string connName = "")
         {
-            NombreConexion = connName;
+            connName = VerifyConnection(connName);
             return Bd.ExecuteEscalar(GetBuilder().BuildQuery(), connName);
         }
 
@@ -87,21 +87,29 @@ namespace Mane.BD
         /// </summary>
         /// <returns>Consulta SQL</returns>
         public string GetQuery(string NombreConexion = "")
-            => GetBuilder(NombreConexion).BuildQuery();
+        {
+            NombreConexion = VerifyConnection(NombreConexion);
+            return GetBuilder(NombreConexion).BuildQuery();
+        }
+
 
         /// <summary>
         /// Retorna un data table con el resultado de la consulta actual
         /// </summary>
         /// <param name="NombreConexion">Nombre de la conexión</param>
         /// <returns></returns>
-        public DataTable Get(string NombreConexion = "") => Bd.ExecuteQuery(
+        public DataTable Get(string NombreConexion = "") {
+            NombreConexion = VerifyConnection(NombreConexion);
+           return Bd.ExecuteQuery(
             GetBuilder(NombreConexion).BuildQuery(),
             NombreConexion);
+        }
         public DataTable ExecuteProcedure(string procedureName, object[] parametros = null, string ConnName = "")
         {
+            ConnName = VerifyConnection(ConnName);
             return Bd.ExecuteQuery(
-                GetBuilder(NombreConexion).BuildExecProcedure(procedureName, parametros),
-                ConnName == null ? "" : ConnName
+                GetBuilder(ConnName).BuildExecProcedure(procedureName, parametros),
+                ConnName
                 );
         }
 
@@ -224,6 +232,19 @@ namespace Mane.BD
         #endregion
 
         #region helpers
+
+        public QueryBuilder Connection(string connectionName)
+        {
+            this.NombreConexion = connectionName;
+            return this;
+        }
+        private string VerifyConnection(string NombreConexion)
+        {
+            if (!string.IsNullOrEmpty(this.NombreConexion))
+                NombreConexion = this.NombreConexion;
+            else this.NombreConexion = NombreConexion;
+            return this.NombreConexion;
+        }
         /// <summary>
         /// Crea una copia del query actual;
         /// </summary>

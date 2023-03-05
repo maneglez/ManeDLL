@@ -112,8 +112,10 @@ namespace Mane.BD.Executors
                 conn = new OdbcConnection(ConnString);
                 conn.Open();
             }
-            catch (OdbcException)
+            catch (OdbcException e)
             {
+                Bd.LastErrorCode = e.ErrorCode;
+                Bd.LastErrorDescription = e.Message;
                 return false;
             }
             return true;

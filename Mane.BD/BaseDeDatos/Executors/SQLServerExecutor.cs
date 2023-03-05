@@ -108,8 +108,10 @@ namespace Mane.BD.Executors
                 conn = new SqlConnection(ConnString);
                 conn.Open();
             }
-            catch (SqlException)
+            catch (SqlException e)
             {
+                Bd.LastErrorCode = e.ErrorCode;
+                Bd.LastErrorDescription = e.Message;
                 return false;
             }
             return true;

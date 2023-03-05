@@ -119,8 +119,10 @@ namespace Mane.BD.Executors
                 conn.Close();
 
             }
-            catch (SQLiteException)
+            catch (SQLiteException e)
             {
+                Bd.LastErrorCode = e.ErrorCode;
+                Bd.LastErrorDescription = e.Message;
                 return false;
             }
             return true;
