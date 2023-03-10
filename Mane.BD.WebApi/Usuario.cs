@@ -6,7 +6,7 @@ using System.Web.Services.Protocols;
 
 namespace Mane.BD.WebApi
 {
-    public class Usuario : SoapHeader
+    public class WebApiUser : SoapHeader
     {
         public string UserName { get; set; }
         public string Password { get; set; }

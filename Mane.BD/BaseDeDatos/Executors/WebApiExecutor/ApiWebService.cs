@@ -30,7 +30,7 @@ namespace Mane.BD.WebServiceBd
     public partial class ApiWebService : System.Web.Services.Protocols.SoapHttpClientProtocol
     {
 
-        private Usuario usuarioValueField;
+        private WebApiUser usuarioValueField;
 
         private System.Threading.SendOrPostCallback ExecuteQueryOperationCompleted;
 
@@ -46,7 +46,7 @@ namespace Mane.BD.WebServiceBd
             this.Url = "https://localhost:44380/ManeBdWebService.asmx";
         }
 
-        public Usuario UsuarioValue
+        public WebApiUser UsuarioValue
         {
             get
             {
@@ -293,7 +293,7 @@ namespace Mane.BD.WebServiceBd
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://tempuri.org/")]
     [System.Xml.Serialization.XmlRootAttribute(Namespace = "http://tempuri.org/", IsNullable = false)]
-    public partial class Usuario : System.Web.Services.Protocols.SoapHeader
+    public partial class WebApiUser : System.Web.Services.Protocols.SoapHeader
     {
 
         private string userNameField;

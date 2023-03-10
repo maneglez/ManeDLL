@@ -25,7 +25,7 @@ namespace Mane.BD.WebApi
     public class ApiWebService : WebService
     {
         
-        public Usuario User;
+        public WebApiUser User;
         private static ConexionModel.ModeloCollection Conexiones;
         private static Dictionary<string, PermisosConexionModel> PermisoConexion;
         private WebApiResponse ServiceExceptionHandler(Exception ex, HttpStatusCode statusCode = HttpStatusCode.InternalServerError)

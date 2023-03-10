@@ -18,7 +18,7 @@ namespace Mane.BD.BaseDeDatos.Executors.WebApiExecutor
             Client = new WebServiceBd.ApiWebService
             {
                 Timeout = Conexion.TimeOut * 1000,
-                UsuarioValue = new WebServiceBd.Usuario
+                UsuarioValue = new WebServiceBd.WebApiUser
                 {
                     UserName = conexion.Usuario,
                     Password = conexion.Contrasena

@@ -2,19 +2,39 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Drawing;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Mane.Helpers
+namespace Mane.BD.Forms
 {
-    public partial class SeleccionarGenerico : Form
+    public partial class MostrarDatosGenerico : Form
     {
 
         private QueryBuilder query { get; set; }
         public event EventHandler<ItemCambiaEventArgs> ItemSeleccionadoCambia;
+
+        private string Desde => Bd.ToDateSqlFormat(dtpDesde.Value);
+        private string Hasta => Bd.ToDateSqlFormat(dtpHasta.Value);
+        /// <summary>
+        /// Indica la columna que se utilizará para filtrar los datos por fecha
+        /// </summary>
+        public string ColumnaFiltradoFecha
+        {
+            get => columnaFiltradoFecha; set
+            {
+                if (string.IsNullOrEmpty(value))
+                {
+                    grpFecha.Visible = false;
+                }
+                else
+                {
+                    grpFecha.Visible = true;
+                }
+                columnaFiltradoFecha = value;
+            }
+        }
         /// <summary>
         /// Texto a buscar
         /// </summary>
@@ -31,19 +51,11 @@ namespace Mane.Helpers
                 habilitarBusqueda = value;
             }
         }
-        public bool CerrarAlSeleccionar { get; set; }
-        public bool MostrarBotonesDeSeleccionYCancelar
-        {
-            set
-            {
-                btnCancelar.Visible = value;
-                btnSeleccionar.Visible = value;
-            }
-        }
 
         private string ConnName;
         private int cBusqueda;
         private bool habilitarBusqueda;
+        private string columnaFiltradoFecha;
 
         public DataRow SelectedRow { get; private set; }
 
@@ -54,22 +66,35 @@ namespace Mane.Helpers
             return dtSource.Rows[dgvContenido.SelectedRows[0].Index];
 
         }
+        private string FormatCol(string col)
+        {
+            if (col.Contains("."))
+            {
+                var aux = col.Split('.');
+                return aux[aux.Length - 1];
+            }
+            return col;
+        }
         /// <summary>
         /// Seleccion de elementos generico
         /// </summary>
         /// <param name="query">Consulta</param>
         /// <param name="queryColNames_DisplayColNames">(opcional) Columna(query) -> nombre a mostrar, ej. [NombreUsuario, Nombre de usuario]</param>
-        public SeleccionarGenerico(QueryBuilder query, string connName, Dictionary<string, string> queryColNames_DisplayColNames = null, string[] FilterBy = null)
+        public MostrarDatosGenerico(QueryBuilder query, string connName, Dictionary<string, string> queryColNames_DisplayColNames = null, string[] FilterBy = null)
         {
             InitializeComponent();
             this.query = query;
-            if (query.CurrentLimit == 0)
-                query.Limit(300);
+            query.Limit(300);
             ConnName = connName;
             HabilitarBusqueda = true;
+            ColumnaFiltradoFecha = "";
+            dtpDesde.Value = DateTime.Now.AddMonths(-1);
+            dtpDesde.ValueChanged += (s, e) => Buscar();
+            dtpHasta.ValueChanged += (s, e) => Buscar();
             var dtFiltro = new DataTable();
             dtFiltro.Columns.Add(new DataColumn("value"));
             dtFiltro.Columns.Add(new DataColumn("name"));
+
             if (queryColNames_DisplayColNames != null)
             {
                 this.query.Select(queryColNames_DisplayColNames.Keys.ToArray());
@@ -78,7 +103,7 @@ namespace Mane.Helpers
                     dgvContenido.Columns.Add(new DataGridViewTextBoxColumn
                     {
                         Name = item,
-                        DataPropertyName = item,
+                        DataPropertyName = FormatCol(item),
                         HeaderText = queryColNames_DisplayColNames[item],
                         SortMode = DataGridViewColumnSortMode.NotSortable,
 
@@ -86,11 +111,9 @@ namespace Mane.Helpers
                     if (FilterBy == null)
                         dtFiltro.Rows.Add(item, queryColNames_DisplayColNames[item]);
                     else if (FilterBy.Contains(item))
-                    {
                         dtFiltro.Rows.Add(item, queryColNames_DisplayColNames[item]);
-                    }
-                }
 
+                }
             }
             else
             {
@@ -120,9 +143,6 @@ namespace Mane.Helpers
             cbFiltro.DisplayMember = "name";
             if (dtFiltro.Rows.Count > 0)
                 cbFiltro.SelectedIndex = 0;
-
-            MostrarBotonesDeSeleccionYCancelar = true;
-            CerrarAlSeleccionar = true;
         }
         private void Buscar()
         {
@@ -133,35 +153,28 @@ namespace Mane.Helpers
                 return;
             }
             Cursor = Cursors.WaitCursor;
-            DataTable dt;
-            if (string.IsNullOrEmpty(Busqueda))
-            {
-                dt = query.Get(ConnName);
-            }
-            else
+            DataTable dt = null;
+            try
             {
                 var q = query.Copy();
-                q.Where(cbFiltro.SelectedValue.ToString(), "LIKE", $"%{Busqueda}%");
-                dt = q.Get(ConnName);
+                if (!string.IsNullOrEmpty(ColumnaFiltradoFecha))
+                    q.WhereBetween(ColumnaFiltradoFecha, Desde, Hasta);
+                if (string.IsNullOrEmpty(Busqueda))
+                {
+                    dt = q.Get(ConnName);
+                }
+                else
+                {
+                    q.Where(cbFiltro.SelectedValue.ToString(), "LIKE", $"%{Busqueda}%");
+                    dt = q.Get(ConnName);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
             dgvContenido.DataSource = dt;
-            AjustarTamano();
             Cursor = Cursors.Default;
-        }
-
-        private void AjustarTamano()
-        {
-            int ancho = 0;
-            foreach (DataGridViewColumn c in dgvContenido.Columns)
-            {
-                ancho += c.Width;
-            }
-            if (ancho <= MinimumSize.Width)
-                Size = MinimumSize;
-            else
-            {
-                Size = new Size(ancho, Size.Height);
-            }
         }
 
         private void SeleccionarGenerico_Load(object sender, EventArgs e)
@@ -185,7 +198,6 @@ namespace Mane.Helpers
         {
             if (dgvContenido.SelectedRows.Count == 0) MessageBox.Show("No se seleccionó nada");
             SelectedRow = getSelectedRow();
-            if (!CerrarAlSeleccionar) return;
             DialogResult = DialogResult.OK;
             Close();
         }
@@ -233,6 +245,11 @@ namespace Mane.Helpers
             if (contador == 1)
                 funcion.Invoke();
             contador--;
+        }
+
+        private void btnActualizar_Click(object sender, EventArgs e)
+        {
+            Actualizar();
         }
     }
 }
