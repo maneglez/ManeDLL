@@ -81,6 +81,7 @@ namespace Mane.BD
                     case "DateTime": return value == DBNull.Value ? DateTime.MinValue : DateTime.Parse(value.ToString());
                     case "Double": return value == DBNull.Value ? 0 : double.Parse(value.ToString());
                     case "Int32": return value == DBNull.Value ? 0 : int.Parse(value.ToString());
+                    case "Int16": return value == DBNull.Value ? 0 : Convert.ToInt16(value);
                     case "Decimal": return value == DBNull.Value ? 0 : decimal.Parse(value.ToString());
                     case "Byte[]": return value == DBNull.Value ? new byte[] { } : SoapHexBinary.Parse(value.ToString()).Value;
                 }

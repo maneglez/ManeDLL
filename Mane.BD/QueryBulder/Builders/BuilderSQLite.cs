@@ -9,7 +9,24 @@
         }
         override public string BuildLimit()
         {
+            if(QueryBuilder.Pagination != null)
+            {
+                var p= QueryBuilder.Pagination;
+                return $"LIMIT {p.Paginate} OFFSET {(p.Page - 1) * p.Paginate}";
+            }
             return QueryBuilder._Limit > 0 ? $"LIMIT {QueryBuilder._Limit}" : "";
+        }
+        override public string BuildOrderBy()
+        {
+            string orderBy = "";
+            var q = QueryBuilder;
+            if (q.Order != null)
+            {
+                var order = q.Order;
+                string orden = order.Orden == OrderDireccion.Asendente ? "ASC" : "DESC";
+                orderBy = $"ORDER BY {FormatColumn(order.Columna)} {orden}";
+            }
+            return orderBy;
         }
         override public string BuildQuery()
         {

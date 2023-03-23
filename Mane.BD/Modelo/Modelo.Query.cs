@@ -285,5 +285,11 @@ namespace Mane.BD
             query.WhereNotIn(columna, valores);
             return this;
         }
+
+        public ModeloQuery<Tmodelo> Paginate(int page, int paginate)
+        {
+            query.Paginate(page, paginate);
+            return this;
+        }
     }
 }

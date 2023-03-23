@@ -7,11 +7,13 @@ namespace Mane.BD
     {
         public int Count(string NombreConexion = "")
         {
+           NombreConexion = VerifyConnection(NombreConexion);
             return Convert.ToInt32(Bd.ExecuteEscalar(GetBuilder(NombreConexion).Count(), NombreConexion));
         }
 
         public void Delete(string NombreConexion = "", bool forzar = false)
         {
+            NombreConexion = VerifyConnection(NombreConexion);
             if (Wheres.Count == 0 && !forzar) throw new QueryBuilderExeption("No puede ejecutar un delete sin condición");
             if (Tabla == "") throw new QueryBuilderExeption("No se eligió una tabla");
             Bd.ExecuteNonQuery(GetBuilder(NombreConexion).Delete(), NombreConexion);
@@ -19,6 +21,7 @@ namespace Mane.BD
 
         public bool Exists(string NombreConexion = "")
         {
+            NombreConexion = VerifyConnection(NombreConexion);
             Limit(1);
             return Bd.Exists(GetBuilder(NombreConexion).BuildQuery(), NombreConexion);
         }
@@ -37,6 +40,7 @@ namespace Mane.BD
 
         public object Insert(Dictionary<string, object> col_values, string NombreConexion = "")
         {
+            NombreConexion = VerifyConnection(NombreConexion);
             if (Tabla == "") throw new QueryBuilderExeption("No se eligió una tabla");
             object result = Bd.ExecuteEscalar(GetBuilder(NombreConexion).Insert(col_values), NombreConexion);
             if (result == DBNull.Value || result == null)
@@ -47,6 +51,7 @@ namespace Mane.BD
 
         public object Insert(object col_values, string NombreConexion = "")
         {
+            NombreConexion = VerifyConnection(NombreConexion);
             if (Tabla == "") throw new QueryBuilderExeption("No se eligió una tabla");
             object result = Bd.ExecuteEscalar(GetBuilder(NombreConexion).Insert(col_values), NombreConexion);
             return result;
@@ -102,7 +107,6 @@ namespace Mane.BD
             };
             return this;
         }
-
         public QueryBuilder OrWhere(Func<QueryBuilder, QueryBuilder> func)
         {
             return CommonWhere("", "", "OR", func);
@@ -121,6 +125,12 @@ namespace Mane.BD
         public QueryBuilder OrWhereBetween(string col1, object valor1, object valor2)
         {
             return CommonWhere(col1, "BETWEEN", new object[] { valor1, valor2 }, "OR", TipoWhere.WhereBetween);
+        }
+
+        public QueryBuilder Paginate(int page, int paginate)
+        {
+            Pagination = new PaginateClass(page, paginate);
+            return this;
         }
 
         public QueryBuilder RawQuery(string query)
@@ -170,6 +180,7 @@ namespace Mane.BD
 
         public int Update(Dictionary<string, object> dic, string NombreConexion = "", bool forzar = false)
         {
+            NombreConexion = VerifyConnection(NombreConexion);
             if (dic == null) return 0;
             if (Wheres.Count == 0 && !forzar) throw new QueryBuilderExeption("No puede ejecutar un update sin condición");
             if (Tabla == "") throw new QueryBuilderExeption("No se eligió una tabla");

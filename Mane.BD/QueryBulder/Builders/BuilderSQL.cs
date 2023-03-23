@@ -52,14 +52,21 @@ namespace Mane.BD.QueryBulder.Builders
             return QueryBuilder._Limit > 0 ? $"TOP({QueryBuilder._Limit})" : "";
         }
 
-        public string BuildOrderBy()
+        public virtual string BuildOrderBy()
         {
             string orderBy = "";
             var q = QueryBuilder;
             if (q.Order != null)
             {
-                string orden = q.Order.Orden == OrderDireccion.Asendente ? "ASC" : "DESC";
-                orderBy = $"ORDER BY {FormatColumn(q.Order.Columna)} {orden}";
+                var order = q.Order;
+                string orden = order.Orden == OrderDireccion.Asendente ? "ASC" : "DESC";
+                orderBy = $"ORDER BY {FormatColumn(order.Columna)} {orden}";
+                if(q.Pagination != null)
+                {
+                    var p = q.Pagination;
+                    orderBy += $" OFFSET {(p.Page - 1 * p.Paginate)} ROWS";
+                    orderBy += $" FETCH NEXT {p.Paginate} ROWS ONLY";
+                }
             }
             return orderBy;
         }

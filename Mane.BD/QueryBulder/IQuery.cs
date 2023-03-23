@@ -37,6 +37,13 @@ namespace Mane.BD
         T OrWhere(string col, object valor);
         T OrWhere(string col1, string operador, object Valor);
         T OrWhereBetween(string col1, object valor1, object valor2);
+        /// <summary>
+        /// Pagina el resultado de la consulta
+        /// </summary>
+        /// <param name="page">Número de página</param>
+        /// <param name="paginate">Limite de registros por página</param>
+        /// <returns>T</returns>
+        T Paginate(int page, int paginate);
         T RawQuery(string query);
         T RightJoin(string tabla, string col1, string col2, string operador = "=");
         T RightJoin(string tabla, string col1, string col2, Func<T, T> func, string operador = "=");

@@ -26,6 +26,7 @@ namespace Mane.BD
         internal OrderByClass Order;
         internal int _Limit;
         internal string NombreConexion;
+        internal PaginateClass Pagination;
         #endregion
 
         #region Constructores
@@ -207,8 +208,18 @@ namespace Mane.BD
             public string Columna;
             public OrderDireccion Orden = OrderDireccion.Asendente;
         }
+        [Serializable]
+        internal class PaginateClass
+        {
+            public PaginateClass(int page, int paginate)
+            {
+                Page = page;
+                Paginate = paginate;
+            }
 
-
+            public int Page { get; set; }
+            public int Paginate { get; set; }
+        }
         internal enum TipoWhere
         {
             Where,
@@ -238,6 +249,11 @@ namespace Mane.BD
             this.NombreConexion = connectionName;
             return this;
         }
+        /// <summary>
+        /// Establece y/o recupera el nombre de la conexion del querybuilder actual
+        /// </summary>
+        /// <param name="NombreConexion"></param>
+        /// <returns></returns>
         private string VerifyConnection(string NombreConexion)
         {
             if (!string.IsNullOrEmpty(this.NombreConexion))
