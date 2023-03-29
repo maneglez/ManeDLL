@@ -17,6 +17,7 @@ namespace Mane.BD
         private string usuario;
         private string contrasena;
         private string driver;
+        [JsonIgnore]
         public IBdExecutor Executor
         {
             get
@@ -48,6 +49,7 @@ namespace Mane.BD
         /// <summary>
         /// Cadena De conexión generada apartir de los atributos de la clase
         /// </summary>
+        [JsonIgnore]
         public string CadenaDeConexion
         {
             get
@@ -59,7 +61,7 @@ namespace Mane.BD
                         {
                             var sb = new SqlConnectionStringBuilder
                             {
-                                DataSource = Servidor,
+                                DataSource = ServerName(),
                                 InitialCatalog = NombreBD,
                                 UserID = Usuario,
                                 Password = Contrasena,
@@ -75,7 +77,7 @@ namespace Mane.BD
                     case TipoDeBd.SQLite:
                         var b = new SQLiteConnectionStringBuilder
                         {
-                            DataSource = Servidor
+                            DataSource = ServerName()
                         };
                         if (!string.IsNullOrEmpty(Contrasena))
                             b.Password = Contrasena;
@@ -83,7 +85,7 @@ namespace Mane.BD
                     case TipoDeBd.Hana:
                         var ob = new OdbcConnectionStringBuilder();
                         ob.Driver = Driver;
-                        ob.Add("SERVERNODE", Servidor);
+                        ob.Add("SERVERNODE", ServerName());
                         ob.Add("UID", Usuario);
                         ob.Add("PWD", Contrasena);
                         //   ob.Add("DATABASENAME", NombreBD);
@@ -110,7 +112,7 @@ namespace Mane.BD
         /// </summary>
         public string Servidor
         {
-            get => Puerto != 0 ? servidor + ":" + Puerto : servidor;
+            get => servidor;
 
             set => servidor = value == null ? "" : value;
         }
@@ -153,7 +155,7 @@ namespace Mane.BD
             Construct();
 
         }
-
+        private string ServerName() => Puerto != 0 ? servidor + ":" + Puerto : servidor;
 
 
 

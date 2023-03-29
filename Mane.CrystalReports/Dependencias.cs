@@ -78,7 +78,7 @@ namespace Mane.CrystalReports
         public static void Cargar()
         {
             if (VersionDeCrystal == null)
-                throw new Exception("No ha definido una versión de runtime crystal reports");
+                throw new Exception("No ha definido una versión de runtime crystal reports (Mane.CrystalReports.Dependencias.VersionDeCrystal no se ha definido)");
                 if (!Directory.Exists(Path.Combine(RutaEnsamblados, "CrystalDecisions.CrystalReports.Engine")))
             {
                 RutaEnsamblados = RutaEnsambladoNet4;

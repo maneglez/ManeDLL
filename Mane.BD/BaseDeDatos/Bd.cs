@@ -1,10 +1,10 @@
 ﻿using Mane.BD.Executors;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-
-
+using System.IO;
 
 namespace Mane.BD
 {
@@ -220,6 +220,37 @@ namespace Mane.BD
             }
 
         }
+        #region Persistencia de conexiones en archivo json
+        public static ConexionCollection LoadConnectionsFromFile(string fileName)
+        {
+            if (!File.Exists(fileName))
+                return new ConexionCollection();
+            var json = "";
+            using (var sr = new StreamReader(fileName))
+                json = sr.ReadToEnd();
+            if (string.IsNullOrEmpty(json))
+                return new ConexionCollection();
+            return JsonConvert.DeserializeObject<ConexionCollection>(json);
+        }
+        public static ConexionCollection LoadConnectionsFromFile()
+        {
+            return LoadConnectionsFromFile("ManeBdConnections.json");
+        }
+        public static void SaveConnectionsToFile(ConexionCollection conexiones, string fileName)
+        {
+            var json = JsonConvert.SerializeObject(conexiones,Formatting.Indented);
+            using (var f = File.Create(fileName)){ }
+            using (var sw = new StreamWriter(fileName))
+                sw.Write(json);
+        }
+        public static void SaveConnectionsToFile(ConexionCollection conexiones)
+        {
+            SaveConnectionsToFile(conexiones,"ManeBdConnections.json");
+        }
+        #endregion
+
     }
+
+
 
 }
