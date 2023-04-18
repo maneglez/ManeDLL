@@ -33,7 +33,8 @@ namespace Mane.BD.QueryBulder.Builders
         {
             if (columna == "") return columna;
             string colFormateada = "";
-
+            if (columna.StartsWith(delimiters[0].ToString()))
+                return columna;
 
             if (columna.ToLower().Contains(" as ")) // Columna as otraCosa
             {
@@ -93,6 +94,8 @@ namespace Mane.BD.QueryBulder.Builders
         {
             if (string.IsNullOrEmpty(tabla)) return "";
             string output = tabla.Trim();
+            if (output.StartsWith(delimiters[0].ToString()))
+                return output;
             if (output.Contains(" "))// table alias
             {
                 var aux = output.Split(' ');
@@ -104,6 +107,7 @@ namespace Mane.BD.QueryBulder.Builders
         }
         private static string Delimit(string value, char[] delimiter)
         {
+            if (string.IsNullOrEmpty(value) && delimiter[0] != '\'') return "";
             return delimiter[0] + value + delimiter[1];
         }
 

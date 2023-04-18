@@ -216,6 +216,8 @@ namespace Mane.BD
                 if (Count == 0) return null;
                 if (string.IsNullOrEmpty(nombreConexion) && string.IsNullOrEmpty(DefaultConnectionName))
                     return Conexiones[0];
+                else if (string.IsNullOrEmpty(nombreConexion) && !string.IsNullOrEmpty(DefaultConnectionName))
+                    nombreConexion = DefaultConnectionName;
                 return Find(c => c.Nombre == nombreConexion);
             }
 
@@ -234,7 +236,8 @@ namespace Mane.BD
         }
         public static ConexionCollection LoadConnectionsFromFile()
         {
-            return LoadConnectionsFromFile("ManeBdConnections.json");
+            
+            return LoadConnectionsFromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"ManeBdConnections.json"));
         }
         public static void SaveConnectionsToFile(ConexionCollection conexiones, string fileName)
         {
@@ -245,7 +248,7 @@ namespace Mane.BD
         }
         public static void SaveConnectionsToFile(ConexionCollection conexiones)
         {
-            SaveConnectionsToFile(conexiones,"ManeBdConnections.json");
+            SaveConnectionsToFile(conexiones, Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ManeBdConnections.json"));
         }
         #endregion
 

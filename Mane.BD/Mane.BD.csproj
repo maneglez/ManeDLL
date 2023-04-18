@@ -112,6 +112,7 @@
     <Compile Include="Modelo\Modelo.cs" />
     <Compile Include="Modelo\Modelo.FormsBinding.cs" />
     <Compile Include="Modelo\Modelo.Query.cs" />
+    <Compile Include="Modelo\ModeloConCamposDeUsuario.cs" />
     <Compile Include="Modelo\ModeloException.cs" />
     <Compile Include="Modelo\ModeloExceptionEventArgs.cs" />
     <Compile Include="Modelo\Modelo.Generic.cs" />

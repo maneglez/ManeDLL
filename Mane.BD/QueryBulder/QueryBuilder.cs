@@ -186,6 +186,19 @@ namespace Mane.BD
             });
             return this;
         }
+        private QueryBuilder CommonWhere(object valor, string operador, string booleano, Func<QueryBuilder, QueryBuilder> func)
+        {
+            var q = func.Invoke(new QueryBuilder(this.Tabla));
+            this.Wheres.Add(new WhereClass()
+            {
+                Query = q,
+                Valor = valor,
+                Boleano = booleano,
+                Operador = operador,
+                Tipo = TipoWhere.WhereGroup
+            });
+            return this;
+        }
         #endregion
 
         #region SubClases y Enums
@@ -195,6 +208,7 @@ namespace Mane.BD
             public string Columna, Operador, Boleano;
             public object Valor;
             public TipoWhere Tipo;
+            public QueryBuilder Query;
             public WhereClass()
             {
                 Columna = Operador = Boleano = "";
@@ -257,8 +271,9 @@ namespace Mane.BD
         private string VerifyConnection(string NombreConexion)
         {
             if (!string.IsNullOrEmpty(this.NombreConexion))
-                NombreConexion = this.NombreConexion;
-            else this.NombreConexion = NombreConexion;
+                this.NombreConexion = NombreConexion;
+            else if (!string.IsNullOrEmpty(Bd.DefaultConnectionName) && string.IsNullOrEmpty(NombreConexion))
+                this.NombreConexion = Bd.DefaultConnectionName;
             return this.NombreConexion;
         }
         /// <summary>

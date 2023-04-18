@@ -217,6 +217,11 @@ namespace Mane.BD
             return CommonWhere(col1, operador, valor, "AND", TipoWhere.Where);
         }
 
+        public QueryBuilder Where(Func<QueryBuilder, QueryBuilder> func, string operador, object valor)
+        {
+            return CommonWhere(valor, operador, "AND", func);
+        }
+
         public QueryBuilder WhereBetween(string col1, object valor1, object valor2)
         {
             return CommonWhere(col1, "BETWEEN", new object[] { valor1, valor2 }, "AND", TipoWhere.WhereBetween);

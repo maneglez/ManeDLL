@@ -116,7 +116,7 @@ namespace Mane.BD.QueryBulder.Builders
             if (qb.Wheres.Count == 0) return where;
             foreach (var w in qb.Wheres)
             {
-                where += $" {w.Boleano} {FormatColumn(w.Columna)} {w.Operador} ";
+                where += $" {w.Boleano} {(w.Query == null ? FormatColumn(w.Columna) : $"({w.Query.BuildQuery(TipoDeBd.SqlServer)})")} {w.Operador} ";
                 switch (w.Tipo)
                 {
                     case QueryBuilder.TipoWhere.WhereIn:
@@ -143,9 +143,16 @@ namespace Mane.BD.QueryBulder.Builders
                         where += FormatColumn((string)w.Valor);
                         break;
                     case QueryBuilder.TipoWhere.WhereGroup:
-                        QueryBuilder q1 = (QueryBuilder)w.Valor;
-                        if (q1.Columnas.Length == 0) where += $"({q1.GetBuilder(Tipo).BuildWeres()})";
-                        else where += $"({q1.GetQuery(TipoDeBd.SqlServer)})";
+                        if(w.Valor is QueryBuilder q1)
+                        {
+                            if (q1.Columnas.Length == 0) where += $"({q1.GetBuilder(Tipo).BuildWeres()})";
+                            else where += $"({q1.GetQuery(TipoDeBd.SqlServer)})";
+                        }
+                        else if(w.Query != null)
+                        {
+                            where += FormatValue(w.Valor);
+                        }
+                         
                         break;
                     case QueryBuilder.TipoWhere.WhereBetween:
                         var vals = (object[])w.Valor;

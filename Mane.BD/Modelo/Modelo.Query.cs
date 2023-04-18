@@ -291,5 +291,13 @@ namespace Mane.BD
             query.Paginate(page, paginate);
             return this;
         }
+
+        public ModeloQuery<Tmodelo> Where(Func<ModeloQuery<Tmodelo>, ModeloQuery<Tmodelo>> func, string operador, object valor)
+        {
+            var aux = func.Invoke(new ModeloQuery<Tmodelo>());
+            var qry = aux.query;
+            query.Where(q=>qry, operador, valor);
+            return this;
+        }
     }
 }

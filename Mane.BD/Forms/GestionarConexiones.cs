@@ -75,5 +75,22 @@ namespace Mane.BD.Forms
         {
             Guardar();
         }
+        private void ProbarConexion()
+        {
+            if (dataGridView1.CurrentCell == null) return;
+            if (dataGridView1.CurrentCell.RowIndex == -1) return;
+            var c = dataGridView1.CurrentCell.OwningRow.DataBoundItem as Conexion;
+            Cursor = Cursors.WaitCursor;
+            if (!Bd.TestConection(c))
+                MessageBox.Show($"No se logró conectar {Bd.LastErrorDescription}");
+            else
+                MessageBox.Show("Conectado correctamente!");
+            Cursor = Cursors.Default;
+        }
+
+        private void probarConexionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ProbarConexion();
+        }
     }
 }
