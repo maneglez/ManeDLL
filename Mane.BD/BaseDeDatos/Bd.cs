@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.IO;
+using System.Security.Cryptography;
 
 namespace Mane.BD
 {
@@ -220,9 +221,25 @@ namespace Mane.BD
                     nombreConexion = DefaultConnectionName;
                 return Find(c => c.Nombre == nombreConexion);
             }
+            public bool TestAllConections()
+            {
+                foreach (var c in this)
+                    if (!TestConection(c)) return false;
+                return true;
+            }
 
         }
         #region Persistencia de conexiones en archivo json
+        /// <summary>
+        /// Indica la contraseña para encriptar y desencriptar las credenciales de las conexiones a base de datos.
+        /// Si no se establece la contraseña, no se encriptarán las contraseñas
+        /// </summary>
+        public static string JsonEncryptPassword { get; set; }
+        /// <summary>
+        /// Carga una colección de conexiones desde un json
+        /// </summary>
+        /// <param name="fileName">Archivo de conexiones</param>
+        /// <returns></returns>
         public static ConexionCollection LoadConnectionsFromFile(string fileName)
         {
             if (!File.Exists(fileName))
@@ -232,20 +249,41 @@ namespace Mane.BD
                 json = sr.ReadToEnd();
             if (string.IsNullOrEmpty(json))
                 return new ConexionCollection();
-            return JsonConvert.DeserializeObject<ConexionCollection>(json);
+            var conns = JsonConvert.DeserializeObject<ConexionCollection>(json);
+            //Decriptar contraseñas si La clave de encriptado está seteada
+            if (!string.IsNullOrEmpty(JsonEncryptPassword))
+                foreach (var c in conns)
+                    c.Contrasena = Helpers.Crypto.Decriptar(c.Contrasena, JsonEncryptPassword);
+            return conns;
         }
+        /// <summary>
+        /// Carga colección de conexiones desde archivo ManeBdConnections.json ubicado en la carpeta base del ejecutable
+        /// </summary>
+        /// <returns></returns>
         public static ConexionCollection LoadConnectionsFromFile()
         {
-            
             return LoadConnectionsFromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"ManeBdConnections.json"));
         }
+        /// <summary>
+        /// Guarda las conexiones en un archivo json
+        /// </summary>
+        /// <param name="conexiones">Lista de conexiones</param>
+        /// <param name="fileName">nombre del archivo json</param>
         public static void SaveConnectionsToFile(ConexionCollection conexiones, string fileName)
         {
+            //Encriptar contraseñas si La clave de encriptado está seteada
+            if (!string.IsNullOrEmpty(JsonEncryptPassword))
+                foreach (var c in conexiones)
+                    c.Contrasena = Helpers.Crypto.Encriptar(c.Contrasena, JsonEncryptPassword);
             var json = JsonConvert.SerializeObject(conexiones,Formatting.Indented);
             using (var f = File.Create(fileName)){ }
             using (var sw = new StreamWriter(fileName))
                 sw.Write(json);
         }
+        /// <summary>
+        /// Guarda las conexiones en el archivo ManeBdConnections.json ubicado en la carpeta base del ejecutable
+        /// </summary>
+        /// <param name="conexiones">Lista de conexiones</param>
         public static void SaveConnectionsToFile(ConexionCollection conexiones)
         {
             SaveConnectionsToFile(conexiones, Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ManeBdConnections.json"));
