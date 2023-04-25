@@ -239,7 +239,7 @@ namespace Mane.BD
         /// Carga una colección de conexiones desde un json
         /// </summary>
         /// <param name="fileName">Archivo de conexiones</param>
-        /// <returns></returns>
+        /// <returns>Colección de conexiones o coleccion vacía si no existe el archivo</returns>
         public static ConexionCollection LoadConnectionsFromFile(string fileName)
         {
             if (!File.Exists(fileName))

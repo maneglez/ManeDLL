@@ -157,7 +157,23 @@ namespace Mane.BD
         }
         private string ServerName() => Puerto != 0 ? servidor + ":" + Puerto : servidor;
 
-
+        public Conexion Copy()
+        {
+            return new Conexion
+            {
+                Nombre = Nombre,
+                Servidor = Servidor,
+                Usuario = Usuario,
+                Contrasena = Contrasena,
+                NombreBD = NombreBD,
+                Puerto = Puerto,
+                TipoDeBaseDeDatos = TipoDeBaseDeDatos,
+                SubTipoDeBD = SubTipoDeBD,
+                Driver = Driver,
+                TimeOut = TimeOut,
+                UseSSL = UseSSL
+            };
+        }
 
 
     }

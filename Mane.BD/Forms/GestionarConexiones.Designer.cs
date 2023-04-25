@@ -44,6 +44,7 @@
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.probarConexionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.button1 = new System.Windows.Forms.Button();
+            this.eliminarConexionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -67,6 +68,7 @@
             this.Column8,
             this.Column9});
             this.dataGridView1.ContextMenuStrip = this.contextMenuStrip1;
+            this.dataGridView1.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
             this.dataGridView1.Location = new System.Drawing.Point(12, 12);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.Size = new System.Drawing.Size(659, 208);
@@ -141,14 +143,16 @@
             // contextMenuStrip1
             // 
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.probarConexionToolStripMenuItem});
+            this.probarConexionToolStripMenuItem,
+            this.eliminarConexionToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(164, 26);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(181, 70);
+            this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
             // 
             // probarConexionToolStripMenuItem
             // 
             this.probarConexionToolStripMenuItem.Name = "probarConexionToolStripMenuItem";
-            this.probarConexionToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
+            this.probarConexionToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.probarConexionToolStripMenuItem.Text = "Probar Conexion";
             this.probarConexionToolStripMenuItem.Click += new System.EventHandler(this.probarConexionToolStripMenuItem_Click);
             // 
@@ -162,6 +166,13 @@
             this.button1.Text = "Guardar";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // eliminarConexionToolStripMenuItem
+            // 
+            this.eliminarConexionToolStripMenuItem.Name = "eliminarConexionToolStripMenuItem";
+            this.eliminarConexionToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.eliminarConexionToolStripMenuItem.Text = "Eliminar Conexion";
+            this.eliminarConexionToolStripMenuItem.Click += new System.EventHandler(this.eliminarConexionToolStripMenuItem_Click);
             // 
             // GestionarConexiones
             // 
@@ -196,5 +207,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Column9;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem probarConexionToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem eliminarConexionToolStripMenuItem;
     }
 }

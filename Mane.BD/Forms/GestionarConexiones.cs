@@ -92,5 +92,18 @@ namespace Mane.BD.Forms
         {
             ProbarConexion();
         }
+
+        private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
+        {
+
+        }
+
+        private void eliminarConexionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (dataGridView1.CurrentCell == null) return;
+            if (dataGridView1.CurrentCell.RowIndex == -1) return;
+            var c = dataGridView1.CurrentCell.OwningRow.DataBoundItem as Conexion;
+            Conexiones.Remove(c);
+        }
     }
 }

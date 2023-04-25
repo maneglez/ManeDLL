@@ -270,7 +270,7 @@ namespace Mane.BD
         /// <returns></returns>
         private string VerifyConnection(string NombreConexion)
         {
-            if (!string.IsNullOrEmpty(this.NombreConexion))
+            if (!string.IsNullOrEmpty(NombreConexion))
                 this.NombreConexion = NombreConexion;
             else if (!string.IsNullOrEmpty(Bd.DefaultConnectionName) && string.IsNullOrEmpty(NombreConexion))
                 this.NombreConexion = Bd.DefaultConnectionName;
