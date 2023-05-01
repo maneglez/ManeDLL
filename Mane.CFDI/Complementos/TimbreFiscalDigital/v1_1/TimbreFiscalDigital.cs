@@ -24,7 +24,7 @@ namespace Mane.CFDI.Complementos.TimbreFiscalDigital.v1_1
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.sat.gob.mx/TimbreFiscalDigital")]
     [System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.sat.gob.mx/TimbreFiscalDigital", IsNullable = false)]
-    public partial class TimbreFiscalDigital
+    public partial class TimbreFiscalDigital 
     {
 
         private string versionField;

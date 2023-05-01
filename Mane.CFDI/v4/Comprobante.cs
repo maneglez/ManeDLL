@@ -32,7 +32,7 @@ namespace Mane.CFDI.v4
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.sat.gob.mx/cfd/4")]
     [System.Xml.Serialization.XmlRootAttribute(Namespace = "http://www.sat.gob.mx/cfd/4", IsNullable = false)]
-    public partial class Comprobante
+    public partial class Comprobante 
     {
 
         private ComprobanteInformacionGlobal informacionGlobalField;
@@ -96,6 +96,11 @@ namespace Mane.CFDI.v4
         public Comprobante()
         {
             this.versionField = "4.0";
+        }
+
+        public Comprobante(string xmlPath)
+        {
+
         }
 
         /// <remarks/>
@@ -505,7 +510,7 @@ namespace Mane.CFDI.v4
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.sat.gob.mx/cfd/4")]
-    public partial class ComprobanteInformacionGlobal
+    public partial class ComprobanteInformacionGlobal 
     {
 
         private string periodicidadField;
@@ -563,7 +568,7 @@ namespace Mane.CFDI.v4
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.sat.gob.mx/cfd/4")]
-    public partial class ComprobanteCfdiRelacionados
+    public partial class ComprobanteCfdiRelacionados 
     {
 
         private ComprobanteCfdiRelacionadosCfdiRelacionado[] cfdiRelacionadoField;
@@ -605,7 +610,7 @@ namespace Mane.CFDI.v4
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.sat.gob.mx/cfd/4")]
-    public partial class ComprobanteCfdiRelacionadosCfdiRelacionado
+    public partial class ComprobanteCfdiRelacionadosCfdiRelacionado 
     {
 
         private string uUIDField;
@@ -631,7 +636,7 @@ namespace Mane.CFDI.v4
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.sat.gob.mx/cfd/4")]
-    public partial class ComprobanteEmisor
+    public partial class ComprobanteEmisor 
     {
 
         private string rfcField;
@@ -705,7 +710,7 @@ namespace Mane.CFDI.v4
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.sat.gob.mx/cfd/4")]
-    public partial class ComprobanteReceptor
+    public partial class ComprobanteReceptor 
     {
 
         private string rfcField;
@@ -1106,7 +1111,7 @@ namespace Mane.CFDI.v4
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.sat.gob.mx/cfd/4")]
-    public partial class ComprobanteConceptoImpuestos
+    public partial class ComprobanteConceptoImpuestos 
     {
 
         private ComprobanteConceptoImpuestosTraslado[] trasladosField;
@@ -1148,7 +1153,7 @@ namespace Mane.CFDI.v4
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.sat.gob.mx/cfd/4")]
-    public partial class ComprobanteConceptoImpuestosTraslado
+    public partial class ComprobanteConceptoImpuestosTraslado 
     {
 
         private decimal baseField;
@@ -1270,7 +1275,7 @@ namespace Mane.CFDI.v4
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.sat.gob.mx/cfd/4")]
-    public partial class ComprobanteConceptoImpuestosRetencion
+    public partial class ComprobanteConceptoImpuestosRetencion 
     {
 
         private decimal baseField;
@@ -1360,7 +1365,7 @@ namespace Mane.CFDI.v4
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.sat.gob.mx/cfd/4")]
-    public partial class ComprobanteConceptoACuentaTerceros
+    public partial class ComprobanteConceptoACuentaTerceros 
     {
 
         private string rfcACuentaTercerosField;
@@ -1434,7 +1439,7 @@ namespace Mane.CFDI.v4
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.sat.gob.mx/cfd/4")]
-    public partial class ComprobanteConceptoInformacionAduanera
+    public partial class ComprobanteConceptoInformacionAduanera 
     {
 
         private string numeroPedimentoField;
@@ -1460,7 +1465,7 @@ namespace Mane.CFDI.v4
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.sat.gob.mx/cfd/4")]
-    public partial class ComprobanteConceptoCuentaPredial
+    public partial class ComprobanteConceptoCuentaPredial 
     {
 
         private string numeroField;
@@ -1512,7 +1517,7 @@ namespace Mane.CFDI.v4
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.sat.gob.mx/cfd/4")]
-    public partial class ComprobanteConceptoParte
+    public partial class ComprobanteConceptoParte 
     {
 
         private ComprobanteConceptoParteInformacionAduanera[] informacionAduaneraField;
@@ -1708,7 +1713,7 @@ namespace Mane.CFDI.v4
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.sat.gob.mx/cfd/4")]
-    public partial class ComprobanteImpuestos
+    public partial class ComprobanteImpuestos 
     {
 
         private ComprobanteImpuestosRetencion[] retencionesField;
@@ -1814,7 +1819,7 @@ namespace Mane.CFDI.v4
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.sat.gob.mx/cfd/4")]
-    public partial class ComprobanteImpuestosRetencion
+    public partial class ComprobanteImpuestosRetencion 
     {
 
         private string impuestoField;
@@ -1856,7 +1861,7 @@ namespace Mane.CFDI.v4
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.sat.gob.mx/cfd/4")]
-    public partial class ComprobanteImpuestosTraslado
+    public partial class ComprobanteImpuestosTraslado 
     {
 
         private decimal baseField;
@@ -1982,7 +1987,6 @@ namespace Mane.CFDI.v4
     {
 
         private System.Xml.XmlElement[] anyField;
-        private Dictionary<ComplementosCompatibles, string> Complemento_version;
 
         /// <remarks/>
         [System.Xml.Serialization.XmlAnyElementAttribute()]
@@ -1997,68 +2001,7 @@ namespace Mane.CFDI.v4
                 this.anyField = value;
             }
         }
-        public string VersionDelComplemento(ComplementosCompatibles comp)
-        {
-            return Complemento_version[comp];
-        }
 
-        public void CargarComplementos()
-        {
-            var tipoEnum = typeof(ComplementosCompatibles);
-            var nombres = Enum.GetNames(tipoEnum);
-            var valores = Enum.GetValues(tipoEnum);
-            Complemento_version = new Dictionary<ComplementosCompatibles, string>();
-            var i = 0;
-            foreach (ComplementosCompatibles tipoComplemento in valores)
-            {
-                Complemento_version.Add(tipoComplemento, "");
-                var nombreComplemento = nombres[i];
-                foreach (XmlElement element in Any)
-                {
-                    if (element.Name.EndsWith(nombreComplemento))
-                    {
-                        var versionComplemento = "";
-                        if (element.HasAttribute("Version"))
-                            versionComplemento = element.GetAttribute("Version");
-                        else if (element.HasAttribute("version"))
-                            versionComplemento = element.GetAttribute("version");
-                        if (string.IsNullOrEmpty(versionComplemento))
-                            throw new Exception("No se logró encontrar la versión del complemento " + nombreComplemento);
-                        Complemento_version[tipoComplemento] = versionComplemento;
-                        switch (tipoComplemento)
-                        {
-                            case ComplementosCompatibles.Pagos:
-                                switch (versionComplemento)
-                                {
-                                    case "2.0":
-                                        PagosV2 = element.ToObject<Mane.CFDI.Complementos.Pago.v2.Pagos>();
-                                        break;
-                                    default:
-                                        break;
-                                }
-                                break;
-                            case ComplementosCompatibles.TimbreFiscalDigital:
-                                switch (versionComplemento)
-                                {
-                                    case "1.1":
-                                        TimbreFiscalDigital1_1 = element.ToObject<Mane.CFDI.Complementos.TimbreFiscalDigital.v1_1.TimbreFiscalDigital>();
-                                        break;
-                                    default:
-                                        break;
-                                }
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                }
-                i++;
-            }
-        }
-        [XmlIgnore]
-        public Mane.CFDI.Complementos.Pago.v2.Pagos PagosV2 { get; set; }
-        [XmlIgnore]
-        public Mane.CFDI.Complementos.TimbreFiscalDigital.v1_1.TimbreFiscalDigital TimbreFiscalDigital1_1 { get; set; }
     }
 
     /// <remarks/>
@@ -2086,9 +2029,5 @@ namespace Mane.CFDI.v4
             }
         }
     }
-    public enum ComplementosCompatibles
-    {
-        Pagos,
-        TimbreFiscalDigital
-    }
+    
 }

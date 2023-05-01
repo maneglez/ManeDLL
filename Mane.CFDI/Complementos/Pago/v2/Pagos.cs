@@ -91,7 +91,7 @@ namespace Mane.CFDI.Complementos.Pago.v2
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.sat.gob.mx/Pagos20")]
-    public partial class PagosTotales
+    public partial class PagosTotales 
     {
 
         private decimal totalRetencionesIVAField;
@@ -437,7 +437,7 @@ namespace Mane.CFDI.Complementos.Pago.v2
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.sat.gob.mx/Pagos20")]
-    public partial class PagosPago
+    public partial class PagosPago 
     {
 
         private PagosPagoDoctoRelacionado[] doctoRelacionadoField;
@@ -750,7 +750,7 @@ namespace Mane.CFDI.Complementos.Pago.v2
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.sat.gob.mx/Pagos20")]
-    public partial class PagosPagoDoctoRelacionado
+    public partial class PagosPagoDoctoRelacionado 
     {
 
         private PagosPagoDoctoRelacionadoImpuestosDR impuestosDRField;
@@ -951,7 +951,7 @@ namespace Mane.CFDI.Complementos.Pago.v2
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.sat.gob.mx/Pagos20")]
-    public partial class PagosPagoDoctoRelacionadoImpuestosDR
+    public partial class PagosPagoDoctoRelacionadoImpuestosDR 
     {
 
         private PagosPagoDoctoRelacionadoImpuestosDRRetencionDR[] retencionesDRField;
@@ -1083,7 +1083,7 @@ namespace Mane.CFDI.Complementos.Pago.v2
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.sat.gob.mx/Pagos20")]
-    public partial class PagosPagoDoctoRelacionadoImpuestosDRTrasladoDR
+    public partial class PagosPagoDoctoRelacionadoImpuestosDRTrasladoDR 
     {
 
         private decimal baseDRField;
@@ -1205,7 +1205,7 @@ namespace Mane.CFDI.Complementos.Pago.v2
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.sat.gob.mx/Pagos20")]
-    public partial class PagosPagoImpuestosP
+    public partial class PagosPagoImpuestosP 
     {
 
         private PagosPagoImpuestosPRetencionP[] retencionesPField;
@@ -1247,7 +1247,7 @@ namespace Mane.CFDI.Complementos.Pago.v2
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.sat.gob.mx/Pagos20")]
-    public partial class PagosPagoImpuestosPRetencionP
+    public partial class PagosPagoImpuestosPRetencionP 
     {
 
         private string impuestoPField;
@@ -1289,7 +1289,7 @@ namespace Mane.CFDI.Complementos.Pago.v2
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://www.sat.gob.mx/Pagos20")]
-    public partial class PagosPagoImpuestosPTrasladoP
+    public partial class PagosPagoImpuestosPTrasladoP 
     {
 
         private decimal basePField;

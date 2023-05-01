@@ -2,6 +2,8 @@
 using System;
 using System.Windows.Forms;
 using System.Collections.Generic;
+using System.IO;
+using Mane.CFDI;
 
 namespace Pruebas
 {
@@ -21,8 +23,17 @@ namespace Pruebas
 
         static void Prueba()
         {
-            using (var fm = new Mane.BD.Forms.GestionarConexiones())
-                fm.ShowDialog();
+            var ruta = @"C:\Users\TIE\Desktop\mane\CAMPANARIO\05 Mayo Xml Egresos";
+            var archivos = Directory.GetFiles(ruta);
+            foreach (var archivo in archivos)
+            {
+                if(Cfdi.GetVersionCfdi(archivo) == CfdiVersion.Cfdi4_0)
+                {
+                    var cfdi = Mane.CFDI.Cfdi.Load(archivo);
+                    Console.Write(cfdi.Total.ToString("c"));
+                }
+            }
+            
         }
         
     }
