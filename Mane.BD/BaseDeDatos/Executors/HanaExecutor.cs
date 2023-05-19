@@ -39,17 +39,17 @@ namespace Mane.BD.Executors
                 cmd = conn.CreateCommand();
                 cmd.CommandText = Query;
                 conn.Open();
-
             }
             catch (OdbcException ex)
             {
+                
                 Bd.bdExceptionHandler(ex);
             }
         }
 
         public void Disconnect()
         {
-            if (!AutoDisconnect) return;
+            //if (!AutoDisconnect) return;
             reader?.Close();
             cmd?.Dispose();
             conn?.Close();
@@ -59,31 +59,33 @@ namespace Mane.BD.Executors
         public object ExecuteEscalar()
         {
             Connect();
+            object result = null;
             try
             {
-                return cmd.ExecuteScalar();
+                result = cmd.ExecuteScalar();
             }
             catch (OdbcException ex)
             {
                 Bd.bdExceptionHandler(ex, Query);
             }
             Disconnect();
-            return null;
+            return result;
         }
 
         public int ExecuteNonQuery()
         {
             Connect();
+            int result = 0;
             try
             {
-                return cmd.ExecuteNonQuery();
+                result = cmd.ExecuteNonQuery();
             }
             catch (OdbcException ex)
             {
                 Bd.bdExceptionHandler(ex, Query);
             }
             Disconnect();
-            return 0;
+            return result;
         }
 
         public DataTable ExecuteQuery()
@@ -118,6 +120,7 @@ namespace Mane.BD.Executors
                 Bd.LastErrorDescription = e.Message;
                 return false;
             }
+            Disconnect();
             return true;
         }
     }

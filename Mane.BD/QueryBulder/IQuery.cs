@@ -5,6 +5,7 @@ namespace Mane.BD
 {
     public interface IQuery<T> where T : IQuery<T>
     {
+        T AddSelect(string column);
         int Count(string NombreConexion = "");
         void Delete(string NombreConexion = "", bool forzar = false);
         bool Exists(string NombreConexion = "");
@@ -68,5 +69,6 @@ namespace Mane.BD
         T WhereIsNull(string columna);
         T WhereNotIn(string columna, Func<T, T> func);
         T WhereNotIn(string columna, object[] valores);
+
     }
 }

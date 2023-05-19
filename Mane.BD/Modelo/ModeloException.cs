@@ -15,10 +15,12 @@ namespace Mane.BD
         /// </summary>
         /// <param name="modelo"></param>
         /// <param name="error"></param>
-        public ModeloException(Type modelo, string error) : base()
+        public ModeloException(Type modelo, Exception originalException) : base()
         {
             this.modelo = modelo;
-            this.error = error;
+            this.error = originalException.Message;
+            this.OriginalExeption = originalException;
         }
+        public Exception OriginalExeption { get; private set; }
     }
 }

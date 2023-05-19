@@ -57,31 +57,33 @@ namespace Mane.BD.Executors
         public object ExecuteEscalar()
         {
             Connect();
+            object result = null;
             try
             {
-                return cmd.ExecuteScalar();
+                result = cmd.ExecuteScalar();
             }
             catch (SqlException ex)
             {
                 Bd.bdExceptionHandler(ex, Query);
             }
             Disconnect();
-            return null;
+            return result;
         }
 
         public int ExecuteNonQuery()
         {
             Connect();
+            int result = 0;
             try
             {
-                return cmd.ExecuteNonQuery();
+                result = cmd.ExecuteNonQuery();
             }
             catch (SqlException ex)
             {
                 Bd.bdExceptionHandler(ex, Query);
             }
             Disconnect();
-            return 0;
+            return result;
         }
 
         public DataTable ExecuteQuery()
@@ -107,6 +109,7 @@ namespace Mane.BD.Executors
             {
                 conn = new SqlConnection(ConnString);
                 conn.Open();
+                Disconnect();
             }
             catch (SqlException e)
             {

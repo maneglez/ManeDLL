@@ -40,7 +40,8 @@
                 groupBy = BuildGroupBy();
             if (where != "") where = "WHERE " + where;
             string query = $"SELECT {select} FROM {FormatTable(q.Tabla)} {joins} {where} {orderBy} {groupBy} {limit}";
-            return System.Text.RegularExpressions.Regex.Replace(query, @"\s+", " ");
+            return query;
+            //return System.Text.RegularExpressions.Regex.Replace(query, @"\s+", " ");
         }
     }
 }

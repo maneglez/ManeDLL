@@ -31,7 +31,7 @@ namespace Mane.BD.QueryBulder.Builders
         }
         public static string FormatColumn(string columna, char[] delimiters)
         {
-            if (columna == "") return columna;
+            if (string.IsNullOrEmpty(columna)) return "";
             string colFormateada = "";
             if (columna.StartsWith(delimiters[0].ToString()))
                 return columna;

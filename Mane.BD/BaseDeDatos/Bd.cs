@@ -262,7 +262,7 @@ namespace Mane.BD
         /// <returns></returns>
         public static ConexionCollection LoadConnectionsFromFile()
         {
-            return LoadConnectionsFromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"ManeBdConnections.json"));
+            return LoadConnectionsFromFile(DefaultConectionsFileName);
         }
         /// <summary>
         /// Guarda las conexiones en un archivo json
@@ -286,8 +286,22 @@ namespace Mane.BD
         /// <param name="conexiones">Lista de conexiones</param>
         public static void SaveConnectionsToFile(ConexionCollection conexiones)
         {
-            SaveConnectionsToFile(conexiones, Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ManeBdConnections.json"));
+            SaveConnectionsToFile(conexiones, DefaultConectionsFileName);
         }
+        /// <summary>
+        /// Guarda la colección de conexiones actual en el archivo por defecto
+        /// </summary>
+        public static void SaveConnectionsToFile()
+        {
+            SaveConnectionsToFile(Conexiones, DefaultConectionsFileName);
+        }
+        private static string defaultConectionsFileName;
+        public static string DefaultConectionsFileName { get {
+                if (string.IsNullOrEmpty(defaultConectionsFileName))
+                    return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ManeBdConnections.json");
+                else return defaultConectionsFileName;
+            } set => defaultConectionsFileName = value; }
+    
         #endregion
 
     }

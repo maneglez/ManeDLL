@@ -2,9 +2,9 @@
 using System.IO;
 using System.Windows.Forms;
 
-namespace Mane.Helpers
+namespace Mane.BD.Helpers
 {
-    public static class Log
+    internal static class Log
     {
         private static string RutaLogDef;
         public static string RutaLogPorDefecto

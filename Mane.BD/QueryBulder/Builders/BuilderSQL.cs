@@ -25,7 +25,7 @@ namespace Mane.BD.QueryBulder.Builders
             {
                 foreach (string col in QueryBuilder._GroupBy)
                 {
-                    groupBy += FormatColumn(col) + ",";
+                    groupBy += FormatColumn(col) + $"{Environment.NewLine},";
                 }
                 groupBy = groupBy.Trim(',');
                 groupBy = $"GROUP BY {groupBy}";
@@ -43,6 +43,7 @@ namespace Mane.BD.QueryBulder.Builders
                 extraCondicion = j.ExtraCondicion != null ? "AND " + j.ExtraCondicion.GetBuilder(Tipo).BuildWeres() : "";
                 consulta = j.Consulta != null ? $"({(j.Consulta as IBuilder).BuildQuery()}) {FormatColumn(j.AliasDeConsulta)}" : "";
                 joins += $" {j.Tipo} JOIN {consulta}{FormatTable(j.Tabla)} ON {FormatColumn(j.Columna1)} {j.Operador} {FormatColumn(j.Columna2)} {extraCondicion}";
+                joins += Environment.NewLine;
             }
             return joins;
         }
@@ -83,7 +84,8 @@ namespace Mane.BD.QueryBulder.Builders
                 groupBy = BuildGroupBy();
             if (where != "") where = "WHERE " + where;
             string query = $"SELECT {limit} {select} FROM {FormatTable(q.Tabla)} {joins} {where} {orderBy} {groupBy}";
-            return System.Text.RegularExpressions.Regex.Replace(query, @"\s+", " ");
+            return query;
+           // return System.Text.RegularExpressions.Regex.Replace(query, @"\s+", " ");
         }
 
         public string BuildSelect()
@@ -92,7 +94,7 @@ namespace Mane.BD.QueryBulder.Builders
             var q = QueryBuilder;
             foreach (string item in q.Columnas)
             {
-                select += FormatColumn(item) + ",";
+                select += FormatColumn(item) + $"{Environment.NewLine},";
             }
             if (q._SelectSubquery.Count > 0)
             {
@@ -102,6 +104,65 @@ namespace Mane.BD.QueryBulder.Builders
                         select += $"({(q._SelectSubquery[key] as IBuilder).BuildQuery()})";
                     else select += $"({q._SelectSubquery[key]})";
                     select += $" AS {FormatColumn(key)},";
+                }
+            }
+            if(q._SelectCase.Count > 0)
+            {
+                foreach (var c in q._SelectCase)
+                {
+                    if (c.WhenData.Count != c.ThenData.Count)
+                        throw new Exception("Select Case: La lista then contiene más o menos elemntos que la lista when");
+                    select += "CASE";
+                    if (!string.IsNullOrEmpty(c.CaseColumn))
+                        select += " " + FormatColumn(c.CaseColumn);
+                    int contador = 0;
+                    foreach (var w in c.WhenData)
+                    {
+                        select += Environment.NewLine + " WHEN ";
+                        switch (w.TipoWhen)
+                        {
+                            case WhenThenType.Value:
+                                select += $"{FormatColumn(w.Column)} {w.Operador} {FormatValue(w.Value)}" + Environment.NewLine;
+                                break;
+                            case WhenThenType.Column:
+                                select += $"{FormatColumn(w.Column)} {w.Operador} {FormatColumn(w.Value?.ToString())}" + Environment.NewLine;
+                                break;
+                            case WhenThenType.Query:
+                                select += $"({w.Query.GetQuery(Tipo)}) {w.Operador} {FormatValue(w.Value)}" + Environment.NewLine;
+                                break;
+                            default:
+                                break;
+                        }
+                        var t = c.ThenData[contador];
+                        select += " THEN ";
+                        switch (t.TipoThen)
+                        {
+                            case WhenThenType.Value:
+                                select += FormatValue(t.Value) + Environment.NewLine;
+                                break;
+                            case WhenThenType.Column:
+                                select += FormatColumn(t.Column) + Environment.NewLine;
+                                break;
+                            case WhenThenType.Query:
+                                select += $"({t.Query.GetQuery(Tipo)}){Environment.NewLine}";
+                                break;
+                            default:
+                                break;
+                        }
+                        contador++;
+                    }
+                    if(c.ElseQuery != null || c.ElseValue != null || !string.IsNullOrEmpty(c._ElseColumn))
+                    {
+                        select += " ELSE " + Environment.NewLine;
+                        if (!string.IsNullOrEmpty(c._ElseColumn))
+                            select += FormatColumn(c._ElseColumn);
+                        else if (c.ElseValue != null)
+                            select += FormatValue(c.ElseValue);
+                        else if (c.ElseQuery != null)
+                            select += $"({c.ElseQuery.GetQuery(Tipo)})";
+                    }
+                    if (string.IsNullOrEmpty(c.Alias)) throw new Exception("Falta el alias para la sentencia case");
+                    select += " END AS " + FormatColumn(c.Alias) + $"{Environment.NewLine},";
                 }
             }
             select = select.Trim(',');
@@ -208,11 +269,11 @@ namespace Mane.BD.QueryBulder.Builders
             string values = "";
             foreach (string item in diccionario.Keys)
             {
-                into += FormatColumn(item) + ",";
+                into += FormatColumn(item) + $"{Environment.NewLine},";
             }
             foreach (object item in diccionario.Values)
             {
-                values += FormatValue(item) + ",";
+                values += FormatValue(item) + $"{Environment.NewLine},";
             }
             into = into.Trim(',');
             values = values.Trim(',');

@@ -5,6 +5,14 @@ namespace Mane.BD
 {
     public partial class QueryBuilder : IQuery<QueryBuilder>
     {
+        public QueryBuilder AddSelect(string column)
+        {
+            var aux = new List<string>(Columnas);
+            aux.Add(column);
+            Columnas = aux.ToArray();
+            return this;
+        }
+
         public int Count(string NombreConexion = "")
         {
            NombreConexion = VerifyConnection(NombreConexion);

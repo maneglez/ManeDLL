@@ -299,5 +299,11 @@ namespace Mane.BD
             query.Where(q=>qry, operador, valor);
             return this;
         }
+
+        public ModeloQuery<Tmodelo> AddSelect(string column)
+        {
+            query.AddSelect(column);
+            return this;
+        }
     }
 }

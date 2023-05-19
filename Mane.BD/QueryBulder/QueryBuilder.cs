@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Mane.BD.QueryBulder;
+using System;
 using System.Collections.Generic;
 using System.Data;
 
@@ -27,6 +28,7 @@ namespace Mane.BD
         internal int _Limit;
         internal string NombreConexion;
         internal PaginateClass Pagination;
+        internal List<CaseClass> _SelectCase;
         #endregion
 
         #region Constructores
@@ -58,6 +60,7 @@ namespace Mane.BD
             Tabla = "";
             _Limit = 0;
             _SelectSubquery = new Dictionary<string, object>();
+            _SelectCase = new List<CaseClass>();
         }
         #endregion
 
@@ -197,6 +200,19 @@ namespace Mane.BD
                 Operador = operador,
                 Tipo = TipoWhere.WhereGroup
             });
+            return this;
+        }
+        #endregion
+
+        #region Case Functions
+        public QueryBuilder Case(Func<CaseClass, CaseClass> func)
+        {
+            _SelectCase.Add(func.Invoke(new CaseClass()));
+            return this;
+        }
+        public QueryBuilder Case(string column, Func<CaseClass, CaseClass> func)
+        {
+            _SelectCase.Add(func.Invoke(new CaseClass(column)));
             return this;
         }
         #endregion

@@ -115,6 +115,7 @@
     </Compile>
     <Compile Include="Forms\Helper.cs" />
     <Compile Include="Helpers\Crypto.cs" />
+    <Compile Include="Helpers\Log.cs" />
     <Compile Include="Helpers\Utils.cs" />
     <Compile Include="IgnorarPropAttribute.cs" />
     <Compile Include="Modelo\Modelo.cs" />
@@ -141,6 +142,7 @@
     <Compile Include="QueryBulder\QueryBuilder.Query.cs" />
     <Compile Include="QueryBulder\QueryBuilderExeption.cs" />
     <Compile Include="QueryBulder\QueryBuilder.cs" />
+    <Compile Include="QueryBulder\CaseClass.cs" />
     <Compile Include="QueryUtils.cs" />
     <Compile Include="Forms\SeleccionarGenerico.cs">
       <SubType>Form</SubType>

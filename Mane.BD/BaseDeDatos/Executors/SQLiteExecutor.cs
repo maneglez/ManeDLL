@@ -57,7 +57,7 @@ namespace Mane.BD.Executors
 
         public void Disconnect()
         {
-            if (!AutoDisconnect) return;
+            //if (!AutoDisconnect) return;
             reader?.Close();
             cmd?.Dispose();
             conn?.Close();
@@ -67,31 +67,33 @@ namespace Mane.BD.Executors
         public object ExecuteEscalar()
         {
             Connect();
+            object result = null;
             try
             {
-                return cmd.ExecuteScalar();
+                result = cmd.ExecuteScalar();
             }
             catch (SQLiteException ex)
             {
                 Bd.bdExceptionHandler(ex, Query);
             }
             Disconnect();
-            return null;
+            return result;
         }
 
         public int ExecuteNonQuery()
         {
             Connect();
+            int result = 0;
             try
             {
-                return cmd.ExecuteNonQuery();
+                result = cmd.ExecuteNonQuery();
             }
             catch (SQLiteException ex)
             {
                 Bd.bdExceptionHandler(ex, Query);
             }
             Disconnect();
-            return 0;
+            return result;
         }
 
         public DataTable ExecuteQuery()
@@ -116,7 +118,7 @@ namespace Mane.BD.Executors
             {
                 conn = new SQLiteConnection(ConnString);
                 conn.Open();
-                conn.Close();
+                Disconnect();
 
             }
             catch (SQLiteException e)

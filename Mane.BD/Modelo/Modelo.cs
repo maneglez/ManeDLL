@@ -489,7 +489,7 @@ namespace Mane.BD
 
         internal void ModeloExceptionHandler(Exception e)
         {
-            var ex = new ModeloException(this.GetType(), e.Message);
+            var ex = new ModeloException(this.GetType(), e);
             if (OnException == null)
                 throw ex;
             else OnException.Invoke(this, new ModeloExceptionEventArgs(ex));

@@ -59,6 +59,7 @@
             this.dgvContenido.TabIndex = 1;
             this.dgvContenido.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvContenido_CellDoubleClick);
             this.dgvContenido.SelectionChanged += new System.EventHandler(this.dgvContenido_SelectionChanged);
+            this.dgvContenido.KeyDown += new System.Windows.Forms.KeyEventHandler(this.dgvContenido_KeyDown);
             // 
             // btnCancelar
             // 

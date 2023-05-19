@@ -12,7 +12,6 @@ namespace Mane.BD.Forms
 {
     public partial class SeleccionarGenerico : Form
     {
-
         private QueryBuilder query { get; set; }
         public event EventHandler<ItemCambiaEventArgs> ItemSeleccionadoCambia;
         /// <summary>
@@ -54,6 +53,7 @@ namespace Mane.BD.Forms
             return dtSource.Rows[dgvContenido.SelectedRows[0].Index];
 
         }
+        
         /// <summary>
         /// Seleccion de elementos generico
         /// </summary>
@@ -78,7 +78,7 @@ namespace Mane.BD.Forms
                     dgvContenido.Columns.Add(new DataGridViewTextBoxColumn
                     {
                         Name = item,
-                        DataPropertyName = item,
+                        DataPropertyName = GetColumnName(item),
                         HeaderText = queryColNames_DisplayColNames[item],
                         SortMode = DataGridViewColumnSortMode.NotSortable,
 
@@ -124,7 +124,7 @@ namespace Mane.BD.Forms
             MostrarBotonesDeSeleccionYCancelar = true;
             CerrarAlSeleccionar = true;
         }
-        private void Buscar()
+        public void Buscar()
         {
             if (dgvContenido.Disposing || dgvContenido.IsDisposed) return;
             if (dgvContenido.InvokeRequired)
@@ -133,19 +133,26 @@ namespace Mane.BD.Forms
                 return;
             }
             Cursor = Cursors.WaitCursor;
-            DataTable dt;
-            if (string.IsNullOrEmpty(Busqueda))
+            try
             {
-                dt = query.Get(ConnName);
+                DataTable dt;
+                if (string.IsNullOrEmpty(Busqueda))
+                {
+                    dt = query.Get(ConnName);
+                }
+                else
+                {
+                    var q = query.Copy();
+                    q.Where(cbFiltro.SelectedValue.ToString(), "LIKE", $"%{Busqueda}%");
+                    dt = q.Get(ConnName);
+                }
+                dgvContenido.DataSource = dt;
+                AjustarTamano();
             }
-            else
+            catch (Exception)
             {
-                var q = query.Copy();
-                q.Where(cbFiltro.SelectedValue.ToString(), "LIKE", $"%{Busqueda}%");
-                dt = q.Get(ConnName);
+
             }
-            dgvContenido.DataSource = dt;
-            AjustarTamano();
             Cursor = Cursors.Default;
         }
 
@@ -166,7 +173,8 @@ namespace Mane.BD.Forms
 
         private void SeleccionarGenerico_Load(object sender, EventArgs e)
         {
-            Buscar();
+            if(dgvContenido.Rows.Count == 0)
+                 Buscar();
         }
 
         private void tbBusqueda_TextChanged(object sender, EventArgs e)
@@ -233,6 +241,33 @@ namespace Mane.BD.Forms
             if (contador == 1)
                 funcion.Invoke();
             contador--;
+        }
+
+        private string GetColumnName(string column)
+        {
+            if (column.ToLower().Contains(" as "))
+            {
+                var aux = column.Replace(" AS ", " as ")
+                    .Replace(" As ", " as ")
+                    .Replace(" aS ", " as ")
+                    .Replace(" as ", ";")
+                    .Split(';');
+                if (aux.Length > 0)
+                    return aux[aux.Length - 1];
+            }
+            else if (column.Contains("."))
+            {
+                var aux = column.Split('.');
+                return aux[aux.Length - 1];
+            }
+
+             return column;
+        }
+
+        private void dgvContenido_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (dgvContenido.SelectedRows.Count == 1 && e.KeyCode == Keys.Enter)
+                Seleccionar();
         }
     }
 }

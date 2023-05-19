@@ -88,7 +88,8 @@ namespace Mane.BD
                         ob.Add("SERVERNODE", ServerName());
                         ob.Add("UID", Usuario);
                         ob.Add("PWD", Contrasena);
-                        //   ob.Add("DATABASENAME", NombreBD);
+                        ob.Add("DATABASENAME", "NDB");
+                        ob.Add("DATABASE", NombreBD);
                         return ob.ConnectionString;
                     default: return "";
                 }
