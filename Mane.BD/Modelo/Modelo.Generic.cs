@@ -132,7 +132,7 @@ namespace Mane.BD
             var props = modelo.GetType().GetProperties();
             foreach (var prop in props)
             {
-                if (prop.CanWrite && !prop.IsDefined(typeof(IgnorarPropAttribute), false))
+                if (prop.CanWrite && !prop.IsDefined(typeof(ManeBdIgnorarPropAttribute), false))
                     prop.SetValue(modelo, Common.ConvertirATipo(prop.PropertyType, dic[prop.Name]));
             }
             modelo.Inicializando = false;

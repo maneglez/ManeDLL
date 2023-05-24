@@ -26,7 +26,7 @@ namespace Mane.BD
             var props = obj.GetType().GetProperties();
             foreach (var prop in props)
             {
-                if (!prop.IsDefined(typeof(IgnorarPropAttribute), false))
+                if (!prop.IsDefined(typeof(ManeBdIgnorarPropAttribute), false))
                     dic.Add(prop.Name, prop.GetValue(obj));
             }
             return dic;
@@ -43,7 +43,7 @@ namespace Mane.BD
             var props = obj.GetType().GetProperties();
             foreach (var prop in props)
             {
-                if (prop.CanWrite && !prop.IsDefined(typeof(IgnorarPropAttribute), false))
+                if (prop.CanWrite && !prop.IsDefined(typeof(ManeBdIgnorarPropAttribute), false))
                     prop.SetValue(obj, ConvertirATipo(prop.PropertyType, dic[prop.Name]));
             }
             return obj;

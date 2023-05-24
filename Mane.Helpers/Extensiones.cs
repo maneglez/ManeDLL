@@ -62,6 +62,11 @@ namespace Mane.Helpers
             }
         }
 
+        public static string Yyyymmdd(this DateTime d)
+        {
+            return d.ToString("yyyy-MM-dd");
+        }
+
         #region Generic Binding
         public static List<Control> GetAllControls(this Control control)
         {

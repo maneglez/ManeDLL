@@ -67,6 +67,8 @@ namespace Mane.BD.Forms
                 Bd.SaveConnectionsToFile(cons);
             else Bd.SaveConnectionsToFile(cons, FileName);
             MessageBox.Show("Configuracion guardada correctamente");
+            Bd.Conexiones.Clear();
+            Bd.Conexiones.AddRange(cons);
             DialogResult = DialogResult.OK;
             Close();
         }

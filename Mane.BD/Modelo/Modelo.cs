@@ -55,7 +55,7 @@ namespace Mane.BD
         /// <summary>
         /// Indica si el modelo ya fue registrado en la base de datos
         /// </summary>
-        private bool RegistredOnDataBase;
+        protected bool RegistredOnDataBase;
 
         internal bool Inicializando { get; set; }
         /// <summary>

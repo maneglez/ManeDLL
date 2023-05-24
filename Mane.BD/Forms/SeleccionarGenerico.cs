@@ -174,7 +174,12 @@ namespace Mane.BD.Forms
         private void SeleccionarGenerico_Load(object sender, EventArgs e)
         {
             if(dgvContenido.Rows.Count == 0)
-                 Buscar();
+            {
+                Buscar();
+                if (dgvContenido.Rows.Count == 1 && dgvContenido.SelectedRows.Count == 0)
+                    Seleccionar();
+            }
+                 
         }
 
         private void tbBusqueda_TextChanged(object sender, EventArgs e)
@@ -200,7 +205,8 @@ namespace Mane.BD.Forms
 
         private void dgvContenido_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            Seleccionar();
+            if(e.RowIndex != -1)
+                Seleccionar();
         }
 
         private void button2_Click(object sender, EventArgs e)

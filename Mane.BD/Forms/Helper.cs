@@ -15,8 +15,11 @@ namespace Mane.BD.Forms
             form.KeyDown += (s, e) =>
             {
                 if(e.KeyCode == Keys.C && e.Shift && e.Control)
-                using (var fm = new ConfirmarContrasena(rutaConfig))
-                    fm.ShowDialog();
+                {
+                    using (var fm = new ConfirmarContrasena(rutaConfig))
+                        fm.ShowDialog();
+                }
+                
             };
         }
     }

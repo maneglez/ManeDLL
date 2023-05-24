@@ -16,6 +16,12 @@ namespace Mane.BD
         public int Count(string NombreConexion = "")
         {
            NombreConexion = VerifyConnection(NombreConexion);
+            if(Order != null)
+            {
+                var q = Copy();
+                q.Order = null;
+                return Convert.ToInt32(Bd.ExecuteEscalar(q.GetBuilder(NombreConexion).Count(), NombreConexion));
+            }
             return Convert.ToInt32(Bd.ExecuteEscalar(GetBuilder(NombreConexion).Count(), NombreConexion));
         }
 

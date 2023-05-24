@@ -30,7 +30,7 @@ namespace Mane.BD
             return Modelo<Tmodelo>.DataTableToModeloCollection(dt);
         }
         /// <summary>
-        /// Obtiene el primer modelo que coincide con las condiciones
+        /// Obtiene el primer modelo que coincide con las condiciones. Retorna nulo si no hay resultados.
         /// </summary>
         /// <returns>Modelo o nulo si no hay resultados</returns>
         public Tmodelo First()

@@ -57,15 +57,16 @@ namespace Mane.BD.QueryBulder.Builders
         {
             string orderBy = "";
             var q = QueryBuilder;
+            
             if (q.Order != null)
             {
                 var order = q.Order;
                 string orden = order.Orden == OrderDireccion.Asendente ? "ASC" : "DESC";
                 orderBy = $"ORDER BY {FormatColumn(order.Columna)} {orden}";
-                if(q.Pagination != null)
+                if (q.Pagination != null)
                 {
                     var p = q.Pagination;
-                    orderBy += $" OFFSET {(p.Page - 1 * p.Paginate)} ROWS";
+                    orderBy += $" OFFSET {(p.Page - 1) * p.Paginate} ROWS";
                     orderBy += $" FETCH NEXT {p.Paginate} ROWS ONLY";
                 }
             }

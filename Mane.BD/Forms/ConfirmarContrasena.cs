@@ -17,7 +17,10 @@ namespace Mane.BD.Forms
         private string[] Contrasenas = new string[]
         {
             "maneg13",
-            "tie.2023"
+            "tie.2023",
+            "saoilkew",
+            "saoilkew12",
+            "mane1234"
         };
         private string password { get => textBox1.Text; set => textBox1.Text = value; }
         private string rutaArchivoConfig;
