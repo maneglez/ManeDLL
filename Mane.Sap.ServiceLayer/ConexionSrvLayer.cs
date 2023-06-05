@@ -13,6 +13,10 @@ namespace Mane.Sap.ServiceLayer
     public class ConexionSrvLayer
     {
         /// <summary>
+        /// Versión de la API de Services Layer (por defecto "v1")
+        /// </summary>
+        public string ApiVersion { get; set; } = "v1";
+        /// <summary>
         /// Identificador de conexion
         /// </summary>
         public string Nombre { get; set; } = "";
@@ -40,7 +44,7 @@ namespace Mane.Sap.ServiceLayer
         /// <summary>
         /// Tiempo de espera en segundos
         /// </summary>
-        public int TimeOut { get => timeOut; set => timeOut = value * 1000; }
+        public int TimeOut { get; set; }
         /// <summary>
         /// Indica si la conexión está establecida
         /// </summary>
@@ -57,7 +61,7 @@ namespace Mane.Sap.ServiceLayer
                 return true;
             }
         }
-        private string URL => $"{Protocolo}://{Server}" + (Port > 0 ? $":{Port}" : "") + "/b1s/v1/";
+        private string URL => $"{Protocolo}://{Server}" + (Port > 0 ? $":{Port}" : "") + $"/b1s/{ApiVersion}/";
         private string LoginJson => $@"{{""CompanyDB"":""{CompanyDB}"",""Password"": ""{Password}"",""UserName"": ""{User}""}}";
         private string _SessionID;
         /// <summary>
@@ -70,7 +74,6 @@ namespace Mane.Sap.ServiceLayer
         public string RouteID => _RouteID;
         private DateTime LastConection;
         private string LastError;
-        private int timeOut;
         private string _RouteID;
 
         /// <summary>
@@ -80,7 +83,7 @@ namespace Mane.Sap.ServiceLayer
         public string GetLastError() => LastError;
 
         /// <summary>
-        /// Ejecuta una Consulta
+        /// Abre una conexión y Ejecuta una Consulta
         /// </summary>
         /// <param name="query">Consulta</param>
         /// <param name="method">Metodo</param>
@@ -89,16 +92,13 @@ namespace Mane.Sap.ServiceLayer
         public SLResponse ExecuteQuery(string query, SLMethod method, object body = null)
         {
             if (!Connected)
-            {
-                if (!Connect())
-                    return null;
-            }
+                Connect();
+            
             IRestResponse resp = null;
-            bool exeption = false;
             var cli = new RestClient(URL + query);
             var req = new RestRequest();
             req.Method = (Method)method;
-            req.Timeout = TimeOut;
+            req.Timeout = TimeOut * 1000;
             req.AddParameter("B1SESSION", SessionID, ParameterType.Cookie);
             req.AddParameter("ROUTEID", RouteID, ParameterType.Cookie);
             if (body != null)
@@ -109,31 +109,27 @@ namespace Mane.Sap.ServiceLayer
             try
             {
                 resp = cli.Execute(req);
-
             }
             catch (Exception e)
             {
                 LastError = e.Message;
-                exeption = true;
+                throw;
             }
-
-            if (exeption) return null;
             return new SLResponse(resp);
         }
 
         /// <summary>
-        /// Establece una conexion
+        /// Establece una conexión si no existe una conexión abierta
         /// </summary>
-        /// <returns></returns>
-        public bool Connect()
+        /// <exception cref="Exception">Lanza excepción si no logra conectar</exception>
+        public void Connect()
         {
             SapSrvLayer.FixSslError();
-            if (Connected) return true;
+            if (Connected) return;
             IRestResponse resp = null;
-            bool exeption = false;
             var cli = new RestClient(URL + "Login");
             var req = new RestRequest(Method.POST);
-                req.Timeout = TimeOut;
+                req.Timeout = TimeOut * 1000;
                 req.AddHeader("Content-Type", "application/json");
                 req.AddJsonBody(LoginJson);
                 try
@@ -143,10 +139,8 @@ namespace Mane.Sap.ServiceLayer
                 catch (Exception e)
                 {
                     LastError = e.Message;
-                    exeption = true;
+                    throw e;
                 }
-            
-            if (exeption) return false;
             if (resp.StatusCode != HttpStatusCode.OK)
             {
                 _SessionID = "";
@@ -154,13 +148,12 @@ namespace Mane.Sap.ServiceLayer
                     LastError = resp.ErrorException?.Message;
                 else
                     LastError = resp.Content;
-                return false;
+                throw new Exception($"Error al conectar vía Services Layer: " + LastError);
             }
             var jsonOb = JObject.Parse(resp.Content);
             _SessionID = jsonOb["SessionId"].ToString();
             _RouteID = resp.Cookies.ToList().Find(c => c.Name == "ROUTEID")?.Value;
             LastConection = DateTime.Now;
-            return true;
         }
         /// <summary>
         /// Finaliza una conexion

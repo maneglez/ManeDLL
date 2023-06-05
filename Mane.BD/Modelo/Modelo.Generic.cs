@@ -139,6 +139,5 @@ namespace Mane.BD
             return modelo;
         }
 
-
     }
 }

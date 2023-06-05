@@ -26,5 +26,15 @@ namespace Mane.Sap.ServiceLayer
 			}
 			return "";
         }
+		/// <summary>
+		/// Convierte una cadena json a un objeto
+		/// </summary>
+		/// <typeparam name="T">Tipo de objeto</typeparam>
+		/// <param name="obj"></param>
+		/// <returns></returns>
+        public static T JsonToObject<T>(this string obj) where T : class
+        {
+            return JsonConvert.DeserializeObject<T>(obj);
+        }
     }
 }

@@ -31,7 +31,7 @@ namespace Mane.BD.QueryBulder
             Construct();
             CaseColumn = caseColumn;
         }
-
+        [Serializable]
         internal class WhenDataClass
         {
             public WhenThenType TipoWhen;
@@ -40,6 +40,7 @@ namespace Mane.BD.QueryBulder
             public object Value { get; set; }
             public QueryBuilder Query { get; set; }
         }
+        [Serializable]
         internal class ThenDataClass
         {
             public WhenThenType TipoThen;

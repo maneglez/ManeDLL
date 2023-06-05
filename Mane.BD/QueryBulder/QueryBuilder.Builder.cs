@@ -10,7 +10,7 @@ namespace Mane.BD
         char[] IBuilder.ValueDelimiters { get; set; }
         QueryBuilder IBuilder.QueryBuilder { get; set; }
 
-        string IBuilder.SelectLastInsertedIndexQuery => throw new NotImplementedException();
+        string IBuilder.SelectLastInsertedIndexQuery => "";
 
         string IBuilder.BuildGroupBy()
         {

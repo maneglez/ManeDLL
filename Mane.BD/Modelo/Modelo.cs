@@ -271,7 +271,7 @@ namespace Mane.BD
                 Tmodelo m = new Tmodelo();
                 DataTable dt = Bd.Query(m.getNombreTabla()).Select(ColumnasDelModelo<Tmodelo>())
                     .Where($"{m.NombreTabla}.{ColumnaIdForaneo}", idRelacionado)
-                    .Get(this.ConnName);
+                    .Get(m.ConnName);
                 string nombreRel = (currRelName == "" || currRelName == null) ? typeof(Tmodelo).Name : currRelName;
                 var relacion = Modelo<Tmodelo>.DataTableToModeloCollection(dt);
                 return relacion;

@@ -6,9 +6,9 @@ namespace Mane.Sap.ServiceLayer.Interfaces
     {
 
 
-        public RelatedDocumentTypeEnum DocType { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public int AbsEntry { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public RelatedDocumentTypeEnum DocType { get; set; }
+        public int AbsEntry { get; set; }
 
-        public string UUID => throw new NotImplementedException();
+        public string UUID;
     }
 }

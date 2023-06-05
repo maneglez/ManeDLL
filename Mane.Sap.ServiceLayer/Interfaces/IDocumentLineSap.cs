@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Mane.Sap.ServiceLayer.Interfaces
 {
-    interface IDocumentLineSap
+   public interface IDocumentLineSap
     {
         string AccountCode { get; set; }
         int ActualBaseEntry { get; set; }

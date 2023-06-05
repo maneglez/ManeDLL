@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Mane.Sap.ServiceLayer.Interfaces
 {
-    interface IDocumentSap
+    public interface IDocumentSap
     {
         string AddLegIn { get; set; }
         string Address { get; set; }
