@@ -79,6 +79,15 @@ namespace Mane.BD.QueryBulder
             });
             return this;
         }
+        public CaseClass WhenNull(string column)
+        {
+            WhenData.Add(new WhenDataClass
+            {
+                Column = column,
+                TipoWhen = WhenThenType.Null
+            });
+            return this;
+        }
         public CaseClass WhenColumn(string column, string column2)
         {
             return WhenColumn(column, "=", column2);
@@ -151,7 +160,8 @@ namespace Mane.BD.QueryBulder
     {
         Value,
         Column,
-        Query
+        Query,
+        Null
     }
    
 

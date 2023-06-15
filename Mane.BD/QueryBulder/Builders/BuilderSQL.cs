@@ -40,7 +40,7 @@ namespace Mane.BD.QueryBulder.Builders
             string consulta = "";
             foreach (var j in QueryBuilder.Joins)
             {
-                extraCondicion = j.ExtraCondicion != null ? "AND " + j.ExtraCondicion.GetBuilder(Tipo).BuildWeres() : "";
+                extraCondicion = j.ExtraCondicion != null ? j.ExtraCondicion.Wheres[0].Boleano + " " + j.ExtraCondicion.GetBuilder(Tipo).BuildWeres() : "";
                 consulta = j.Consulta != null ? $"({(j.Consulta as IBuilder).BuildQuery()}) {FormatColumn(j.AliasDeConsulta)}" : "";
                 joins += $" {j.Tipo} JOIN {consulta}{FormatTable(j.Tabla)} ON {FormatColumn(j.Columna1)} {j.Operador} {FormatColumn(j.Columna2)} {extraCondicion}";
                 joins += Environment.NewLine;
@@ -131,6 +131,9 @@ namespace Mane.BD.QueryBulder.Builders
                             case WhenThenType.Query:
                                 select += $"({w.Query.GetQuery(Tipo)}) {w.Operador} {FormatValue(w.Value)}" + Environment.NewLine;
                                 break;
+                            case WhenThenType.Null:
+                                select += $"{FormatColumn(w.Column)} IS NULL" + Environment.NewLine;
+                                break;
                             default:
                                 break;
                         }
@@ -152,9 +155,9 @@ namespace Mane.BD.QueryBulder.Builders
                         }
                         contador++;
                     }
-                    if(c.ElseQuery != null || c.ElseValue != null || !string.IsNullOrEmpty(c._ElseColumn))
+                    if (c.ElseQuery != null || c.ElseValue != null || !string.IsNullOrEmpty(c._ElseColumn))
                     {
-                        select += " ELSE " + Environment.NewLine;
+                        select += " ELSE ";
                         if (!string.IsNullOrEmpty(c._ElseColumn))
                             select += FormatColumn(c._ElseColumn);
                         else if (c.ElseValue != null)
@@ -163,7 +166,7 @@ namespace Mane.BD.QueryBulder.Builders
                             select += $"({c.ElseQuery.GetQuery(Tipo)})";
                     }
                     if (string.IsNullOrEmpty(c.Alias)) throw new Exception("Falta el alias para la sentencia case");
-                    select += " END AS " + FormatColumn(c.Alias) + $"{Environment.NewLine},";
+                    select += $"{Environment.NewLine} END AS {FormatColumn(c.Alias)}{Environment.NewLine},";
                 }
             }
             select = select.Trim(',');

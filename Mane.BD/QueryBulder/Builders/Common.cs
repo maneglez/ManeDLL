@@ -64,7 +64,7 @@ namespace Mane.BD.QueryBulder.Builders
                     if (aux2[0].Contains("'"))// 'Algo' as Columna
                         return $"{aux2[0]} AS {FormatColumn(aux2[1], delimiters)}";
                     if (aux2[0].Contains("-") || aux2[0].Contains("+") || (aux2[0].Contains("*") && !aux2[0].Contains(".*")) || aux2[0].Contains("/"))
-                        return $"{aux2[0]} AS {FormatColumn(aux2[1], delimiters)}";
+                        return $"{FormatColumn(aux2[0],delimiters)} AS {FormatColumn(aux2[1], delimiters)}";
                     return $"{FormatColumn(aux2[0], delimiters)} AS {FormatColumn(aux2[1], delimiters)}";
                 }
                 else if (aux2.Length == 1) // as columna
@@ -83,7 +83,17 @@ namespace Mane.BD.QueryBulder.Builders
                 {
                     if (item == "*") colFormateada += item; //Columna.*
                     else
+                    {
+                        if(item.Contains(" * ") || item.Contains(" - ") || item.Contains(" + ") || item.Contains(" / "))//columna (*,+,-,/) valor
+                        {
+                            var colAux = item.Split(' ')[0];
+                            var resto = item.Substring(colAux.Length, item.Length - colAux.Length);
+                            colFormateada += Delimit(colAux, delimiters) + resto;
+                        }
+                        else
                         colFormateada += $"{Delimit(item, delimiters)}.";
+                    }
+                        
                 }
                 colFormateada = colFormateada.Trim('.');
             }

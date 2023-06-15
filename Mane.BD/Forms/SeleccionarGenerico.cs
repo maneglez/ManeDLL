@@ -46,7 +46,7 @@ namespace Mane.BD.Forms
 
         public DataRow SelectedRow { get; private set; }
 
-        private DataRow getSelectedRow()
+        public DataRow GetSelectedRow()
         {
             if (dgvContenido.SelectedRows.Count == 0) return null;
             var dtSource = (dgvContenido.DataSource as DataTable);
@@ -176,7 +176,7 @@ namespace Mane.BD.Forms
             if(dgvContenido.Rows.Count == 0)
             {
                 Buscar();
-                if (dgvContenido.Rows.Count == 1 && dgvContenido.SelectedRows.Count == 0)
+                if (dgvContenido.Rows.Count == 1 && dgvContenido.SelectedRows.Count == 1)
                     Seleccionar();
             }
                  
@@ -197,7 +197,7 @@ namespace Mane.BD.Forms
         private void Seleccionar()
         {
             if (dgvContenido.SelectedRows.Count == 0) MessageBox.Show("No se seleccionó nada");
-            SelectedRow = getSelectedRow();
+            SelectedRow = GetSelectedRow();
             if (!CerrarAlSeleccionar) return;
             DialogResult = DialogResult.OK;
             Close();
@@ -226,7 +226,7 @@ namespace Mane.BD.Forms
 
         private void dgvContenido_SelectionChanged(object sender, EventArgs e)
         {
-            ItemSeleccionadoCambia?.Invoke(this, new ItemCambiaEventArgs(getSelectedRow()));
+            ItemSeleccionadoCambia?.Invoke(this, new ItemCambiaEventArgs(GetSelectedRow()));
         }
         public void Actualizar()
         {

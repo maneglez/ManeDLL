@@ -141,6 +141,16 @@ namespace Mane.BD
             return CommonWhere(col1, "BETWEEN", new object[] { valor1, valor2 }, "OR", TipoWhere.WhereBetween);
         }
 
+        public QueryBuilder OrWhereColumn(string col1, string col2, string operador = "=")
+        {
+            return CommonWhere(col1, operador, col2, "OR", TipoWhere.WhereColumn);
+        }
+
+        public QueryBuilder OrWhereIn(string col, object[] values)
+        {
+            return CommonWhere(col, "IN", values, "OR", TipoWhere.WhereIn);
+        }
+
         public QueryBuilder Paginate(int page, int paginate)
         {
             Pagination = new PaginateClass(page, paginate);

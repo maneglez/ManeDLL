@@ -305,5 +305,17 @@ namespace Mane.BD
             query.AddSelect(column);
             return this;
         }
+
+        public ModeloQuery<Tmodelo> OrWhereColumn(string col1, string col2, string operador = "=")
+        {
+            query.OrWhereColumn(col1, col2, operador);
+            return this;
+        }
+
+        public ModeloQuery<Tmodelo> OrWhereIn(string col, object[] values)
+        {
+            query.OrWhereIn(col, values);
+            return this;
+        }
     }
 }
