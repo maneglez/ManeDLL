@@ -258,7 +258,7 @@ namespace Mane.BD
 
         public QueryBuilder WhereColumn(string col1, string operador, string col2)
         {
-            return CommonWhere(col1, operador, col2, "", TipoWhere.WhereColumn);
+            return CommonWhere(col1, operador, col2, "AND", TipoWhere.WhereColumn);
         }
 
         public QueryBuilder WhereIn(string columna, Func<QueryBuilder, QueryBuilder> func)
