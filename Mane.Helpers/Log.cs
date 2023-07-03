@@ -66,11 +66,11 @@ namespace Mane.Helpers
             }
             catch (UnauthorizedAccessException)
             {
-                MessageBox.Show($"Error al editar o crear el archivo {Path.GetDirectoryName(path)}, por favor ejecute el programa con privilegios de administrador y vuelva a intentarlo.");
+              //  MessageBox.Show($"Error al editar o crear el archivo {Path.GetDirectoryName(path)}, por favor ejecute el programa con privilegios de administrador y vuelva a intentarlo.");
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.Message);
+              //  MessageBox.Show(e.Message);
             }
         }
     }

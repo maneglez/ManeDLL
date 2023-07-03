@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
 using System.Text;
 
 namespace Mane.BD.QueryBulder.Builders
@@ -26,7 +27,9 @@ namespace Mane.BD.QueryBulder.Builders
                 return Delimit(((int)value).ToString(), delimiters);
             if(value is byte[] bytes)//Convertir arreglo de bytes en string sql binary
                 return "0x" + string.Join("", bytes.Select(b => b.ToString("x2")));
-            
+            string strVal = value.ToString();
+            if (double.TryParse(strVal, out double dval))
+                return strVal;
             return Delimit(value.ToString(), delimiters);
         }
         public static string FormatColumn(string columna, char[] delimiters)
