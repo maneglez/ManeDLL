@@ -1,4 +1,5 @@
-﻿using System;
+﻿//using CrystalDecisions.CrystalReports.Engine;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing.Printing;
@@ -11,6 +12,7 @@ namespace Mane.CrystalReports
     public class ReportDocument : IDisposable
     {
         private static dynamic  Rpt;
+       // private static cRpt Rpt;
         public ReportDocument()
         {
             Rpt = Activator.CreateInstance(Dependencias.ReportDocumentType);
@@ -33,11 +35,21 @@ namespace Mane.CrystalReports
         public void SetDatabaseLogon(string user, string password)
         {
             Rpt.SetDatabaseLogon(user, password);
+            foreach (dynamic c in Rpt.DataSourceConnections)
+            {
+                c.SetLogon(user, password);
+            }
         }
         public void SetDatabaseLogon(string user, string password, string server, string database)
         {
             Rpt.SetDatabaseLogon(user, password, server, database);
+            foreach (dynamic c in Rpt.DataSourceConnections)
+            {
+                c.SetConnection(server, database, false);
+                c.SetLogon(user, password);
+            }
         }
+        
         public void SetDataSource(DataSet dataSet)
         {
             Rpt.SetDataSource(dataSet);

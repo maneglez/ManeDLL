@@ -105,7 +105,7 @@ namespace Mane.CrystalReports
                 if (Path.GetFileName(item) == dllName)
                 {
                     var info = FileVersionInfo.GetVersionInfo(item);
-                    if(Version.Parse(info.FileVersion) == VersionDeCrystal)
+                    if(Version.Parse(info.FileVersion) >= VersionDeCrystal)
                     return item;
                 }
                    
