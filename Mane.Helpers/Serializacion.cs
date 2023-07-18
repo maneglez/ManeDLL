@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Text.Json;
 using System.Xml;
 using System.Xml.Serialization;
 
@@ -70,6 +71,10 @@ namespace Mane.Helpers
                 }
             }
             return xml;
+        }
+        public static string ObjectToJson(object obj)
+        {
+           return JsonSerializer.Serialize(obj, new JsonSerializerOptions { WriteIndented = true });
         }
     }
 }
