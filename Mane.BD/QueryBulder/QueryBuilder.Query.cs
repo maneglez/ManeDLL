@@ -196,6 +196,13 @@ namespace Mane.BD
             return this;
         }
 
+        public QueryBuilder SelectDistinct(params string[] columnas)
+        {
+            _Distinct = true;
+            Columnas = columnas;
+            return this;
+        }
+
         public QueryBuilder SelectRaw(string RawQuery, string alias)
         {
             _SelectSubquery.Add(alias, RawQuery);

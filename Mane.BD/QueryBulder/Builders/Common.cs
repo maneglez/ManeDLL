@@ -38,7 +38,6 @@ namespace Mane.BD.QueryBulder.Builders
             string colFormateada = "";
             if (columna.StartsWith(delimiters[0].ToString()))
                 return columna;
-
             if (columna.ToLower().Contains(" as ")) // Columna as otraCosa
             {
                 string funcion = "";

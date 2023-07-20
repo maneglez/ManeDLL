@@ -53,6 +53,7 @@ namespace Mane.BD
         T Select(Dictionary<string, T> SelectSubquery);
         T Select(params string[] columnas);
         T Select(T query, string alias);
+        T SelectDistinct(params string[] columnas);
         T SelectRaw(string RawQuery, string alias);
         int Update(Dictionary<string, object> dic, string NombreConexion = "", bool forzar = false);
         int Update(object objeto, string NombreConexion = "", bool forzar = false);

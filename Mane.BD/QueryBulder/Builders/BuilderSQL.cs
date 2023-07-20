@@ -82,17 +82,18 @@ namespace Mane.BD.QueryBulder.Builders
                 joins = BuildJoins(),
                 limit = BuildLimit(),
                 orderBy = BuildOrderBy(),
-                groupBy = BuildGroupBy();
+                groupBy = BuildGroupBy(),
+                distinct = q._Distinct ? "DISTINCT" : "";
             if (where != "") where = "WHERE " + where;
-            string query = $"SELECT {limit} {select} FROM {FormatTable(q.Tabla)} {joins} {where} {orderBy} {groupBy}";
+            string query = $"SELECT {distinct} {limit} {select} FROM {FormatTable(q.Tabla)} {joins} {where} {orderBy} {groupBy}";
             return query;
            // return System.Text.RegularExpressions.Regex.Replace(query, @"\s+", " ");
         }
 
         public string BuildSelect()
         {
-            string select = "";
             var q = QueryBuilder;
+            string select =  "";
             foreach (string item in q.Columnas)
             {
                 select += FormatColumn(item) + $"{Environment.NewLine},";

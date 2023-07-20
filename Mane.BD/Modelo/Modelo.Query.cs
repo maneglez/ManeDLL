@@ -317,5 +317,11 @@ namespace Mane.BD
             query.OrWhereIn(col, values);
             return this;
         }
+
+        public ModeloQuery<Tmodelo> SelectDistinct(params string[] columnas)
+        {
+            query.SelectDistinct(columnas);
+            return this;
+        }
     }
 }

@@ -55,6 +55,13 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Extensiones.cs" />
+    <Compile Include="Forms\EstablecerValoresADataGridView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\EstablecerValoresADataGridView.Designer.cs">
+      <DependentUpon>EstablecerValoresADataGridView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\VinculableConForms.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="ManeExceptionEventArgs.cs" />
     <Compile Include="MsgBox.cs" />
@@ -65,6 +72,9 @@
   <ItemGroup>
     <EmbeddedResource Include="CrystalReports\VisorCrystal.resx">
       <DependentUpon>VisorCrystal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\EstablecerValoresADataGridView.resx">
+      <DependentUpon>EstablecerValoresADataGridView.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

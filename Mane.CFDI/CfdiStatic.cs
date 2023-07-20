@@ -40,9 +40,9 @@ namespace Mane.CFDI
                     default: return CfdiVersion.Desconocida;
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
+                throw ex;
             }
             return CfdiVersion.Desconocida;
         }
@@ -59,8 +59,11 @@ namespace Mane.CFDI
                     var c2 = Extensiones.CargarDesdeXml<v4.Comprobante>(xmlPath);
                     if (c2 == null) throw new Exception("No se logró deserializar el archivo xml");
                     c.CopiarValoresDePropiedades(c2);
-                    c.Complemento.Any = c2.Complemento.Any;
-                    c.Complemento.CargarComplementos();
+                    if(c2.Complemento != null)
+                    {
+                        c.Complemento.Any = c2.Complemento.Any;
+                        c.Complemento.CargarComplementos();
+                    }
                     c.Emisor.CopiarValoresDePropiedades(c2.Emisor);
                     c.Receptor.CopiarValoresDePropiedades(c2.Receptor);
                     c.Version = CfdiVersion.Cfdi4_0;
@@ -88,7 +91,7 @@ namespace Mane.CFDI
                         r.CopiarValoresDePropiedades(r2);
                         c.Impuestos.Retenciones.Add(r);
                     }
-                    if(c2.Impuestos?.Retenciones != null)
+                    if(c2.Impuestos?.Traslados != null)
                     foreach (var t2 in c2.Impuestos.Traslados)
                     {
                         var t = new Traslado();

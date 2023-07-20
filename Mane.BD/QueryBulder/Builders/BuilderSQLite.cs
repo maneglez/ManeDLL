@@ -37,9 +37,10 @@
                 joins = BuildJoins(),
                 limit = BuildLimit(),
                 orderBy = BuildOrderBy(),
-                groupBy = BuildGroupBy();
+                groupBy = BuildGroupBy(),
+                distinct = q._Distinct ? "DISTINCT" : "";
             if (where != "") where = "WHERE " + where;
-            string query = $"SELECT {select} FROM {FormatTable(q.Tabla)} {joins} {where} {orderBy} {groupBy} {limit}";
+            string query = $"SELECT {distinct} {select} FROM {FormatTable(q.Tabla)} {joins} {where} {orderBy} {groupBy} {limit}";
             return query;
             //return System.Text.RegularExpressions.Regex.Replace(query, @"\s+", " ");
         }

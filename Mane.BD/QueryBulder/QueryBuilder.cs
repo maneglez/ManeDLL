@@ -29,6 +29,7 @@ namespace Mane.BD
         internal string NombreConexion;
         internal PaginateClass Pagination;
         internal List<CaseClass> _SelectCase;
+        internal bool _Distinct;
         #endregion
 
         #region Constructores

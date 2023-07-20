@@ -64,6 +64,7 @@
     <Compile Include="ConceptoTraslado.cs" />
     <Compile Include="CuentaATerceros.cs" />
     <Compile Include="Enums.cs" />
+    <Compile Include="Interfaces\IAddenda.cs" />
     <Compile Include="Interfaces\IPagosTotales.cs" />
     <Compile Include="Interfaces\IPagoImpuestosP.cs" />
     <Compile Include="Interfaces\IPagoImpuestosPRetencionP.cs" />

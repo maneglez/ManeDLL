@@ -156,7 +156,7 @@ namespace Mane.BD
             Construct();
 
         }
-        private string ServerName() => Puerto != 0 ? servidor + ":" + Puerto : servidor;
+        public string ServerName() => Puerto != 0 ? servidor + ":" + Puerto : servidor;
 
         public Conexion Copy()
         {
