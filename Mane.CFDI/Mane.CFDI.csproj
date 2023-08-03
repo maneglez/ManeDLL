@@ -91,6 +91,7 @@
     <Compile Include="Retencion.cs" />
     <Compile Include="Complementos\TimbreFiscalDigital\TimbreFiscalDigital.cs" />
     <Compile Include="Traslado.cs" />
+    <Compile Include="Utilidades.cs" />
     <Compile Include="v4\Catalogos.cs" />
     <Compile Include="v4\Comprobante.cs" />
     <Compile Include="Interfaces\ICfdi.cs" />
