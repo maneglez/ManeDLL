@@ -55,6 +55,7 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Extensiones.cs" />
+    <Compile Include="Errores.cs" />
     <Compile Include="Forms\EstablecerValoresADataGridView.cs">
       <SubType>Form</SubType>
     </Compile>
