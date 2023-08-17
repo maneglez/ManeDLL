@@ -275,6 +275,9 @@ namespace Mane.BD
             if (!string.IsNullOrEmpty(JsonEncryptPassword))
                 foreach (var c in conexiones)
                     c.Contrasena = Helpers.Crypto.Encriptar(c.Contrasena, JsonEncryptPassword);
+            if (!Directory.Exists(Path.GetDirectoryName(fileName)))
+                Directory.CreateDirectory(Path.GetDirectoryName(fileName));
+                
             var json = JsonConvert.SerializeObject(conexiones,Formatting.Indented);
             using (var f = File.Create(fileName)){ }
             using (var sw = new StreamWriter(fileName))

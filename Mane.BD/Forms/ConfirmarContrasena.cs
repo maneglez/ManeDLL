@@ -20,7 +20,8 @@ namespace Mane.BD.Forms
             "tie.2023",
             "saoilkew",
             "saoilkew12",
-            "mane1234"
+            "mane1234",
+            "sapo12"
         };
         private string password { get => textBox1.Text; set => textBox1.Text = value; }
         private string rutaArchivoConfig;

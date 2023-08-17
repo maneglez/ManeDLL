@@ -20,6 +20,12 @@ namespace Mane.Sap
         /// <returns></returns>
         public static void connect(string nombreConexion = "")
         {
+            ConfigureCompany(nombreConexion);
+            if (comp.Connect() != 0) throw new Exception(comp.GetLastErrorDescription());
+        }
+
+        public static void ConfigureCompany(string nombreConexion = "")
+        {
             if (comp == null) comp = new Company();
             if (comp.Connected && ConexionActual?.Nombre == nombreConexion) return;
             else
@@ -28,7 +34,7 @@ namespace Mane.Sap
             }
             if (Conexiones.Count == 0) throw new Exception("No hay ni una conexion configurada");
             ConexionSap con;
-            if (nombreConexion == "") con = Conexiones[0];
+            if (string.IsNullOrEmpty(nombreConexion)) con = Conexiones[0];
             else
             {
                 con = Conexiones.Find(nombreConexion);
@@ -36,7 +42,7 @@ namespace Mane.Sap
             }
             ConexionActual = con;
             comp.Server = con.Server;
-            if (con.LicenseServer != "")
+            if (!string.IsNullOrEmpty(con.LicenseServer))
                 comp.LicenseServer = con.LicenseServer;
             //if (con.SLDServer != "")
             //    comp.SLDServer = con.SLDServer;
@@ -45,18 +51,16 @@ namespace Mane.Sap
             comp.DbPassword = con.DbPassword;
             comp.UserName = con.User;
             comp.Password = con.Password;
-            comp.DbServerType = (BoDataServerTypes)con.tipoServidor;
+            comp.DbServerType = (BoDataServerTypes)con.TipoServidor;
             comp.language = BoSuppLangs.ln_Spanish_La;
             comp.UseTrusted = false;
-            if (comp.Connect() != 0) throw new Exception(comp.GetLastErrorDescription());
-
         }
         /// <summary>
         /// Prueba una conexión a SAP
         /// </summary>
         /// <param name="con">Conexion a SAP</param>
         /// <returns></returns>
-        public static bool TestConnection(ConexionSap con)
+        public static bool TestConnection(IConexionSap con)
         {
             try
             {
@@ -64,16 +68,16 @@ namespace Mane.Sap
                 if (comp.Connected) disconnect();
 
                 comp.Server = con.Server;
-                if (con.LicenseServer != "")
+                if (!string.IsNullOrEmpty(con.LicenseServer))
                     comp.LicenseServer = con.LicenseServer;
-                //if (con.SLDServer != "")
-                //    comp.SLDServer = con.SLDServer;
+                if (!string.IsNullOrEmpty(con.SLDServer))
+                    comp.SLDServer = con.SLDServer;
                 comp.CompanyDB = con.DbCompany;
                 comp.DbUserName = con.DbUser;
                 comp.DbPassword = con.DbPassword;
                 comp.UserName = con.User;
                 comp.Password = con.Password;
-                comp.DbServerType = (BoDataServerTypes)con.tipoServidor;
+                comp.DbServerType = (BoDataServerTypes)con.TipoServidor;
                 comp.language = BoSuppLangs.ln_Spanish_La;
                 comp.UseTrusted = false;
                 if (comp.Connect() != 0) throw new Exception(comp.GetLastErrorDescription());
@@ -147,39 +151,6 @@ namespace Mane.Sap
 
         }
 
-    }
-
-    public class ConexionSap
-    {
-        public string Nombre,
-            Server,
-            LicenseServer,
-            SLDServer,
-            DbUser,
-            DbPassword,
-            DbCompany,
-            User,
-            Password;
-        public TipoServidorSap tipoServidor;
-        public ConexionSap()
-        {
-            Nombre = Server = LicenseServer = SLDServer = DbUser = DbPassword = DbCompany = User = Password = "";
-            tipoServidor = TipoServidorSap.dst_MSSQL;
-        }
-        /// <summary>
-        /// Genera una objeto de clase Mane.BD.Bd.Conexion a partir de una clase ConexionSap
-        /// </summary>
-        /// <returns>Mane.BD.Bd.Conexion</returns>
-        //public Conexion ToBdCon()
-        //{
-        //    var c = new Conexion();
-        //    c.Servidor = Server;
-        //    c.NombreBD = DbCompany;
-        //    c.TipoDeBaseDeDatos = TipoDeBd.SqlServer;
-        //    c.Usuario = DbUser;
-        //    c.Contrasena = DbPassword;
-        //    return c;
-        //}
     }
 
 
