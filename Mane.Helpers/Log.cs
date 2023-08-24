@@ -27,7 +27,7 @@ namespace Mane.Helpers
         {
             var hoy = DateTime.Now;
             var nombreArchivo = "log_" + hoy.Year + "_" + hoy.Month + "_" + hoy.Day + ".txt";
-            texto = hoy + " - " + texto + Environment.NewLine;
+            texto = hoy + $"[{Environment.MachineName}] - " + texto + Environment.NewLine;
             string ruta;
             if (string.IsNullOrEmpty(dir))
                 ruta = Path.Combine(RutaLogPorDefecto, nombreArchivo);

@@ -149,9 +149,10 @@ namespace Mane.BD.Forms
                 dgvContenido.DataSource = dt;
                 AjustarTamano();
             }
-            catch (Exception)
+            catch (Exception e)
             {
-
+                //ey
+                MessageBox.Show(e.ToString());
             }
             Cursor = Cursors.Default;
         }
