@@ -90,7 +90,7 @@ namespace Mane.BD
         {
             return GetBuilder().Update(diccionario);
         }
-        private IBuilder GetBuilder(string NombreConexion = null)
+        internal IBuilder GetBuilder(string NombreConexion = null)
         {
             if (NombreConexion != null)
                 this.NombreConexion = NombreConexion;

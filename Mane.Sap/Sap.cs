@@ -20,6 +20,14 @@ namespace Mane.Sap
         /// <returns></returns>
         public static void connect(string nombreConexion = "")
         {
+            if(comp != null)
+            {
+                if (comp.Connected && ConexionActual?.Nombre == nombreConexion) return;
+                else
+                {
+                    disconnect();
+                }
+            }
             ConfigureCompany(nombreConexion);
             if (comp.Connect() != 0) throw new Exception(comp.GetLastErrorDescription());
         }
@@ -27,11 +35,6 @@ namespace Mane.Sap
         public static void ConfigureCompany(string nombreConexion = "")
         {
             if (comp == null) comp = new Company();
-            if (comp.Connected && ConexionActual?.Nombre == nombreConexion) return;
-            else
-            {
-                disconnect();
-            }
             if (Conexiones.Count == 0) throw new Exception("No hay ni una conexion configurada");
             ConexionSap con;
             if (string.IsNullOrEmpty(nombreConexion)) con = Conexiones[0];

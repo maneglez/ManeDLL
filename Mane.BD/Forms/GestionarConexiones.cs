@@ -107,5 +107,29 @@ namespace Mane.BD.Forms
             var c = dataGridView1.CurrentCell.OwningRow.DataBoundItem as Conexion;
             Conexiones.Remove(c);
         }
+
+        private void GestionarConexiones_DragEnter(object sender, DragEventArgs e)
+        {
+            e.Effect = DragDropEffects.Copy;
+        }
+
+        private void GestionarConexiones_DragDrop(object sender, DragEventArgs e)
+        {
+            try
+            {
+                string[] fileList = (string[])e.Data.GetData(DataFormats.FileDrop, false);
+                var cons = Bd.LoadConnectionsFromFile(fileList[0]);
+                Conexiones.Clear();
+                foreach (var c in cons)
+                {
+                    Conexiones.Add(c);
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
     }
 }

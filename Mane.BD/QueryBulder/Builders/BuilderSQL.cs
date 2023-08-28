@@ -41,7 +41,7 @@ namespace Mane.BD.QueryBulder.Builders
             foreach (var j in QueryBuilder.Joins)
             {
                 extraCondicion = j.ExtraCondicion != null ? j.ExtraCondicion.Wheres[0].Boleano + " " + j.ExtraCondicion.GetBuilder(Tipo).BuildWeres() : "";
-                consulta = j.Consulta != null ? $"({(j.Consulta as IBuilder).BuildQuery()}) {FormatColumn(j.AliasDeConsulta)}" : "";
+                consulta = j.Consulta != null ? $"({BuildSubQuery(j.Consulta)}) {FormatColumn(j.AliasDeConsulta)}" : "";
                 joins += $" {j.Tipo} JOIN {consulta}{FormatTable(j.Tabla)} ON {FormatColumn(j.Columna1)} {j.Operador} {FormatColumn(j.Columna2)} {extraCondicion}";
                 joins += Environment.NewLine;
             }
@@ -102,8 +102,8 @@ namespace Mane.BD.QueryBulder.Builders
             {
                 foreach (var key in q._SelectSubquery.Keys)
                 {
-                    if (q._SelectSubquery[key] is QueryBuilder)
-                        select += $"({(q._SelectSubquery[key] as IBuilder).BuildQuery()})";
+                    if (q._SelectSubquery[key] is QueryBuilder subquery)
+                        select += $"({BuildSubQuery(subquery)})";
                     else select += $"({q._SelectSubquery[key]})";
                     select += $" AS {FormatColumn(key)},";
                 }
@@ -182,7 +182,7 @@ namespace Mane.BD.QueryBulder.Builders
             if (qb.Wheres.Count == 0) return where;
             foreach (var w in qb.Wheres)
             {
-                where += $" {w.Boleano} {(w.Query == null ? FormatColumn(w.Columna) : $"({w.Query.BuildQuery(TipoDeBd.SqlServer)})")} {w.Operador} ";
+                where += $" {w.Boleano} {(w.Query == null ? FormatColumn(w.Columna) : $"({BuildSubQuery(w.Query)})")} {w.Operador} ";
                 switch (w.Tipo)
                 {
                     case QueryBuilder.TipoWhere.WhereIn:
@@ -199,8 +199,8 @@ namespace Mane.BD.QueryBulder.Builders
                         }
                         else if (w.Valor.GetType() == typeof(QueryBuilder))
                         {
-                            var q = (IBuilder)w.Valor;
-                            val = $"({q.BuildQuery()})";
+                            var q = (QueryBuilder)w.Valor;
+                            val = $"({BuildSubQuery(q)})";
                         }
                         where = where.Trim(' ');
                         where += val;
@@ -212,7 +212,7 @@ namespace Mane.BD.QueryBulder.Builders
                         if(w.Valor is QueryBuilder q1)
                         {
                             if (q1.Columnas.Length == 0) where += $"({q1.GetBuilder(Tipo).BuildWeres()})";
-                            else where += $"({q1.GetQuery(TipoDeBd.SqlServer)})";
+                            else where += $"({q1.GetQuery(Tipo)})";
                         }
                         else if(w.Query != null)
                         {
@@ -252,6 +252,7 @@ namespace Mane.BD.QueryBulder.Builders
 
         public virtual string FormatTable(string value)
         {
+            if (string.IsNullOrEmpty(value)) return String.Empty;
             return Common.FormatTable(value, ColumnDelimiters);
         }
 
@@ -305,6 +306,12 @@ namespace Mane.BD.QueryBulder.Builders
                 proc += $" '{item}',";
             }
             return proc.TrimEnd(',');
+        }
+        protected virtual string BuildSubQuery(QueryBuilder q)
+        {
+            if (string.IsNullOrEmpty(QueryBuilder.NombreConexion))
+                return q.BuildQuery(Tipo);
+            else return q.GetBuilder(QueryBuilder.NombreConexion).BuildQuery();
         }
     }
 }

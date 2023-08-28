@@ -43,8 +43,8 @@
             this.Column9 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.probarConexionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.button1 = new System.Windows.Forms.Button();
             this.eliminarConexionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.button1 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -146,15 +146,22 @@
             this.probarConexionToolStripMenuItem,
             this.eliminarConexionToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(181, 70);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(172, 48);
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
             // 
             // probarConexionToolStripMenuItem
             // 
             this.probarConexionToolStripMenuItem.Name = "probarConexionToolStripMenuItem";
-            this.probarConexionToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.probarConexionToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
             this.probarConexionToolStripMenuItem.Text = "Probar Conexion";
             this.probarConexionToolStripMenuItem.Click += new System.EventHandler(this.probarConexionToolStripMenuItem_Click);
+            // 
+            // eliminarConexionToolStripMenuItem
+            // 
+            this.eliminarConexionToolStripMenuItem.Name = "eliminarConexionToolStripMenuItem";
+            this.eliminarConexionToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
+            this.eliminarConexionToolStripMenuItem.Text = "Eliminar Conexion";
+            this.eliminarConexionToolStripMenuItem.Click += new System.EventHandler(this.eliminarConexionToolStripMenuItem_Click);
             // 
             // button1
             // 
@@ -167,13 +174,6 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
-            // eliminarConexionToolStripMenuItem
-            // 
-            this.eliminarConexionToolStripMenuItem.Name = "eliminarConexionToolStripMenuItem";
-            this.eliminarConexionToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.eliminarConexionToolStripMenuItem.Text = "Eliminar Conexion";
-            this.eliminarConexionToolStripMenuItem.Click += new System.EventHandler(this.eliminarConexionToolStripMenuItem_Click);
-            // 
             // GestionarConexiones
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -184,6 +184,8 @@
             this.Name = "GestionarConexiones";
             this.Text = "GestionarConexiones";
             this.Load += new System.EventHandler(this.GestionarConexiones_Load);
+            this.DragDrop += new System.Windows.Forms.DragEventHandler(this.GestionarConexiones_DragDrop);
+            this.DragEnter += new System.Windows.Forms.DragEventHandler(this.GestionarConexiones_DragEnter);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);

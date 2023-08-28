@@ -15,6 +15,7 @@ namespace Mane.BD.QueryBulder.Builders
 
         public override string FormatTable(string value)
         {
+            if (string.IsNullOrEmpty(value)) return String.Empty;
             return base.FormatTable($"{DataBaseName}.{value}");
         }
         public override string BuildWeres()
@@ -42,8 +43,8 @@ namespace Mane.BD.QueryBulder.Builders
                         }
                         else if (w.Valor.GetType() == typeof(QueryBuilder))
                         {
-                            var q = (IBuilder)w.Valor;
-                            val = $"({q.BuildQuery()})";
+                            var q = (QueryBuilder)w.Valor;
+                            val = $"({BuildSubQuery(q)})";
                         }
                         where = where.Trim(' ');
                         where += val;
@@ -53,9 +54,9 @@ namespace Mane.BD.QueryBulder.Builders
                         break;
                     case QueryBuilder.TipoWhere.WhereGroup:
                         QueryBuilder q1 = (QueryBuilder)w.Valor;
-                        var tmpConn = new Conexion() { NombreBD = DataBaseName, TipoDeBaseDeDatos = TipoDeBd.Hana };
+                        var tmpConn = new Conexion { NombreBD = DataBaseName, TipoDeBaseDeDatos = TipoDeBd.Hana };
                         if (q1.Columnas.Length == 0) where += $"({q1.GetBuilder(tmpConn).BuildWeres()})";
-                        else where += $"({q1.GetBuilder(tmpConn).BuildQuery()})";
+                        else where += $"({BuildSubQuery(q1)})";
                         break;
                     case QueryBuilder.TipoWhere.WhereBetween:
                         var vals = (object[])w.Valor;
@@ -71,6 +72,11 @@ namespace Mane.BD.QueryBulder.Builders
             where = where.Substring(qb.Wheres[0].Boleano.Length + 1);
             return where;
 
+        }
+
+        protected override string BuildSubQuery(QueryBuilder q)
+        {
+            return new BuilderHana(q, DataBaseName).BuildQuery();
         }
 
     }

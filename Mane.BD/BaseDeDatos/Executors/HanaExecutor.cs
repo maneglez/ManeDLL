@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 using System.Data.Odbc;
 
 namespace Mane.BD.Executors
@@ -42,8 +43,11 @@ namespace Mane.BD.Executors
             }
             catch (OdbcException ex)
             {
-                
                 Bd.bdExceptionHandler(ex);
+            }
+            catch (Exception ex)
+            {
+                Bd.bdExceptionHandler(ex, Query);
             }
         }
 
@@ -68,6 +72,10 @@ namespace Mane.BD.Executors
             {
                 Bd.bdExceptionHandler(ex, Query);
             }
+            catch (Exception ex)
+            {
+                Bd.bdExceptionHandler(ex, Query);
+            }
             Disconnect();
             return result;
         }
@@ -84,6 +92,10 @@ namespace Mane.BD.Executors
             {
                 Bd.bdExceptionHandler(ex, Query);
             }
+            catch (Exception ex)
+            {
+                Bd.bdExceptionHandler(ex, Query);
+            }
             Disconnect();
             return result;
         }
@@ -94,10 +106,14 @@ namespace Mane.BD.Executors
             Connect();
             try
             {
-                reader = cmd.ExecuteReader();
-                dt.Load(reader);
+                using (var adapter = new OdbcDataAdapter(cmd))
+                    adapter.Fill(dt);
             }
             catch (OdbcException ex)
+            {
+                Bd.bdExceptionHandler(ex, Query);
+            }
+            catch(Exception ex)
             {
                 Bd.bdExceptionHandler(ex, Query);
             }
@@ -118,6 +134,12 @@ namespace Mane.BD.Executors
             {
                 Bd.LastErrorCode = e.ErrorCode;
                 Bd.LastErrorDescription = e.Message;
+                return false;
+            }
+            catch (Exception ex)
+            {
+                Bd.LastErrorCode = 0;
+                Bd.LastErrorDescription = ex.Message;
                 return false;
             }
             Disconnect();
