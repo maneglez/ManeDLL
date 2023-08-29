@@ -9,11 +9,63 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 using System.Data;
+using System.IO;
 
 namespace Mane.Helpers
 {
     public static class Extensiones
     {
+        public static void ExportToCSV(this DataGridView dgv)
+        {
+            string fileName = "";
+            using(var fm = new SaveFileDialog())
+            {
+                fm.Filter = "csv files (*.csv)|*.csv";
+                fm.DefaultExt = ".csv";
+                if(fm.ShowDialog() == DialogResult.OK)
+                {
+                    fileName = fm.FileName;
+                }
+            }
+            if (string.IsNullOrEmpty(fileName))
+                return;
+
+            using(var sw = new StreamWriter(new FileStream(fileName,FileMode.Create),Encoding.UTF8))
+            {
+                var columns = "";
+                foreach (DataGridViewColumn c in dgv.Columns)
+                {
+                    columns += c.HeaderText + ",";
+                }
+                sw.WriteLine(columns.TrimEnd(','));
+                foreach (DataGridViewRow r in dgv.Rows)
+                {
+                    string row = "";
+                    foreach (DataGridViewCell c in r.Cells)
+                    {
+                        if (c.Value != null && c.Value != DBNull.Value)
+                            row += c.Value.ToString().Replace(",","");
+                        row += ",";
+                    }
+                    sw.WriteLine(row.TrimEnd(','));
+                }
+            }
+            MsgBox.info("Exportado Correctamente!");
+
+        }
+        public static void CopiarTabla(this DataGridView grid)
+        {
+            Utils.CopiarTabla(grid);
+        }
+        public static void AddCopiarTablaOption(this DataGridView grid)
+        {
+
+            if (grid.ContextMenuStrip == null)
+                grid.ContextMenuStrip = new ContextMenuStrip();
+            var i = grid.ContextMenuStrip.Items.Add("Copiar Tabla");
+            i.Click += (s, e) => grid.CopiarTabla();
+
+        }
         public static string ToJsonString<T>(this T obj) where T: class, new()
         {
 			try

@@ -47,6 +47,13 @@
   <ItemGroup>
     <Compile Include="Archivos.cs" />
     <Compile Include="Asincrono.cs" />
+    <Compile Include="Common\Interfaces\IBatchNumbers.cs" />
+    <Compile Include="Common\Interfaces\IBinAllocation.cs" />
+    <Compile Include="Common\Interfaces\IDocumento.cs" />
+    <Compile Include="Common\Interfaces\ILineaDocumento.cs" />
+    <Compile Include="Common\Interfaces\ILineaTraspaso.cs" />
+    <Compile Include="Common\Interfaces\ISerialNumbers.cs" />
+    <Compile Include="Common\Interfaces\ITraspaso.cs" />
     <Compile Include="Crypto.cs" />
     <Compile Include="Extensiones.cs" />
     <Compile Include="Errores.cs" />
