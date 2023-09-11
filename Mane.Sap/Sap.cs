@@ -20,7 +20,7 @@ namespace Mane.Sap
         /// <returns></returns>
         public static void connect(string nombreConexion = "")
         {
-            if(comp != null)
+            if (comp != null)
             {
                 if (comp.Connected && ConexionActual?.Nombre == nombreConexion) return;
                 else

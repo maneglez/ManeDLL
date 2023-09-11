@@ -37,9 +37,9 @@ namespace Mane.BD.Executors
 
         public void Connect()
         {
-            if(!ConnIsDisposed)
-            if (conn?.State == ConnectionState.Open)
-                Disconnect();
+            if (!ConnIsDisposed)
+                if (conn?.State == ConnectionState.Open)
+                    Disconnect();
             try
             {
                 conn = new SQLiteConnection(ConnString);

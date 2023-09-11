@@ -130,16 +130,16 @@ namespace Mane.Helpers
         public static List<EnumObj> EnumToList(Type tipo)
         {
             var list = new List<EnumObj>();
-                var values = Enum.GetValues(tipo);
-                foreach (var value in values)
-                {
+            var values = Enum.GetValues(tipo);
+            foreach (var value in values)
+            {
                 list.Add(new EnumObj(value, value.GetDescriptionAttr()));
-                    
-                }
-                return list;
-            
+
+            }
+            return list;
+
         }
-       
+
         /// <summary>
         /// Asigna todos los valores de un enum a un combobox
         /// </summary>
@@ -153,7 +153,7 @@ namespace Mane.Helpers
         /// Asigna todos los valores de un enum a un combobox
         /// </summary>
         /// <param name="cb">Combobox</param>
-        public static void EnumToComboBox(ComboBox cb,Type tipoEnum)
+        public static void EnumToComboBox(ComboBox cb, Type tipoEnum)
         {
             cb.DataSource = EnumToList(tipoEnum);
             cb.DisplayMember = "Name";
@@ -293,19 +293,19 @@ namespace Mane.Helpers
         public static void DataTableToCsv(DataTable dtDataTable)
         {
             var ruta = "";
-            using(var fm = new SaveFileDialog())
+            using (var fm = new SaveFileDialog())
             {
                 fm.Filter = "Archivo CSV | *.csv";
                 fm.DefaultExt = "csv";
                 fm.Title = "Elija donde guardar el archivo";
                 if (fm.ShowDialog() == DialogResult.OK)
-                ruta = fm.FileName;
+                    ruta = fm.FileName;
             }
             if (!string.IsNullOrEmpty(ruta))
             {
                 DataTableToCsv(dtDataTable, ruta);
             }
-               
+
         }
         /// <summary>
         /// Convierte una notacion de camello en una frase con espacios
@@ -325,6 +325,5 @@ namespace Mane.Helpers
     );
         }
 
-        
     }
 }

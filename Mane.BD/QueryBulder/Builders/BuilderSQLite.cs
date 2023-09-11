@@ -9,9 +9,9 @@
         }
         override public string BuildLimit()
         {
-            if(QueryBuilder.Pagination != null)
+            if (QueryBuilder.Pagination != null)
             {
-                var p= QueryBuilder.Pagination;
+                var p = QueryBuilder.Pagination;
                 return $"LIMIT {p.Paginate} OFFSET {(p.Page - 1) * p.Paginate}";
             }
             return QueryBuilder._Limit > 0 ? $"LIMIT {QueryBuilder._Limit}" : "";

@@ -1,11 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Mane.Helpers.Forms
@@ -17,13 +12,13 @@ namespace Mane.Helpers.Forms
         {
             InitializeComponent();
             Rows = rows;
-            if(rows.Count() >= 1)
+            if (rows.Count() >= 1)
             {
                 var r = rows.ElementAt(0);
                 foreach (DataGridViewCell c in r.Cells)
                 {
-                    if(!c.ReadOnly && c.OwningColumn.Visible)    
-                    cbColumnas.Items.Add(new { Name = c.OwningColumn.HeaderText, Value = c.OwningColumn.Name });
+                    if (!c.ReadOnly && c.OwningColumn.Visible)
+                        cbColumnas.Items.Add(new { Name = c.OwningColumn.HeaderText, Value = c.OwningColumn.Name });
                 }
                 cbColumnas.DisplayMember = "Name";
                 cbColumnas.ValueMember = "Value";
@@ -33,7 +28,7 @@ namespace Mane.Helpers.Forms
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if(cbColumnas.SelectedItem != null && Rows != null)
+            if (cbColumnas.SelectedItem != null && Rows != null)
             {
                 var col = (string)(cbColumnas.SelectedItem as dynamic).Value;
                 foreach (var r in Rows)

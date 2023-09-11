@@ -1,22 +1,18 @@
 ﻿//using CrystalDecisions.CrystalReports.Engine;
 using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Drawing.Printing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 //using cRpt = CrystalDecisions.CrystalReports.Engine.ReportDocument;
 namespace Mane.CrystalReports
 {
     public class ReportDocument : IDisposable
     {
-        private static dynamic  Rpt;
-       // private static cRpt Rpt;
+        private static dynamic Rpt;
+        // private static cRpt Rpt;
         public ReportDocument()
         {
             Rpt = Activator.CreateInstance(Dependencias.ReportDocumentType);
-           // Rpt = new cRpt();
+            // Rpt = new cRpt();
         }
         public void Load(string rutaRpt) =>
             Rpt.Load(rutaRpt);
@@ -24,11 +20,11 @@ namespace Mane.CrystalReports
         {
             Rpt.Refresh();
         }
-        public void SetParameterValue(int index,object val)
+        public void SetParameterValue(int index, object val)
         {
             Rpt.SetParameterValue(index, val);
         }
-        public void SetParameterValue(string name,object val)
+        public void SetParameterValue(string name, object val)
         {
             Rpt.SetParameterValue(name, val);
         }
@@ -49,7 +45,7 @@ namespace Mane.CrystalReports
                 c.SetLogon(user, password);
             }
         }
-        
+
         public void SetDataSource(DataSet dataSet)
         {
             Rpt.SetDataSource(dataSet);
@@ -58,20 +54,20 @@ namespace Mane.CrystalReports
         {
             Rpt.SetDataSource(dataTable);
         }
-        public void ExportToDisk(CrystalExportFormat format,string ruta)
+        public void ExportToDisk(CrystalExportFormat format, string ruta)
         {
             var tipo = (dynamic)Enum.Parse(Dependencias.ExportFormatType, format.ToString());
-           Rpt.ExportToDisk(tipo, ruta);
+            Rpt.ExportToDisk(tipo, ruta);
         }
         public void Show()
         {
-            using(var fm = new VisorCrystal())
+            using (var fm = new VisorCrystal())
             {
                 fm.SetReportSource(Rpt);
                 fm.ShowDialog();
             }
         }
-        public void Print(PrinterSettings printerSettings,PageSettings pageSettings,bool reformatReportPageSettings)
+        public void Print(PrinterSettings printerSettings, PageSettings pageSettings, bool reformatReportPageSettings)
         {
             Rpt.PrintToPrinter(printerSettings, pageSettings, reformatReportPageSettings);
         }

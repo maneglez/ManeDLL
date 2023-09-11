@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Mane.Helpers.Common.Interfaces
+namespace Mane.Helpers.Common
 {
     public interface IDocumento
     {
@@ -15,6 +12,6 @@ namespace Mane.Helpers.Common.Interfaces
         DateTime DocDate { get; set; }
         string Comments { get; set; }
         List<ILineaDocumento> Lines { get; set; }
-    
+
     }
 }

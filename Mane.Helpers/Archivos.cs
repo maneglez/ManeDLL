@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Windows.Forms;
 
 namespace Mane.Helpers
@@ -65,6 +67,25 @@ namespace Mane.Helpers
             {
                 MessageBox.Show($"No se pudo crear el directorio '{carpeta}', ejecute la aplicación como administrador", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        /// <summary>
+        /// Obtiene el directorio en el que se encuentra el .Exe de la aplicación
+        /// </summary>
+        /// <returns>Devuelve el directirio físico de la aplicación</returns>
+        public static string DirectorioBase()
+        {
+            return Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        }
+
+        public static string DirectorioBase(params string[] subDirectorios)
+        {
+            var dirs = new List<string>
+            {
+                DirectorioBase()
+            };
+            dirs.AddRange(subDirectorios);
+            return Path.Combine(dirs.ToArray());
         }
 
     }

@@ -31,12 +31,12 @@
             this.dtpExp = new System.Windows.Forms.DateTimePicker();
             this.tbHk = new System.Windows.Forms.TextBox();
             this.tbAppCve = new System.Windows.Forms.TextBox();
-            this.tbAppId = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
+            this.cbAppId = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // dtpExp
@@ -59,13 +59,6 @@
             this.tbAppCve.Name = "tbAppCve";
             this.tbAppCve.Size = new System.Drawing.Size(200, 20);
             this.tbAppCve.TabIndex = 1;
-            // 
-            // tbAppId
-            // 
-            this.tbAppId.Location = new System.Drawing.Point(109, 26);
-            this.tbAppId.Name = "tbAppId";
-            this.tbAppId.Size = new System.Drawing.Size(200, 20);
-            this.tbAppId.TabIndex = 1;
             // 
             // label1
             // 
@@ -113,17 +106,26 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
+            // cbAppId
+            // 
+            this.cbAppId.FormattingEnabled = true;
+            this.cbAppId.Location = new System.Drawing.Point(110, 25);
+            this.cbAppId.Name = "cbAppId";
+            this.cbAppId.Size = new System.Drawing.Size(199, 21);
+            this.cbAppId.TabIndex = 4;
+            this.cbAppId.SelectedIndexChanged += new System.EventHandler(this.cbAppId_SelectedIndexChanged);
+            // 
             // frmGenerador
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(339, 229);
+            this.Controls.Add(this.cbAppId);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.tbAppId);
             this.Controls.Add(this.tbAppCve);
             this.Controls.Add(this.tbHk);
             this.Controls.Add(this.dtpExp);
@@ -139,11 +141,11 @@
         private System.Windows.Forms.DateTimePicker dtpExp;
         private System.Windows.Forms.TextBox tbHk;
         private System.Windows.Forms.TextBox tbAppCve;
-        private System.Windows.Forms.TextBox tbAppId;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.ComboBox cbAppId;
     }
 }

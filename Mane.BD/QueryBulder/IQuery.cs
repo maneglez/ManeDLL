@@ -38,7 +38,7 @@ namespace Mane.BD
         T OrWhere(string col, object valor);
         T OrWhere(string col1, string operador, object Valor);
         T OrWhereBetween(string col1, object valor1, object valor2);
-        T OrWhereColumn(string col1, string col2,string operador = "=");
+        T OrWhereColumn(string col1, string col2, string operador = "=");
         T OrWhereIn(string col, object[] values);
         /// <summary>
         /// Pagina el resultado de la consulta
@@ -62,7 +62,7 @@ namespace Mane.BD
         T Where(string col1, object valor);
         T Where(string col, string operador, Func<T, T> func);
         T Where(string col1, string operador, object valor);
-        T Where(Func<T, T> func, string operador, object valor );
+        T Where(Func<T, T> func, string operador, object valor);
         T WhereBetween(string col1, object valor1, object valor2);
         T WhereColumn(string col1, string col2);
         T WhereColumn(string col1, string operador, string col2);

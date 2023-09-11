@@ -89,7 +89,7 @@ namespace Mane.BD.Helpers
             }
             catch (Exception ex)
             {
-               // Log.Add("Conversor de tipo \r\n" + ex.StackTrace);
+                // Log.Add("Conversor de tipo \r\n" + ex.StackTrace);
             }
             return value;
         }
@@ -128,16 +128,16 @@ namespace Mane.BD.Helpers
         public static List<EnumObj> EnumToList(Type tipo)
         {
             var list = new List<EnumObj>();
-                var values = Enum.GetValues(tipo);
-                foreach (var value in values)
-                {
+            var values = Enum.GetValues(tipo);
+            foreach (var value in values)
+            {
                 list.Add(new EnumObj(value, value.GetDescriptionAttr()));
-                    
-                }
-                return list;
-            
+
+            }
+            return list;
+
         }
-       
+
         /// <summary>
         /// Asigna todos los valores de un enum a un combobox
         /// </summary>
@@ -151,7 +151,7 @@ namespace Mane.BD.Helpers
         /// Asigna todos los valores de un enum a un combobox
         /// </summary>
         /// <param name="cb">Combobox</param>
-        public static void EnumToComboBox(ComboBox cb,Type tipoEnum)
+        public static void EnumToComboBox(ComboBox cb, Type tipoEnum)
         {
             cb.DataSource = EnumToList(tipoEnum);
             cb.DisplayMember = "Name";
@@ -259,6 +259,6 @@ namespace Mane.BD.Helpers
     );
         }
 
-        
+
     }
 }

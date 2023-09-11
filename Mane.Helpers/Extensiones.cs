@@ -1,28 +1,79 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Windows.Forms;
 using System.Data;
 using System.IO;
+using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Runtime.Serialization;
+using System.Text;
+using System.Text.Json;
+using System.Windows.Forms;
+using System.Collections.ObjectModel;
 
 namespace Mane.Helpers
 {
     public static class Extensiones
     {
+        /// <summary>
+        /// Elimina los elementos que cumplan una condicion
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="list"></param>
+        /// <param name="predicate"></param>
+        public static void RemoveWhere<T>(this IList<T> list, Func<T,bool> predicate)
+        {
+            var itemsToRemove = new List<T>();
+            itemsToRemove.AddRange(list.Where(predicate));
+            foreach (var item in itemsToRemove)
+            {
+                list.Remove(item);
+            }
+        }
+        public static void AbrirOpcion(this Panel PanelEjecucion, Form Mostrar) //Mostrar una forma en un panel
+        {
+
+            if (PanelEjecucion.Controls.Count > 0)
+            {
+                bool match = false;
+                foreach (Control item in PanelEjecucion.Controls)//ocultar los demás forms
+                {
+                    if (!(item is Form)) continue;
+                    if (item.Name == Mostrar.Name)
+                    {
+                        item.Visible = true;
+                        match = true;
+                    }
+                    else
+                        item.Visible = false;
+                }
+                if (match)//Si el control ya estaba inicializado
+                {
+                    Mostrar.Dispose();//Libera el form Recibido como parámetro
+                    return;
+                }
+            }
+            Mostrar.FormBorderStyle = FormBorderStyle.None;
+            Mostrar.TopLevel = false; //Se le dice que no es un objeto de alto nivel
+            Mostrar.Dock = DockStyle.Fill; //En el panel se llena completamente
+            PanelEjecucion.Controls.Add(Mostrar); //Se agrega el elemento al panel
+
+            try
+            {
+                Mostrar.Show();
+            }
+            catch (Exception)
+            {
+
+            }
+        }
         public static void ExportToCSV(this DataGridView dgv)
         {
             string fileName = "";
-            using(var fm = new SaveFileDialog())
+            using (var fm = new SaveFileDialog())
             {
                 fm.Filter = "csv files (*.csv)|*.csv";
                 fm.DefaultExt = ".csv";
-                if(fm.ShowDialog() == DialogResult.OK)
+                if (fm.ShowDialog() == DialogResult.OK)
                 {
                     fileName = fm.FileName;
                 }
@@ -30,7 +81,7 @@ namespace Mane.Helpers
             if (string.IsNullOrEmpty(fileName))
                 return;
 
-            using(var sw = new StreamWriter(new FileStream(fileName,FileMode.Create),Encoding.UTF8))
+            using (var sw = new StreamWriter(new FileStream(fileName, FileMode.Create), Encoding.UTF8))
             {
                 var columns = "";
                 foreach (DataGridViewColumn c in dgv.Columns)
@@ -44,7 +95,7 @@ namespace Mane.Helpers
                     foreach (DataGridViewCell c in r.Cells)
                     {
                         if (c.Value != null && c.Value != DBNull.Value)
-                            row += c.Value.ToString().Replace(",","");
+                            row += c.Value.ToString().Replace(",", "");
                         row += ",";
                     }
                     sw.WriteLine(row.TrimEnd(','));
@@ -66,16 +117,16 @@ namespace Mane.Helpers
             i.Click += (s, e) => grid.CopiarTabla();
 
         }
-        public static string ToJsonString<T>(this T obj) where T: class, new()
+        public static string ToJsonString<T>(this T obj) where T : class, new()
         {
-			try
-			{
-				return JsonSerializer.Serialize(obj);
-			}
-			catch (Exception)
-			{
-				return "";
-			}
+            try
+            {
+                return JsonSerializer.Serialize(obj);
+            }
+            catch (Exception)
+            {
+                return "";
+            }
         }
         /// <summary>
         /// Establece el valor de la propiedad de un objeto
@@ -84,7 +135,7 @@ namespace Mane.Helpers
         /// <param name="obj"></param>
         /// <param name="PropertyName"></param>
         /// <param name="value"></param>
-        public static void SetPropertyValue<T>(this T obj,string PropertyName, object value) where T : class, new()
+        public static void SetPropertyValue<T>(this T obj, string PropertyName, object value) where T : class, new()
         {
             try
             {
@@ -119,6 +170,77 @@ namespace Mane.Helpers
             return d.ToString("yyyy-MM-dd");
         }
 
+        public static void CopyObject<T>(this T source, T target) where T : class
+        {
+            if (target == null || source == null)
+                return;
+            Type sourceType = source.GetType();
+            Type targetType = target.GetType();
+            var sourceProperties = sourceType.GetProperties();
+            foreach (var sProp in sourceProperties)
+            {
+                var tProp = targetType.GetProperty(sProp.Name);
+                if (tProp == null)
+                    continue;
+                if (!sProp.CanRead || !tProp.CanWrite)
+                    continue;
+                if (sProp.PropertyType.IsValueType || sProp.PropertyType.IsPrimitive)
+                {
+                    tProp.SetValue(target, sProp.GetValue(source));
+                    continue;
+                }
+                var sPropValue = sProp.GetValue(source);
+                if (sProp.PropertyType.IsSerializable)
+                {
+                    try
+                    {
+                        var sPropCloneValue = sPropValue.CloneSerializer();
+                        tProp.SetValue(target, sPropCloneValue);
+                    }
+                    catch
+                    {
+                        var tPropValue = Activator.CreateInstance(sProp.PropertyType, true);
+                        tPropValue.CopyObjectProperties(sPropValue);
+                        tProp.SetValue(target, tPropValue);
+                    }
+                }
+                else
+                {
+                    tProp.SetValue(target, sPropValue);
+                }
+            }
+        }
+
+        private static void CopyObjectProperties<T>(this T target, object source)
+        {
+            
+        }
+
+        public static T CloneSerializer<T>(this T source) where T : class
+        {
+            if (!typeof(T).IsSerializable)
+                throw new ArgumentException("NonSerializable");
+
+            if (Object.ReferenceEquals(source, null))
+                return null;
+
+            IFormatter formatter = new BinaryFormatter();
+            Stream stream = new MemoryStream();
+            using (stream)
+            {
+                formatter.Serialize(stream, source);
+                stream.Seek(0, SeekOrigin.Begin);
+                return (T)formatter.Deserialize(stream);
+            }
+        }
+
+        public static T CloneObject<T>(this T source) where T : class,new()
+        {
+            var value = new T();
+            value.CopyObject(source);
+            return (T)value;
+        }
+
         #region Generic Binding
         public static List<Control> GetAllControls(this Control control)
         {
@@ -131,11 +253,11 @@ namespace Mane.Helpers
             return controls;
 
         }
-        public static void CopiarPropiedadesAForm<T>(this T obj,Form fm) where T:class, new()
+        public static void CopiarPropiedadesAForm<T>(this T obj, Form fm) where T : class, new()
         {
             obj.CopiarPropiedadesAControles(GetAllControls(fm));
         }
-        public static void CopiarAForm(this DataTable dt,Form fm)
+        public static void CopiarAForm(this DataTable dt, Form fm)
         {
             if (dt.Rows.Count == 0) return;
             var controls = fm.GetAllControls();
@@ -170,17 +292,17 @@ namespace Mane.Helpers
                 }
             }
         }
-        public static void CopiarPropiedadesAControles<T>(this T obj,IEnumerable<Control> controls) where T : class,new()
+        public static void CopiarPropiedadesAControles<T>(this T obj, IEnumerable<Control> controls) where T : class, new()
         {
             foreach (Control control in controls)
             {
                 try
                 {
-                    var bind = (ContextoBinding)ToContextoBinding(control.Tag,obj);
+                    var bind = (ContextoBinding)ToContextoBinding(control.Tag, obj);
                     if (bind == null) continue;
                     if (!string.IsNullOrEmpty(bind.Format))
                     {
-                        control.SetPropertyValue(bind.PropiedadDelControl, (obj.GetPropertyValue(bind.PropiedadDelObjeto) as IFormattable).ToString(bind.Format,null));
+                        control.SetPropertyValue(bind.PropiedadDelControl, (obj.GetPropertyValue(bind.PropiedadDelObjeto) as IFormattable).ToString(bind.Format, null));
                         continue;
                     }
                     if (bind.NegarProp)
@@ -188,7 +310,7 @@ namespace Mane.Helpers
                         control.SetPropertyValue(bind.PropiedadDelControl, !(bool)obj.GetPropertyValue(bind.PropiedadDelObjeto));
                         continue;
                     }
-                    if(bind.PropiedadDelControl == "Text")
+                    if (bind.PropiedadDelControl == "Text")
                     {
                         control.SetPropertyValue(bind.PropiedadDelControl, obj.GetPropertyValue(bind.PropiedadDelObjeto).ToString());
                         continue;
@@ -243,13 +365,13 @@ namespace Mane.Helpers
         {
             return grid.Rows[e.RowIndex].Cells[e.ColumnIndex]?.Value;
         }
-        public static void SetCellValue(this DataGridView grid, DataGridViewCellEventArgs e,object value)
+        public static void SetCellValue(this DataGridView grid, DataGridViewCellEventArgs e, object value)
         {
-             grid.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = value;
+            grid.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = value;
         }
         public static void SetCellValue(this DataGridView grid, DataGridViewCellCancelEventArgs e, object value)
         {
-             grid.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = value;
+            grid.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = value;
         }
 
 

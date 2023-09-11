@@ -57,7 +57,7 @@ namespace Mane.BD.QueryBulder.Builders
         {
             string orderBy = "";
             var q = QueryBuilder;
-            
+
             if (q.Order != null)
             {
                 var order = q.Order;
@@ -87,13 +87,13 @@ namespace Mane.BD.QueryBulder.Builders
             if (where != "") where = "WHERE " + where;
             string query = $"SELECT {distinct} {limit} {select} FROM {FormatTable(q.Tabla)} {joins} {where} {orderBy} {groupBy}";
             return query;
-           // return System.Text.RegularExpressions.Regex.Replace(query, @"\s+", " ");
+            // return System.Text.RegularExpressions.Regex.Replace(query, @"\s+", " ");
         }
 
         public string BuildSelect()
         {
             var q = QueryBuilder;
-            string select =  "";
+            string select = "";
             foreach (string item in q.Columnas)
             {
                 select += FormatColumn(item) + $"{Environment.NewLine},";
@@ -108,7 +108,7 @@ namespace Mane.BD.QueryBulder.Builders
                     select += $" AS {FormatColumn(key)},";
                 }
             }
-            if(q._SelectCase.Count > 0)
+            if (q._SelectCase.Count > 0)
             {
                 foreach (var c in q._SelectCase)
                 {
@@ -209,16 +209,16 @@ namespace Mane.BD.QueryBulder.Builders
                         where += FormatColumn((string)w.Valor);
                         break;
                     case QueryBuilder.TipoWhere.WhereGroup:
-                        if(w.Valor is QueryBuilder q1)
+                        if (w.Valor is QueryBuilder q1)
                         {
                             if (q1.Columnas.Length == 0) where += $"({q1.GetBuilder(Tipo).BuildWeres()})";
                             else where += $"({q1.GetQuery(Tipo)})";
                         }
-                        else if(w.Query != null)
+                        else if (w.Query != null)
                         {
                             where += FormatValue(w.Valor);
                         }
-                         
+
                         break;
                     case QueryBuilder.TipoWhere.WhereBetween:
                         var vals = (object[])w.Valor;

@@ -13,13 +13,34 @@ namespace Mane.Licenciamiento.Generador
 {
     public partial class frmGenerador : Form
     {
-        public string AppId { get => tbAppId.Text; set => tbAppId.Text = value; }
+        public string AppId { get => cbAppId.Text; set => cbAppId.Text = value; }
         public string ClaveDeApp { get => tbAppCve.Text; set => tbAppCve.Text = value; }
         public string HardwareKey { get => tbHk.Text; set => tbHk.Text = value; }
         public DateTime Expiracion { get => dtpExp.Value; set => dtpExp.Value = value; }
+
+        private class AppClass
+        {
+            public AppClass(string appId, string clave)
+            {
+                AppId = appId;
+                Clave = clave;
+            }
+
+            public string AppId { get; set; }
+            public string Clave { get; set; }
+        }
         public frmGenerador()
         {
             InitializeComponent();
+            var apps = new AppClass[]
+            {
+                new AppClass("POSCAJA2","POSCAJA245289IJK")
+            };
+  
+            cbAppId.DataSource = apps;
+            cbAppId.DisplayMember = "AppId";
+            cbAppId.ValueMember = "Clave";
+            
         }
 
         private void GenerarLic()
@@ -40,6 +61,19 @@ namespace Mane.Licenciamiento.Generador
         private void button1_Click(object sender, EventArgs e)
         {
             GenerarLic();
+        }
+
+        private void cbAppId_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                ClaveDeApp = (cbAppId.SelectedItem as AppClass).Clave;
+            }
+            catch (Exception)
+            {
+
+                
+            }
         }
     }
 }

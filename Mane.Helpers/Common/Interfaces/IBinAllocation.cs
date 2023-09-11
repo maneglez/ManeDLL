@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Mane.Helpers.Common
+﻿namespace Mane.Helpers.Common
 {
     public interface IBinAllocation
     {
         int BinAbsEntry { get; set; }
+        string BinCode { get; set; }
         double Quantity { get; set; }
         int SerialAndBatchNumbersBaseLine { get; set; }
         int BaseLineNumber { get; set; }
+        BinActionType BinActionType { get; set; }
     }
 }

@@ -113,7 +113,7 @@ namespace Mane.BD.Executors
             {
                 Bd.bdExceptionHandler(ex, Query);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Bd.bdExceptionHandler(ex, Query);
             }

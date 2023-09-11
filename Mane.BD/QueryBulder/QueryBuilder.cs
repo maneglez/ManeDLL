@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Runtime.Remoting.Messaging;
 
 namespace Mane.BD
 {
@@ -76,6 +77,12 @@ namespace Mane.BD
             connName = VerifyConnection(connName);
             return Bd.ExecuteEscalar(GetBuilder().BuildQuery(), connName);
         }
+        public object GetScalar(string connName,object defaultValue = null)
+        {
+            connName = VerifyConnection(connName);
+            var result = Bd.ExecuteEscalar(GetBuilder().BuildQuery(), connName);
+            return result ?? defaultValue;
+        }
 
         /// <summary>
         /// Genera una cadena de consulta en formato SQL
@@ -103,11 +110,12 @@ namespace Mane.BD
         /// </summary>
         /// <param name="NombreConexion">Nombre de la conexión</param>
         /// <returns></returns>
-        public DataTable Get(string NombreConexion = "") {
+        public DataTable Get(string NombreConexion = "")
+        {
             NombreConexion = VerifyConnection(NombreConexion);
-           return Bd.ExecuteQuery(
-            GetBuilder(NombreConexion).BuildQuery(),
-            NombreConexion);
+            return Bd.ExecuteQuery(
+             GetBuilder(NombreConexion).BuildQuery(),
+             NombreConexion);
         }
         public DataTable ExecuteProcedure(string procedureName, object[] parametros = null, string ConnName = "")
         {

@@ -1,9 +1,6 @@
 ﻿using Mane.BD.Executors;
-using Mane.BD.QueryBulder.Builders;
 using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Runtime.InteropServices;
 
 namespace Mane.BD.BaseDeDatos.Executors.WebApiExecutor
 {
@@ -25,7 +22,7 @@ namespace Mane.BD.BaseDeDatos.Executors.WebApiExecutor
                 },
                 Url = conexion.Servidor
             };
-            
+
         }
 
         public string Query { get; set; }
@@ -61,7 +58,7 @@ namespace Mane.BD.BaseDeDatos.Executors.WebApiExecutor
             try
             {
                 return ValidarResponse<int>(Client.ExecuteNonQuery(Query, Conexion.Nombre));
-                
+
             }
             catch (Exception e)
             {
@@ -87,7 +84,7 @@ namespace Mane.BD.BaseDeDatos.Executors.WebApiExecutor
         }
 
         public bool TestConnection()
-        {            
+        {
             try
             {
                 var response = Client.TestConnection(Conexion.Nombre);

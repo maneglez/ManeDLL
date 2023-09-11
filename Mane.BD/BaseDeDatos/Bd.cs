@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.IO;
-using System.Security.Cryptography;
 
 namespace Mane.BD
 {
@@ -277,9 +276,9 @@ namespace Mane.BD
                     c.Contrasena = Helpers.Crypto.Encriptar(c.Contrasena, JsonEncryptPassword);
             if (!Directory.Exists(Path.GetDirectoryName(fileName)))
                 Directory.CreateDirectory(Path.GetDirectoryName(fileName));
-                
-            var json = JsonConvert.SerializeObject(conexiones,Formatting.Indented);
-            using (var f = File.Create(fileName)){ }
+
+            var json = JsonConvert.SerializeObject(conexiones, Formatting.Indented);
+            using (var f = File.Create(fileName)) { }
             using (var sw = new StreamWriter(fileName))
                 sw.Write(json);
         }
@@ -299,12 +298,17 @@ namespace Mane.BD
             SaveConnectionsToFile(Conexiones, DefaultConectionsFileName);
         }
         private static string defaultConectionsFileName;
-        public static string DefaultConectionsFileName { get {
+        public static string DefaultConectionsFileName
+        {
+            get
+            {
                 if (string.IsNullOrEmpty(defaultConectionsFileName))
                     return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ManeBdConnections.json");
                 else return defaultConectionsFileName;
-            } set => defaultConectionsFileName = value; }
-    
+            }
+            set => defaultConectionsFileName = value;
+        }
+
         #endregion
 
     }

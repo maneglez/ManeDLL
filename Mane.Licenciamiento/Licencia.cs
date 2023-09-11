@@ -1,13 +1,8 @@
 ﻿using Mane.Helpers;
 using Microsoft.Win32;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Management;
-using System.Net.NetworkInformation;
-using System.Security.Principal;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Serialization;
@@ -21,7 +16,7 @@ namespace Mane.Licenciamiento
             var hk = string.Empty;
             //Identificador generado al instalar windows
             hk += Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\Cryptography").GetValue("MachineGuid", string.Empty);
-           //Serial de la placa base
+            //Serial de la placa base
             hk += GetMotherBoardID();
             hk = Crypto.GetMD5(hk);
             var arr = hk.ToCharArray();
@@ -87,7 +82,7 @@ namespace Mane.Licenciamiento
         /// <returns>El estatus actual de la licencia</returns>
         public static EstatusDeLicencia Check()
         {
-            return Check(RutaLicenciaDefault,ManeApp.AppId,ManeApp.ClaveCifrado);
+            return Check(RutaLicenciaDefault, ManeApp.AppId, ManeApp.ClaveCifrado);
         }
         /// <summary>
         /// Verifica el estatus actual de la licencia
@@ -103,9 +98,9 @@ namespace Mane.Licenciamiento
         /// <param name="rutaLicencia">Runta hacia el XML de licencia</param>
         /// <param name="MostrarMensajePorDefecto">Indica si muestra un mensaje de validación o no</param>
         /// <returns>Verdadero si la licencia es válida de lo contrario retorna falso</returns>
-        public static bool ValidarLicencia(string rutaLicencia,string appId,string claveEncriptado, bool MostrarMensajePorDefecto = false)
+        public static bool ValidarLicencia(string rutaLicencia, string appId, string claveEncriptado, bool MostrarMensajePorDefecto = false)
         {
-            EstatusDeLicencia estatus = Check(rutaLicencia,appId,claveEncriptado);
+            EstatusDeLicencia estatus = Check(rutaLicencia, appId, claveEncriptado);
             bool valida = true;
             string mensaje = "";
             switch (estatus)
@@ -143,14 +138,14 @@ namespace Mane.Licenciamiento
         /// <returns>Válida o inválidad</returns>
         public static bool ValidarLicencia(bool MostrarMensajePorDefecto = false)
         {
-            return ValidarLicencia(RutaLicenciaDefault,ManeApp.AppId,ManeApp.ClaveCifrado, MostrarMensajePorDefecto);
+            return ValidarLicencia(RutaLicenciaDefault, ManeApp.AppId, ManeApp.ClaveCifrado, MostrarMensajePorDefecto);
         }
         /// <summary>
         /// Verifica el estatus de la licencia especificando la ruta de la misma
         /// </summary>
         /// <param name="ruta">Ruta hacia el XML de licencia</param>
         /// <returns>El estatus actual de la licencia especificada</returns>
-        public static EstatusDeLicencia Check(string ruta,string appId,string claveEncriptado)
+        public static EstatusDeLicencia Check(string ruta, string appId, string claveEncriptado)
         {
             try
             {
@@ -307,7 +302,7 @@ namespace Mane.Licenciamiento
             /// </summary>
             public string ClaveDeLicencia { get; set; }
         }
-        
+
     }
     /// <summary>
     /// Estatuses de licencia

@@ -1,18 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Mane.Licenciamiento
 {
     public partial class InfoDeLicencia : Form
     {
-       
+
         public InfoDeLicencia()
         {
             InitializeComponent();
@@ -22,7 +15,7 @@ namespace Mane.Licenciamiento
         private void InfoDeLicencia_Load(object sender, EventArgs e)
         {
             Cursor = Cursors.WaitCursor;
-                Licencia.Check();
+            Licencia.Check();
             tbAppId.Text = ManeApp.AppId;
             tbHk.Text = Licencia.GetHardwareKey();
             tbExpiracion.Text = Licencia.Expiracion.ToString("d");
@@ -39,7 +32,7 @@ namespace Mane.Licenciamiento
                 tbExpiracion.Text = Licencia.Expiracion.ToString("d");
                 Cursor = Cursors.Default;
             }
-                
+
         }
         private void button1_Click(object sender, EventArgs e)
         {

@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Mane.BD.QueryBulder
 {
@@ -49,7 +46,7 @@ namespace Mane.BD.QueryBulder
             public QueryBuilder Query { get; set; }
 
         }
-        public CaseClass When(string column,object value)
+        public CaseClass When(string column, object value)
         {
             return When(column, "=", value);
         }
@@ -68,11 +65,11 @@ namespace Mane.BD.QueryBulder
         {
             return When(query, "=", value);
         }
-        public CaseClass When(QueryBuilder query, string operador,object value )
+        public CaseClass When(QueryBuilder query, string operador, object value)
         {
             WhenData.Add(new WhenDataClass
             {
-               Query = query,
+                Query = query,
                 Value = value,
                 Operador = operador,
                 TipoWhen = WhenThenType.Query
@@ -92,7 +89,7 @@ namespace Mane.BD.QueryBulder
         {
             return WhenColumn(column, "=", column2);
         }
-        public CaseClass WhenColumn(string column,string operador, string column2)
+        public CaseClass WhenColumn(string column, string operador, string column2)
         {
             WhenData.Add(new WhenDataClass
             {
@@ -163,6 +160,6 @@ namespace Mane.BD.QueryBulder
         Query,
         Null
     }
-   
+
 
 }

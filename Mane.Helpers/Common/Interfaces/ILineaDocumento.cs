@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace Mane.Helpers.Common
 {
     public interface ILineaDocumento
     {
+        string FromWhs { get; set; }
+        string ToWhs { get; set; }
         int LineNum { get; set; }
         string ItemCode { get; set; }
         string ItemDescription { get; set; }

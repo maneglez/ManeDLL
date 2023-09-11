@@ -1,12 +1,6 @@
 ﻿using Mane.BD.Helpers;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Mane.BD.Forms
@@ -35,10 +29,10 @@ namespace Mane.BD.Forms
             Conexiones = new BindingList<Conexion>();
             var cons = string.IsNullOrEmpty(FileName) ? Bd.LoadConnectionsFromFile() :
                 Bd.LoadConnectionsFromFile(FileName);
-            if(cons != null)
+            if (cons != null)
                 foreach (var c in cons)
                     Conexiones.Add(c);
-            dataGridView1.DataSource =  Conexiones;
+            dataGridView1.DataSource = Conexiones;
 
         }
 

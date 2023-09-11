@@ -1,5 +1,4 @@
-﻿using Mane.BD;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
@@ -53,7 +52,7 @@ namespace Mane.BD.Forms
             return dtSource.Rows[dgvContenido.SelectedRows[0].Index];
 
         }
-        
+
         /// <summary>
         /// Seleccion de elementos generico
         /// </summary>
@@ -174,13 +173,13 @@ namespace Mane.BD.Forms
 
         private void SeleccionarGenerico_Load(object sender, EventArgs e)
         {
-            if(dgvContenido.Rows.Count == 0)
+            if (dgvContenido.Rows.Count == 0)
             {
                 Buscar();
                 if (dgvContenido.Rows.Count == 1 && dgvContenido.SelectedRows.Count == 1)
                     Seleccionar();
             }
-                 
+
         }
 
         private void tbBusqueda_TextChanged(object sender, EventArgs e)
@@ -206,7 +205,7 @@ namespace Mane.BD.Forms
 
         private void dgvContenido_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            if(e.RowIndex != -1)
+            if (e.RowIndex != -1)
                 Seleccionar();
         }
 
@@ -268,7 +267,7 @@ namespace Mane.BD.Forms
                 return aux[aux.Length - 1];
             }
 
-             return column;
+            return column;
         }
 
         private void dgvContenido_KeyDown(object sender, KeyEventArgs e)

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Security.Cryptography;
 using System.Text.Json;
 using System.Xml;
 using System.Xml.Serialization;
@@ -75,7 +74,12 @@ namespace Mane.Helpers
         }
         public static string ObjectToJson(object obj)
         {
-           return JsonSerializer.Serialize(obj, new JsonSerializerOptions { WriteIndented = true });
+            return JsonSerializer.Serialize(obj, new JsonSerializerOptions { WriteIndented = true });
+        }
+
+        public static T JsonToObject<T>(string jsonString)
+        {
+            return JsonSerializer.Deserialize<T>(jsonString);
         }
     }
 }

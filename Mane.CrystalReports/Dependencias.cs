@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Mane.CrystalReports
 {
@@ -25,11 +20,15 @@ namespace Mane.CrystalReports
             Environment.GetFolderPath(Environment.SpecialFolder.Windows),
              "assembly", "GAC_MSIL");
 
-        public static Assembly EngineAssem { get {
+        public static Assembly EngineAssem
+        {
+            get
+            {
                 if (engineAssem == null)
                     Cargar();
                 return engineAssem;
-            }  }
+            }
+        }
         public static Assembly SharedAssem
         {
             get
@@ -49,21 +48,33 @@ namespace Mane.CrystalReports
             }
         }
 
-        public static Type ReportDocumentType { get {
+        public static Type ReportDocumentType
+        {
+            get
+            {
                 if (reportDocumentType == null)
                     Cargar();
                 return reportDocumentType;
-            }}
-        public static Type ExportFormatType { get {
+            }
+        }
+        public static Type ExportFormatType
+        {
+            get
+            {
                 if (exportFormatType == null)
                     Cargar();
                 return exportFormatType;
-            }}
-        public static Type ReportViewerType { get {
+            }
+        }
+        public static Type ReportViewerType
+        {
+            get
+            {
                 if (reportViewerType == null)
                     Cargar();
                 return reportViewerType;
-            }}
+            }
+        }
 
         private static Type reportDocumentType;
         private static Type exportFormatType;
@@ -79,15 +90,31 @@ namespace Mane.CrystalReports
         {
             if (VersionDeCrystal == null)
                 throw new Exception("No ha definido una versión de runtime crystal reports (Mane.CrystalReports.Dependencias.VersionDeCrystal no se ha definido)");
-                if (!Directory.Exists(Path.Combine(RutaEnsamblados, "CrystalDecisions.CrystalReports.Engine")))
+            var rutaAsemblyEngine = "";
+            try
+            {
+                rutaAsemblyEngine = FindDll("CrystalDecisions.CrystalReports.Engine.dll");
+            }
+            catch (Exception)
             {
                 RutaEnsamblados = RutaEnsambladoNet4;
-                if (!Directory.Exists(Path.Combine(RutaEnsamblados, "CrystalDecisions.CrystalReports.Engine")))
-                    throw new Exception("Parece que no se encuentra instalado el runtime de Crystal Reports");
+                try
+                {
+                    rutaAsemblyEngine = FindDll("CrystalDecisions.CrystalReports.Engine.dll");
+                }
+                catch (Exception)
+                {
+
+                }
             }
-           engineAssem = Assembly.LoadFile(FindDll("CrystalDecisions.CrystalReports.Engine.dll"));
-           sharedAssem = Assembly.LoadFile(FindDll("CrystalDecisions.Shared.dll"));
-           formsAssem = Assembly.LoadFile(FindDll("CrystalDecisions.Windows.Forms.dll"));
+            if (string.IsNullOrEmpty(rutaAsemblyEngine))
+            {
+                throw new Exception("No se logró encontrar el runtime de Crystal Reports v" + VersionDeCrystal);
+            }
+          
+            engineAssem = Assembly.LoadFile(rutaAsemblyEngine);
+            sharedAssem = Assembly.LoadFile(FindDll("CrystalDecisions.Shared.dll"));
+            formsAssem = Assembly.LoadFile(FindDll("CrystalDecisions.Windows.Forms.dll"));
             reportDocumentType = engineAssem.GetType("CrystalDecisions.CrystalReports.Engine.ReportDocument");
             exportFormatType = sharedAssem.GetType("CrystalDecisions.Shared.ExportFormatType");
             reportViewerType = formsAssem.GetType("CrystalDecisions.Windows.Forms.CrystalReportViewer");
@@ -97,23 +124,24 @@ namespace Mane.CrystalReports
             var ruta = Path.Combine(RutaEnsamblados, Path.GetFileNameWithoutExtension(dllName));
             return FindDll(ruta, dllName);
         }
-        private static string FindDll(string rutaEnsamblado,string dllName,bool recursivo = false)
+        private static string FindDll(string rutaEnsamblado, string dllName, bool recursivo = false)
         {
-           var files = Directory.GetFiles(rutaEnsamblado);
+            var files = Directory.GetFiles(rutaEnsamblado);
             foreach (var item in files)
             {
                 if (Path.GetFileName(item) == dllName)
                 {
                     var info = FileVersionInfo.GetVersionInfo(item);
-                    if(Version.Parse(info.FileVersion) >= VersionDeCrystal)
-                    return item;
+                    var itemVer = Version.Parse(info.FileVersion);
+                    if (itemVer >= VersionDeCrystal)
+                        return item;
                 }
-                   
+
             }
             var dirs = Directory.GetDirectories(rutaEnsamblado);
             foreach (var item in dirs)
             {
-                var file = FindDll(item,dllName,true);
+                var file = FindDll(item, dllName, true);
                 if (!string.IsNullOrEmpty(file))
                     return file;
             }

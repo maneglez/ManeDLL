@@ -296,7 +296,7 @@ namespace Mane.BD
         {
             var aux = func.Invoke(new ModeloQuery<Tmodelo>());
             var qry = aux.query;
-            query.Where(q=>qry, operador, valor);
+            query.Where(q => qry, operador, valor);
             return this;
         }
 

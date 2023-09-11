@@ -15,8 +15,8 @@ namespace Mane.BD
 
         public int Count(string NombreConexion = "")
         {
-           NombreConexion = VerifyConnection(NombreConexion);
-            if(Order != null)
+            NombreConexion = VerifyConnection(NombreConexion);
+            if (Order != null)
             {
                 var q = Copy();
                 q.Order = null;

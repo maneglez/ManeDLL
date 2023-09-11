@@ -1,10 +1,10 @@
 ﻿using Mane.BD.BaseDeDatos.Executors.WebApiExecutor;
 using Mane.BD.Executors;
-using System.Data.SQLite;
+using Newtonsoft.Json;
 using System;
 using System.Data.Odbc;
 using System.Data.SqlClient;
-using Newtonsoft.Json;
+using System.Data.SQLite;
 
 namespace Mane.BD
 {
@@ -41,6 +41,10 @@ namespace Mane.BD
                         default:
                             break;
                     }
+                }
+                else
+                {
+                    executor.ConnString = CadenaDeConexion;
                 }
 
                 return executor;
@@ -174,6 +178,18 @@ namespace Mane.BD
                 TimeOut = TimeOut,
                 UseSSL = UseSSL
             };
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is Conexion c)
+                return c.Nombre == Nombre && c.ServerName() == ServerName()
+                    && c.NombreBD == NombreBD && c.TipoDeBaseDeDatos == TipoDeBaseDeDatos;
+            else return false;
+        }
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
         }
 
 

@@ -33,13 +33,13 @@ namespace Mane.BD.Helpers
                 ruta = Path.Combine(RutaLogPorDefecto, nombreArchivo);
             else
                 ruta = Path.Combine(dir, nombreArchivo);
-           EscribirEnArchivo(texto, ruta);
+            EscribirEnArchivo(texto, ruta);
         }
-        public static void Add(object obj,string dir = "")
+        public static void Add(object obj, string dir = "")
         {
             Add(obj?.ToString(), dir);
         }
-        public static void Add(Exception exception,string dir = "")
+        public static void Add(Exception exception, string dir = "")
         {
             Add(exception?.ToString(), dir);
         }

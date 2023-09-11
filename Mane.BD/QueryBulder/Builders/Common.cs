@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Runtime.Remoting.Messaging;
 using System.Text;
 
 namespace Mane.BD.QueryBulder.Builders
@@ -25,7 +24,7 @@ namespace Mane.BD.QueryBulder.Builders
                 return Delimit(Bd.ToDateTimeSqlFormat((DateTime)value), delimiters);
             if (value.GetType().IsEnum)
                 return Delimit(((int)value).ToString(), delimiters);
-            if(value is byte[] bytes)//Convertir arreglo de bytes en string sql binary
+            if (value is byte[] bytes)//Convertir arreglo de bytes en string sql binary
                 return "0x" + string.Join("", bytes.Select(b => b.ToString("x2")));
             string strVal = value.ToString();
             if (double.TryParse(strVal, out double dval))
@@ -66,7 +65,7 @@ namespace Mane.BD.QueryBulder.Builders
                     if (aux2[0].Contains("'"))// 'Algo' as Columna
                         return $"{aux2[0]} AS {FormatColumn(aux2[1], delimiters)}";
                     if (aux2[0].Contains("-") || aux2[0].Contains("+") || (aux2[0].Contains("*") && !aux2[0].Contains(".*")) || aux2[0].Contains("/"))
-                        return $"{FormatColumn(aux2[0],delimiters)} AS {FormatColumn(aux2[1], delimiters)}";
+                        return $"{FormatColumn(aux2[0], delimiters)} AS {FormatColumn(aux2[1], delimiters)}";
                     return $"{FormatColumn(aux2[0], delimiters)} AS {FormatColumn(aux2[1], delimiters)}";
                 }
                 else if (aux2.Length == 1) // as columna
@@ -86,16 +85,16 @@ namespace Mane.BD.QueryBulder.Builders
                     if (item == "*") colFormateada += item; //Columna.*
                     else
                     {
-                        if(item.Contains(" * ") || item.Contains(" - ") || item.Contains(" + ") || item.Contains(" / "))//columna (*,+,-,/) valor
+                        if (item.Contains(" * ") || item.Contains(" - ") || item.Contains(" + ") || item.Contains(" / "))//columna (*,+,-,/) valor
                         {
                             var colAux = item.Split(' ')[0];
                             var resto = item.Substring(colAux.Length, item.Length - colAux.Length);
                             colFormateada += Delimit(colAux, delimiters) + resto;
                         }
                         else
-                        colFormateada += $"{Delimit(item, delimiters)}.";
+                            colFormateada += $"{Delimit(item, delimiters)}.";
                     }
-                        
+
                 }
                 colFormateada = colFormateada.Trim('.');
             }

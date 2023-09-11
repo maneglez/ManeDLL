@@ -35,6 +35,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Memory, Version=4.0.1.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL" />
     <Reference Include="System.Text.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
@@ -47,6 +48,12 @@
   <ItemGroup>
     <Compile Include="Archivos.cs" />
     <Compile Include="Asincrono.cs" />
+    <Compile Include="Common\Clases\BatchNumbers.cs" />
+    <Compile Include="Common\Clases\BinAllocations.cs" />
+    <Compile Include="Common\Clases\LineaTraspaso.cs" />
+    <Compile Include="Common\Clases\SerialNumbers.cs" />
+    <Compile Include="Common\Clases\Traspaso.cs" />
+    <Compile Include="Common\Enums.cs" />
     <Compile Include="Common\Interfaces\IBatchNumbers.cs" />
     <Compile Include="Common\Interfaces\IBinAllocation.cs" />
     <Compile Include="Common\Interfaces\IDocumento.cs" />
@@ -63,6 +70,12 @@
     <Compile Include="Forms\EstablecerValoresADataGridView.Designer.cs">
       <DependentUpon>EstablecerValoresADataGridView.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\LongMsgBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\LongMsgBox.Designer.cs">
+      <DependentUpon>LongMsgBox.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\VinculableConForms.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="ManeExceptionEventArgs.cs" />
@@ -74,6 +87,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Forms\EstablecerValoresADataGridView.resx">
       <DependentUpon>EstablecerValoresADataGridView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\LongMsgBox.resx">
+      <DependentUpon>LongMsgBox.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
