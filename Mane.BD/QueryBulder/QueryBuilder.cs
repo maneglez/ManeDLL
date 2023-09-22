@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Runtime.Remoting.Messaging;
 
 namespace Mane.BD
 {
@@ -77,7 +76,7 @@ namespace Mane.BD
             connName = VerifyConnection(connName);
             return Bd.ExecuteEscalar(GetBuilder().BuildQuery(), connName);
         }
-        public object GetScalar(string connName,object defaultValue = null)
+        public object GetScalar(string connName, object defaultValue = null)
         {
             connName = VerifyConnection(connName);
             var result = Bd.ExecuteEscalar(GetBuilder().BuildQuery(), connName);

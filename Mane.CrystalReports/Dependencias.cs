@@ -111,7 +111,7 @@ namespace Mane.CrystalReports
             {
                 throw new Exception("No se logró encontrar el runtime de Crystal Reports v" + VersionDeCrystal);
             }
-          
+
             engineAssem = Assembly.LoadFile(rutaAsemblyEngine);
             sharedAssem = Assembly.LoadFile(FindDll("CrystalDecisions.Shared.dll"));
             formsAssem = Assembly.LoadFile(FindDll("CrystalDecisions.Windows.Forms.dll"));

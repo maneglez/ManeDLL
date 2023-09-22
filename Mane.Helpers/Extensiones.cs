@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Text.Json;
 using System.Windows.Forms;
-using System.Collections.ObjectModel;
 
 namespace Mane.Helpers
 {
@@ -20,7 +19,7 @@ namespace Mane.Helpers
         /// <typeparam name="T"></typeparam>
         /// <param name="list"></param>
         /// <param name="predicate"></param>
-        public static void RemoveWhere<T>(this IList<T> list, Func<T,bool> predicate)
+        public static void RemoveWhere<T>(this IList<T> list, Func<T, bool> predicate)
         {
             var itemsToRemove = new List<T>();
             itemsToRemove.AddRange(list.Where(predicate));
@@ -213,7 +212,7 @@ namespace Mane.Helpers
 
         private static void CopyObjectProperties<T>(this T target, object source)
         {
-            
+
         }
 
         public static T CloneSerializer<T>(this T source) where T : class
@@ -234,7 +233,7 @@ namespace Mane.Helpers
             }
         }
 
-        public static T CloneObject<T>(this T source) where T : class,new()
+        public static T CloneObject<T>(this T source) where T : class, new()
         {
             var value = new T();
             value.CopyObject(source);

@@ -14,7 +14,7 @@
         public string BinCode { get; set; }
         public override bool Equals(object obj)
         {
-            if(obj is IBinAllocation bin)
+            if (obj is IBinAllocation bin)
             {
                 return bin.BinCode == BinCode &&
                     bin.BinAbsEntry == BinAbsEntry &&
