@@ -73,9 +73,9 @@ namespace Mane.BD.QueryBulder.Builders
 
             }
             if (columna.Contains("("))//Funcion()
-            {
                 return columna;
-            }
+            if (columna.StartsWith("'") && columna.EndsWith("'")) // 'valor'
+                return columna;
 
             if (columna.Contains("."))//BaseDeDatos.Esquema.Tabla.Columna
             {
