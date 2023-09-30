@@ -83,7 +83,7 @@ namespace Mane.BD
                         {
                             DataSource = ServerName()
                         };
-                        if (!string.IsNullOrEmpty(Contrasena))
+                        if (!string.IsNullOrWhiteSpace(Contrasena))
                             b.Password = Contrasena;
                         return b.ConnectionString;
                     case TipoDeBd.Hana:

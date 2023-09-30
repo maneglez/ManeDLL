@@ -54,7 +54,7 @@ namespace Mane.BD
         /// </summary>
         public void Refresh()
         {
-            if (string.IsNullOrEmpty(idValue?.ToString())) return;
+            if (string.IsNullOrWhiteSpace(idValue?.ToString())) return;
             Inicializando = true;
             var tipo = GetType();
             var m = Find(idValue);
@@ -102,7 +102,7 @@ namespace Mane.BD
                         dic.Add(key, r[key]);
                     }
                     T mAux = DicToModel(dic);
-                    if (!string.IsNullOrEmpty(mAux.getIdName()))
+                    if (!string.IsNullOrWhiteSpace(mAux.getIdName()))
                     {
                         mAux.setId(r[mAux.getIdName()]);
                         mAux.setOriginalIdValue(r[mAux.getIdName()]);

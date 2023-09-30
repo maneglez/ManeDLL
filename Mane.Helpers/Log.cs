@@ -11,7 +11,7 @@ namespace Mane.Helpers
         {
             get
             {
-                if (string.IsNullOrEmpty(RutaLogDef))
+                if (string.IsNullOrWhiteSpace(RutaLogDef))
                     return Path.Combine(Application.StartupPath, "Log");
                 else return RutaLogDef;
             }
@@ -29,7 +29,7 @@ namespace Mane.Helpers
             var nombreArchivo = "log_" + hoy.Year + "_" + hoy.Month + "_" + hoy.Day + ".txt";
             texto = hoy + $"[{Environment.MachineName}] - " + texto + Environment.NewLine;
             string ruta;
-            if (string.IsNullOrEmpty(dir))
+            if (string.IsNullOrWhiteSpace(dir))
                 ruta = Path.Combine(RutaLogPorDefecto, nombreArchivo);
             else
                 ruta = Path.Combine(dir, nombreArchivo);

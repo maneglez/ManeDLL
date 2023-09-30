@@ -23,7 +23,7 @@ namespace Mane.BD.Forms
         {
             get => columnaFiltradoFecha; set
             {
-                if (string.IsNullOrEmpty(value))
+                if (string.IsNullOrWhiteSpace(value))
                 {
                     grpFecha.Visible = false;
                 }
@@ -156,9 +156,9 @@ namespace Mane.BD.Forms
             try
             {
                 var q = query.Copy();
-                if (!string.IsNullOrEmpty(ColumnaFiltradoFecha))
+                if (!string.IsNullOrWhiteSpace(ColumnaFiltradoFecha))
                     q.WhereBetween(ColumnaFiltradoFecha, Desde, Hasta);
-                if (string.IsNullOrEmpty(Busqueda))
+                if (string.IsNullOrWhiteSpace(Busqueda))
                 {
                     dt = q.Get(ConnName);
                 }

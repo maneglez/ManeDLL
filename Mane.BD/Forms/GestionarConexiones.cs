@@ -27,7 +27,7 @@ namespace Mane.BD.Forms
             colSubtipoBd.ValueMember = "Value";
 
             Conexiones = new BindingList<Conexion>();
-            var cons = string.IsNullOrEmpty(FileName) ? Bd.LoadConnectionsFromFile() :
+            var cons = string.IsNullOrWhiteSpace(FileName) ? Bd.LoadConnectionsFromFile() :
                 Bd.LoadConnectionsFromFile(FileName);
             if (cons != null)
                 foreach (var c in cons)
@@ -48,7 +48,7 @@ namespace Mane.BD.Forms
             {
                 foreach (var c in Conexiones)
                 {
-                    if (!string.IsNullOrEmpty(c.Nombre))
+                    if (!string.IsNullOrWhiteSpace(c.Nombre))
                         cons.Add(c);
                 }
             }
@@ -57,7 +57,7 @@ namespace Mane.BD.Forms
                 MessageBox.Show(e.Message);
                 return;
             }
-            if (string.IsNullOrEmpty(FileName))
+            if (string.IsNullOrWhiteSpace(FileName))
                 Bd.SaveConnectionsToFile(cons);
             else Bd.SaveConnectionsToFile(cons, FileName);
             MessageBox.Show("Configuracion guardada correctamente");

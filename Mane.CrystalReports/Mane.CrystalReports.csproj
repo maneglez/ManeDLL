@@ -49,6 +49,11 @@
   <ItemGroup>
     <Compile Include="Dependencias.cs" />
     <Compile Include="Enums.cs" />
+    <Compile Include="Interfaces\IConnectionInfo.cs" />
+    <Compile Include="Interfaces\IDatabase.cs" />
+    <Compile Include="Interfaces\ITableLogonInfo.cs" />
+    <Compile Include="Interfaces\IReportDocument.cs" />
+    <Compile Include="Interfaces\ITable.cs" />
     <Compile Include="ReportDocument.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VisorCrystal.cs">

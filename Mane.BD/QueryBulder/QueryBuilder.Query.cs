@@ -191,7 +191,7 @@ namespace Mane.BD
 
         public QueryBuilder Select(QueryBuilder query, string alias)
         {
-            if (query == null || string.IsNullOrEmpty(alias)) throw new ArgumentNullException("query");
+            if (query == null || string.IsNullOrWhiteSpace(alias)) throw new ArgumentNullException("query");
             _SelectSubquery.Add(alias, query);
             return this;
         }

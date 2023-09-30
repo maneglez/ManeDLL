@@ -132,7 +132,7 @@ namespace Mane.BD
 
         }
 
-        string IBuilder.BuildExecProcedure(string ProcedureName, object[] ProcParameters = null)
+        string IBuilder.BuildExecProcedure(string ProcedureName, object[] ProcParameters)
         {
             return "";
 

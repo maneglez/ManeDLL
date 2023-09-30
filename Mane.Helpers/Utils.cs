@@ -301,7 +301,7 @@ namespace Mane.Helpers
                 if (fm.ShowDialog() == DialogResult.OK)
                     ruta = fm.FileName;
             }
-            if (!string.IsNullOrEmpty(ruta))
+            if (!string.IsNullOrWhiteSpace(ruta))
             {
                 DataTableToCsv(dtDataTable, ruta);
             }

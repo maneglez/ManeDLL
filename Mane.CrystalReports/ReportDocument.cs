@@ -1,13 +1,17 @@
 ﻿//using CrystalDecisions.CrystalReports.Engine;
+using Mane.CrystalReports.Interfaces;
 using System;
 using System.Data;
 using System.Drawing.Printing;
 //using cRpt = CrystalDecisions.CrystalReports.Engine.ReportDocument;
 namespace Mane.CrystalReports
 {
-    public class ReportDocument : IDisposable
+    public class ReportDocument : IDisposable, IReportDocument
     {
         private static dynamic Rpt;
+
+        public IDatabase Database => (IDatabase)Rpt.DataBase;
+
         // private static cRpt Rpt;
         public ReportDocument()
         {

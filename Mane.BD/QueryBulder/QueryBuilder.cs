@@ -294,9 +294,9 @@ namespace Mane.BD
         /// <returns></returns>
         private string VerifyConnection(string NombreConexion)
         {
-            if (!string.IsNullOrEmpty(NombreConexion))
+            if (!string.IsNullOrWhiteSpace(NombreConexion))
                 this.NombreConexion = NombreConexion;
-            else if (!string.IsNullOrEmpty(Bd.DefaultConnectionName) && string.IsNullOrEmpty(NombreConexion))
+            else if (!string.IsNullOrWhiteSpace(Bd.DefaultConnectionName) && string.IsNullOrWhiteSpace(NombreConexion))
                 this.NombreConexion = Bd.DefaultConnectionName;
             return this.NombreConexion;
         }

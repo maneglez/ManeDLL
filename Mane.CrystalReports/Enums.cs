@@ -19,4 +19,14 @@
         RPTR,
         ExcelWorkbook
     }
+    public enum ConnectionInfoType
+    {
+        Unknown,
+        SQL,
+        Query,
+        MetaData,
+        DBFile,
+        CRQE,
+        OLAP
+    }
 }

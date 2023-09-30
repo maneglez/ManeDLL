@@ -63,36 +63,24 @@ namespace Mane.Sap
         /// </summary>
         /// <param name="con">Conexion a SAP</param>
         /// <returns></returns>
-        public static bool TestConnection(IConexionSap con)
+        public static bool TestConnection(ConexionSap con)
         {
-            try
-            {
-                if (comp == null) comp = new Company();
-                if (comp.Connected) disconnect();
+                bool result = true;
+                using(var exec = new SapExecutor(con))
+                {
+                    try
+                    {
+                        if (exec.Company.Connect() != 0) throw new Exception(exec.Company.GetLastErrorDescription());
+                    }
+                    catch (Exception e)
+                    {
+                        LastError = e.Message;
+                        result = false;
+                    }
+                }
+           
 
-                comp.Server = con.Server;
-                if (!string.IsNullOrEmpty(con.LicenseServer))
-                    comp.LicenseServer = con.LicenseServer;
-                if (!string.IsNullOrEmpty(con.SLDServer))
-                    comp.SLDServer = con.SLDServer;
-                comp.CompanyDB = con.DbCompany;
-                comp.DbUserName = con.DbUser;
-                comp.DbPassword = con.DbPassword;
-                comp.UserName = con.User;
-                comp.Password = con.Password;
-                comp.DbServerType = (BoDataServerTypes)con.TipoServidor;
-                comp.language = BoSuppLangs.ln_Spanish_La;
-                comp.UseTrusted = false;
-                if (comp.Connect() != 0) throw new Exception(comp.GetLastErrorDescription());
-                disconnect();
-
-            }
-            catch (Exception e)
-            {
-                LastError = e.Message;
-                return false;
-            }
-            return true;
+            return result;
         }
         ///// <summary>
         ///// Obtiene el DocNum a partir del doc Entry
@@ -151,6 +139,7 @@ namespace Mane.Sap
                 return this.Find(c => c.Nombre == nombreConexion);
 
             }
+
 
         }
 

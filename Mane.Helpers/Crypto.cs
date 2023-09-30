@@ -30,7 +30,7 @@ namespace Mane.Helpers
         /// <returns></returns>
         public static string Encriptar(string dato, string clave)
         {
-            if (string.IsNullOrEmpty(dato) || string.IsNullOrEmpty(clave))
+            if (string.IsNullOrWhiteSpace(dato) || string.IsNullOrWhiteSpace(clave))
                 return dato;
             try
             {
@@ -68,7 +68,7 @@ namespace Mane.Helpers
         /// <returns></returns>
         public static string Decriptar(string dato, string clave)
         {
-            if (string.IsNullOrEmpty(dato) || string.IsNullOrEmpty(clave))
+            if (string.IsNullOrWhiteSpace(dato) || string.IsNullOrWhiteSpace(clave))
                 return dato;
             try
             {

@@ -28,6 +28,37 @@ namespace Mane.Helpers
                 list.Remove(item);
             }
         }
+        /// <summary>
+        /// Elimina los elementos que cumplan una condicion
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="list"></param>
+        /// <param name="predicate"></param>
+        public static void RemoveWhere<T>(this ICollection<T> list, Func<T, bool> predicate)
+        {
+            var itemsToRemove = new List<T>();
+            itemsToRemove.AddRange(list.Where(predicate));
+            foreach (var item in itemsToRemove)
+            {
+                list.Remove(item);
+            }
+        }
+        /// <summary>
+        /// Elimina los elementos que cumplan una condicion
+        /// </summary>
+        /// <param name="rows"></param>
+        /// <param name="predicate"></param>
+        public static void RemoveWhere(this DataRowCollection rows, Func<DataRow, bool> predicate)
+        {
+            var itemsToRemove = new List<DataRow>();
+            var aux = rows.Cast<DataRow>();
+            itemsToRemove.AddRange(aux.Where(predicate));
+            foreach (var item in itemsToRemove)
+            {
+                rows.Remove(item);
+            }
+            itemsToRemove.Clear();
+        }
         public static void AbrirOpcion(this Panel PanelEjecucion, Form Mostrar) //Mostrar una forma en un panel
         {
 
@@ -77,7 +108,7 @@ namespace Mane.Helpers
                     fileName = fm.FileName;
                 }
             }
-            if (string.IsNullOrEmpty(fileName))
+            if (string.IsNullOrWhiteSpace(fileName))
                 return;
 
             using (var sw = new StreamWriter(new FileStream(fileName, FileMode.Create), Encoding.UTF8))
@@ -267,7 +298,7 @@ namespace Mane.Helpers
                 {
                     var bind = (ContextoBinding)ToContextoBinding(control.Tag);
                     if (bind == null) continue;
-                    if (!string.IsNullOrEmpty(bind.Format))
+                    if (!string.IsNullOrWhiteSpace(bind.Format))
                     {
                         control.SetPropertyValue(bind.PropiedadDelControl, (row[bind.PropiedadDelObjeto] as IFormattable).ToString(bind.Format, null));
                         continue;
@@ -299,7 +330,7 @@ namespace Mane.Helpers
                 {
                     var bind = (ContextoBinding)ToContextoBinding(control.Tag, obj);
                     if (bind == null) continue;
-                    if (!string.IsNullOrEmpty(bind.Format))
+                    if (!string.IsNullOrWhiteSpace(bind.Format))
                     {
                         control.SetPropertyValue(bind.PropiedadDelControl, (obj.GetPropertyValue(bind.PropiedadDelObjeto) as IFormattable).ToString(bind.Format, null));
                         continue;
@@ -334,7 +365,7 @@ namespace Mane.Helpers
             var bindings = new List<ContextoBinding>();
             foreach (var strBind in strBinds)
             {
-                if (string.IsNullOrEmpty(strBind)) continue;
+                if (string.IsNullOrWhiteSpace(strBind)) continue;
                 var properties = strBind.Split(',');
                 if (properties.Length < 2) continue;
                 if (properties[1].Contains("."))//especifica clase
@@ -343,7 +374,7 @@ namespace Mane.Helpers
                     if (obj.GetType()?.Name != clase_propName[0])//Verificar que la clase correspoda a esta clase
                         continue;
                     if (clase_propName.Length != 2) continue;
-                    if (string.IsNullOrEmpty(clase_propName[1])) continue;
+                    if (string.IsNullOrWhiteSpace(clase_propName[1])) continue;
                     properties[1] = clase_propName[1];
                 }
                 var bind = new ContextoBinding(properties[0], properties[1]);

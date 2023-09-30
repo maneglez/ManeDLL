@@ -15,7 +15,7 @@ namespace Mane.BD.QueryBulder.Builders
 
         public override string FormatTable(string value)
         {
-            if (string.IsNullOrEmpty(value)) return String.Empty;
+            if (string.IsNullOrWhiteSpace(value)) return String.Empty;
             return base.FormatTable($"{DataBaseName}.{value}");
         }
         public override string BuildWeres()

@@ -87,7 +87,7 @@ namespace Mane.BD.Helpers
                 if (t.BaseType == typeof(Enum)) return int.Parse(value.ToString());
 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // Log.Add("Conversor de tipo \r\n" + ex.StackTrace);
             }

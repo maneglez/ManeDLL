@@ -33,7 +33,7 @@ namespace Mane.BD.QueryBulder.Builders
         }
         public static string FormatColumn(string columna, char[] delimiters)
         {
-            if (string.IsNullOrEmpty(columna)) return "";
+            if (string.IsNullOrWhiteSpace(columna)) return "";
             string colFormateada = "";
             if (columna.StartsWith(delimiters[0].ToString()))
                 return columna;
@@ -103,7 +103,7 @@ namespace Mane.BD.QueryBulder.Builders
         }
         public static string FormatTable(string tabla, char[] delimiters)
         {
-            if (string.IsNullOrEmpty(tabla)) return "";
+            if (string.IsNullOrWhiteSpace(tabla)) return "";
             string output = tabla.Trim();
             if (output.StartsWith(delimiters[0].ToString()))
                 return output;
@@ -118,7 +118,7 @@ namespace Mane.BD.QueryBulder.Builders
         }
         private static string Delimit(string value, char[] delimiter)
         {
-            if (string.IsNullOrEmpty(value) && delimiter[0] != '\'') return "";
+            if (string.IsNullOrWhiteSpace(value) && delimiter[0] != '\'') return "";
             return delimiter[0] + value + delimiter[1];
         }
 

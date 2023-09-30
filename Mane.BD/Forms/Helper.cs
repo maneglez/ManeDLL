@@ -4,6 +4,11 @@ namespace Mane.BD.Forms
 {
     public static class Helper
     {
+        /// <summary>
+        /// Suscribe el formulario al evento de combinacion de teclas Ctrl + Shift + C para abrir la configuracion de conexiones
+        /// </summary>
+        /// <param name="form"></param>
+        /// <param name="rutaConfig"></param>
         public static void SuscribeFormToConfigKeyCombination(Form form, string rutaConfig = "")
         {
             form.KeyPreview = true;

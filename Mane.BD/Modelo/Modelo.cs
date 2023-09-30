@@ -267,7 +267,7 @@ namespace Mane.BD
             try
             {
                 string idRelacionado = ColumnaIdLocal == idName ? id()?.ToString() : Common.GetPropValueByName(this, ColumnaIdLocal).ToString();
-                if (string.IsNullOrEmpty(idRelacionado)) return new Modelo<Tmodelo>.ModeloCollection();
+                if (string.IsNullOrWhiteSpace(idRelacionado)) return new Modelo<Tmodelo>.ModeloCollection();
                 Tmodelo m = new Tmodelo();
                 DataTable dt = Bd.Query(m.getNombreTabla()).Select(ColumnasDelModelo<Tmodelo>())
                     .Where($"{m.NombreTabla}.{ColumnaIdForaneo}", idRelacionado)
@@ -355,7 +355,7 @@ namespace Mane.BD
         {
             List<string> columnasDelModelo = new List<string>();
             columnasDelModelo.AddRange(Common.ObjectToKeyValue(m).Keys);
-            if (!string.IsNullOrEmpty(m.idName))
+            if (!string.IsNullOrWhiteSpace(m.idName))
                 columnasDelModelo.Add(m.idName);
             if (incluirNombreTabla)
             {
@@ -381,7 +381,7 @@ namespace Mane.BD
             {
                 Tmodelo m = new Tmodelo();
                 string idRelacionado = ColumnaIdLocal == idName ? idValue?.ToString() : Common.GetPropValueByName(this, ColumnaIdLocal)?.ToString();
-                if (string.IsNullOrEmpty(idRelacionado)) return null;
+                if (string.IsNullOrWhiteSpace(idRelacionado)) return null;
                 var dt = Bd.Query(m.NombreTabla).Select(ColumnasDelModelo<Tmodelo>())
                     .Where(ColumnaIdForanea, idRelacionado).Get(m.ConnName);
 

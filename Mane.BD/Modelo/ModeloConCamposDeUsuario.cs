@@ -63,7 +63,7 @@ namespace Mane.BD
         public void SaveUdfs()
         {
             if (udfs?.Count == 0) return;
-            if (string.IsNullOrEmpty(idName?.ToString())) return;
+            if (string.IsNullOrWhiteSpace(idName?.ToString())) return;
             Bd.Query(NombreTabla)
                     .Where(idName, idValue)
                     .Update(udfs, ConnName);

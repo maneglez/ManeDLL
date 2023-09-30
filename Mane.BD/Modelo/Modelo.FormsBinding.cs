@@ -98,7 +98,7 @@ namespace Mane.BD
                         catch (Exception) { }
                     });
                 }
-                if (!string.IsNullOrEmpty(contexto.Format))
+                if (!string.IsNullOrWhiteSpace(contexto.Format))
                 {
                     bind.FormattingEnabled = true;
                     bind.FormatString = contexto.Format;
@@ -149,7 +149,7 @@ namespace Mane.BD
             var bindings = new List<ContextoBinding>();
             foreach (var strBind in strBinds)
             {
-                if (string.IsNullOrEmpty(strBind)) continue;
+                if (string.IsNullOrWhiteSpace(strBind)) continue;
                 var properties = strBind.Split(',');
                 if (properties.Length < 2) continue;
                 if (properties[1].Contains("."))//especifica clase
@@ -158,7 +158,7 @@ namespace Mane.BD
                     if (GetType().Name != clase_propName[0])//Verificar que la clase correspoda a esta clase
                         continue;
                     if (clase_propName.Length != 2) continue;
-                    if (string.IsNullOrEmpty(clase_propName[1])) continue;
+                    if (string.IsNullOrWhiteSpace(clase_propName[1])) continue;
                     properties[1] = clase_propName[1];
                 }
                 var bind = new ContextoBinding(properties[0], properties[1]);

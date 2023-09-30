@@ -115,7 +115,7 @@ namespace Mane.BD.QueryBulder.Builders
                     if (c.WhenData.Count != c.ThenData.Count)
                         throw new Exception("Select Case: La lista then contiene más o menos elemntos que la lista when");
                     select += "CASE";
-                    if (!string.IsNullOrEmpty(c.CaseColumn))
+                    if (!string.IsNullOrWhiteSpace(c.CaseColumn))
                         select += " " + FormatColumn(c.CaseColumn);
                     int contador = 0;
                     foreach (var w in c.WhenData)
@@ -156,17 +156,17 @@ namespace Mane.BD.QueryBulder.Builders
                         }
                         contador++;
                     }
-                    if (c.ElseQuery != null || c.ElseValue != null || !string.IsNullOrEmpty(c._ElseColumn))
+                    if (c.ElseQuery != null || c.ElseValue != null || !string.IsNullOrWhiteSpace(c._ElseColumn))
                     {
                         select += " ELSE ";
-                        if (!string.IsNullOrEmpty(c._ElseColumn))
+                        if (!string.IsNullOrWhiteSpace(c._ElseColumn))
                             select += FormatColumn(c._ElseColumn);
                         else if (c.ElseValue != null)
                             select += FormatValue(c.ElseValue);
                         else if (c.ElseQuery != null)
                             select += $"({c.ElseQuery.GetQuery(Tipo)})";
                     }
-                    if (string.IsNullOrEmpty(c.Alias)) throw new Exception("Falta el alias para la sentencia case");
+                    if (string.IsNullOrWhiteSpace(c.Alias)) throw new Exception("Falta el alias para la sentencia case");
                     select += $"{Environment.NewLine} END AS {FormatColumn(c.Alias)}{Environment.NewLine},";
                 }
             }
@@ -252,7 +252,7 @@ namespace Mane.BD.QueryBulder.Builders
 
         public virtual string FormatTable(string value)
         {
-            if (string.IsNullOrEmpty(value)) return String.Empty;
+            if (string.IsNullOrWhiteSpace(value)) return String.Empty;
             return Common.FormatTable(value, ColumnDelimiters);
         }
 
@@ -309,7 +309,7 @@ namespace Mane.BD.QueryBulder.Builders
         }
         protected virtual string BuildSubQuery(QueryBuilder q)
         {
-            if (string.IsNullOrEmpty(QueryBuilder.NombreConexion))
+            if (string.IsNullOrWhiteSpace(QueryBuilder.NombreConexion))
                 return q.BuildQuery(Tipo);
             else return q.GetBuilder(QueryBuilder.NombreConexion).BuildQuery();
         }

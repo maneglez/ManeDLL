@@ -175,7 +175,7 @@ namespace Mane.BD
         /// <returns></returns>
         public static QueryBuilder Query(string tabla = "")
         {
-            return string.IsNullOrEmpty(tabla) ? new QueryBuilder() : new QueryBuilder(tabla);
+            return string.IsNullOrWhiteSpace(tabla) ? new QueryBuilder() : new QueryBuilder(tabla);
         }
 
         /// <summary>
@@ -214,9 +214,9 @@ namespace Mane.BD
             public Conexion Find(string nombreConexion)
             {
                 if (Count == 0) return null;
-                if (string.IsNullOrEmpty(nombreConexion) && string.IsNullOrEmpty(DefaultConnectionName))
+                if (string.IsNullOrWhiteSpace(nombreConexion) && string.IsNullOrWhiteSpace(DefaultConnectionName))
                     return Conexiones[0];
-                else if (string.IsNullOrEmpty(nombreConexion) && !string.IsNullOrEmpty(DefaultConnectionName))
+                else if (string.IsNullOrWhiteSpace(nombreConexion) && !string.IsNullOrWhiteSpace(DefaultConnectionName))
                     nombreConexion = DefaultConnectionName;
                 return Find(c => c.Nombre == nombreConexion);
             }
@@ -246,11 +246,11 @@ namespace Mane.BD
             var json = "";
             using (var sr = new StreamReader(fileName))
                 json = sr.ReadToEnd();
-            if (string.IsNullOrEmpty(json))
+            if (string.IsNullOrWhiteSpace(json))
                 return new ConexionCollection();
             var conns = JsonConvert.DeserializeObject<ConexionCollection>(json);
             //Decriptar contraseñas si La clave de encriptado está seteada
-            if (!string.IsNullOrEmpty(JsonEncryptPassword))
+            if (!string.IsNullOrWhiteSpace(JsonEncryptPassword))
                 foreach (var c in conns)
                     c.Contrasena = Helpers.Crypto.Decriptar(c.Contrasena, JsonEncryptPassword);
             return conns;
@@ -271,7 +271,7 @@ namespace Mane.BD
         public static void SaveConnectionsToFile(ConexionCollection conexiones, string fileName)
         {
             //Encriptar contraseñas si La clave de encriptado está seteada
-            if (!string.IsNullOrEmpty(JsonEncryptPassword))
+            if (!string.IsNullOrWhiteSpace(JsonEncryptPassword))
                 foreach (var c in conexiones)
                     c.Contrasena = Helpers.Crypto.Encriptar(c.Contrasena, JsonEncryptPassword);
             if (!Directory.Exists(Path.GetDirectoryName(fileName)))
@@ -302,7 +302,7 @@ namespace Mane.BD
         {
             get
             {
-                if (string.IsNullOrEmpty(defaultConectionsFileName))
+                if (string.IsNullOrWhiteSpace(defaultConectionsFileName))
                     return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ManeBdConnections.json");
                 else return defaultConectionsFileName;
             }

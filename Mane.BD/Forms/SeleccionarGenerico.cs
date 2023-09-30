@@ -11,8 +11,12 @@ namespace Mane.BD.Forms
 {
     public partial class SeleccionarGenerico : Form
     {
+        public event EventHandler<SeleccionarGenericoAntesDeBuscarEventArgs> AntesDeBuscar;
         private QueryBuilder query { get; set; }
         public event EventHandler<ItemCambiaEventArgs> ItemSeleccionadoCambia;
+        public string[] OcultarEstasColumas;
+        public Dictionary<string, string> RenombrarEstasColumnas;
+        public Dictionary<string, int> OrdenDeColumnas;
         /// <summary>
         /// Texto a buscar
         /// </summary>
@@ -45,30 +49,85 @@ namespace Mane.BD.Forms
 
         public DataRow SelectedRow { get; private set; }
 
+        public DataTable FilterSource;
+
         public DataRow GetSelectedRow()
         {
-            if (dgvContenido.SelectedRows.Count == 0) return null;
+            if (dgvContenido.SelectedRows.Count == 0 && dgvContenido.Rows.Count == 0)
+            {
+                return null;
+            }
             var dtSource = (dgvContenido.DataSource as DataTable);
-            return dtSource.Rows[dgvContenido.SelectedRows[0].Index];
+            return dgvContenido.SelectedRows.Count == 0  ? dtSource.Rows[0] : dtSource.Rows[dgvContenido.SelectedRows[0].Index];
 
         }
-
+        private Dictionary<string, string> queryColNames_DisplayColNames;
+        private string[] FilterBy;
+        private Dictionary<string, string> FilterByCustom;
         /// <summary>
         /// Seleccion de elementos generico
         /// </summary>
         /// <param name="query">Consulta</param>
         /// <param name="queryColNames_DisplayColNames">(opcional) Columna(query) -> nombre a mostrar, ej. [NombreUsuario, Nombre de usuario]</param>
-        public SeleccionarGenerico(QueryBuilder query, string connName, Dictionary<string, string> queryColNames_DisplayColNames = null, string[] FilterBy = null)
+        public SeleccionarGenerico(QueryBuilder query, string connName, Dictionary<string, string> queryColNames_DisplayColNames, string[] FilterBy)
         {
             InitializeComponent();
             this.query = query;
+            ConnName = connName;
+            this.queryColNames_DisplayColNames = queryColNames_DisplayColNames;
+            this.FilterBy = FilterBy;
+            CommonConstructor();
+        }
+        /// <summary>
+        /// Seleccion de elementos generico
+        /// </summary>
+        /// <param name="query">Consulta</param>
+        /// <param name="queryColNames_DisplayColNames">(opcional) Columna(query) -> nombre a mostrar, ej. [NombreUsuario, Nombre de usuario]</param>
+        public SeleccionarGenerico(QueryBuilder query, string connName, Dictionary<string, string> queryColNames_DisplayColNames)
+        {
+            InitializeComponent();
+            this.query = query;
+            ConnName = connName;
+            this.queryColNames_DisplayColNames = queryColNames_DisplayColNames;
+            CommonConstructor();
+        }
+        /// <summary>
+        /// Seleccion de elementos generico
+        /// </summary>
+        /// <param name="query">Consulta</param>
+        /// <param name="queryColNames_DisplayColNames">(opcional) Columna(query) -> nombre a mostrar, ej. [NombreUsuario, Nombre de usuario]</param>
+        public SeleccionarGenerico(QueryBuilder query, string connName)
+        {
+            InitializeComponent();
+            this.query = query;
+            ConnName = connName;
+            CommonConstructor();
+        }
+        /// <summary>
+        /// Seleccion de elementos generico
+        /// </summary>
+        /// <param name="query">Consulta</param>
+        /// <param name="queryColNames_DisplayColNames">(opcional) Columna(query) -> nombre a mostrar, ej. [NombreUsuario, Nombre de usuario]</param>
+        public SeleccionarGenerico(QueryBuilder query, string connName, Dictionary<string, string> queryColNames_DisplayColNames, Dictionary<string, string> FilterBy)
+        {
+            InitializeComponent();
+            this.query = query;
+            ConnName = connName;
+            this.queryColNames_DisplayColNames = queryColNames_DisplayColNames;
+            this.FilterByCustom = FilterBy;
+            CommonConstructor();
+
+        }
+
+        private void CommonConstructor()
+        {
             if (query.CurrentLimit == 0)
                 query.Limit(300);
-            ConnName = connName;
+
             HabilitarBusqueda = true;
-            var dtFiltro = new DataTable();
-            dtFiltro.Columns.Add(new DataColumn("value"));
-            dtFiltro.Columns.Add(new DataColumn("name"));
+            FilterSource = new DataTable();
+            FilterSource.Columns.Add(new DataColumn("value"));
+            FilterSource.Columns.Add(new DataColumn("name"));
             if (queryColNames_DisplayColNames != null)
             {
                 this.query.Select(queryColNames_DisplayColNames.Keys.ToArray());
@@ -83,21 +142,22 @@ namespace Mane.BD.Forms
 
                     });
                     if (FilterBy == null)
-                        dtFiltro.Rows.Add(item, queryColNames_DisplayColNames[item]);
+                        FilterSource.Rows.Add(item, queryColNames_DisplayColNames[item]);
                     else if (FilterBy.Contains(item))
                     {
-                        dtFiltro.Rows.Add(item, queryColNames_DisplayColNames[item]);
+                        FilterSource.Rows.Add(item, queryColNames_DisplayColNames[item]);
                     }
                 }
+                
 
             }
             else
             {
                 foreach (var item in query.GetCurrentColumnsAlias())
                 {
-                    var r = dtFiltro.NewRow();
+                    var r = FilterSource.NewRow();
                     r["name"] = item;
-                    dtFiltro.Rows.Add(r);
+                    FilterSource.Rows.Add(r);
                     dgvContenido.Columns.Add(new DataGridViewTextBoxColumn
                     {
                         Name = item,
@@ -110,14 +170,22 @@ namespace Mane.BD.Forms
                 for (int i = 0; i < colNames.Length; i++)
                 {
                     string item = colNames[i];
-                    dtFiltro.Rows[i]["value"] = item;
+                    FilterSource.Rows[i]["value"] = item;
 
                 }
             }
-            cbFiltro.DataSource = dtFiltro;
+            if (FilterByCustom != null)
+            {
+                FilterSource.Rows.Clear();
+                foreach (var key in FilterByCustom.Keys)
+                {
+                    FilterSource.Rows.Add(key, FilterByCustom[key]);
+                }
+            }
+            cbFiltro.DataSource = FilterSource;
             cbFiltro.ValueMember = "value";
             cbFiltro.DisplayMember = "name";
-            if (dtFiltro.Rows.Count > 0)
+            if (FilterSource.Rows.Count > 0)
                 cbFiltro.SelectedIndex = 0;
 
             MostrarBotonesDeSeleccionYCancelar = true;
@@ -135,17 +203,28 @@ namespace Mane.BD.Forms
             try
             {
                 DataTable dt;
-                if (string.IsNullOrEmpty(Busqueda))
+                if (AntesDeBuscar != null)
+                {
+                    var args = new SeleccionarGenericoAntesDeBuscarEventArgs(query.Copy(), (cbFiltro.SelectedValue ?? "").ToString(), Busqueda);
+                    AntesDeBuscar.Invoke(this, args);
+                    if (!args.HandleFilter)
+                        args.Query.Where(cbFiltro.SelectedValue.ToString(), "LIKE", $"%{Busqueda}%");
+                    dt = args.Query.Get(ConnName);
+                    Clipboard.SetText(args.Query.GetQuery(TipoDeBd.SqlServer));
+
+                }else if (string.IsNullOrWhiteSpace(Busqueda))
                 {
                     dt = query.Get(ConnName);
                 }
                 else
                 {
                     var q = query.Copy();
-                    q.Where(cbFiltro.SelectedValue.ToString(), "LIKE", $"%{Busqueda}%");
-                    dt = q.Get(ConnName);
+                        q.Where(cbFiltro.SelectedValue.ToString(), "LIKE", $"%{Busqueda}%");
+                        dt = q.Get(ConnName);
+                        Clipboard.SetText(q.GetQuery(TipoDeBd.SqlServer));
                 }
                 dgvContenido.DataSource = dt;
+                CustomizarColumnas();
                 AjustarTamano();
             }
             catch (Exception e)
@@ -156,11 +235,57 @@ namespace Mane.BD.Forms
             Cursor = Cursors.Default;
         }
 
+        private void CustomizarColumnas()
+        {
+            if(RenombrarEstasColumnas != null)
+            {
+                try
+                {
+                    foreach (string key in RenombrarEstasColumnas.Keys)
+                    {
+                        dgvContenido.Columns[key].HeaderText = RenombrarEstasColumnas[key];
+                    }
+                }
+                catch (Exception)
+                {
+                   
+                }
+            }
+
+            if(OcultarEstasColumas != null)
+            {
+                try
+                {
+                    foreach (string col in OcultarEstasColumas)
+                    {
+                        dgvContenido.Columns[col].Visible = false;
+                    }
+                }
+                catch (Exception)
+                {
+                    
+                }
+            }
+            if(OrdenDeColumnas != null)
+            {
+                try
+                {
+                    foreach (var key in OrdenDeColumnas.Keys)
+                    {
+                        dgvContenido.Columns[key].DisplayIndex = OrdenDeColumnas[key];
+                    }
+                }
+                catch (Exception)
+                {}
+            }
+        }
+
         private void AjustarTamano()
         {
             int ancho = 0;
             foreach (DataGridViewColumn c in dgvContenido.Columns)
             {
+                if(c.Visible)
                 ancho += c.Width;
             }
             if (ancho <= MinimumSize.Width)
@@ -173,13 +298,20 @@ namespace Mane.BD.Forms
 
         private void SeleccionarGenerico_Load(object sender, EventArgs e)
         {
+
+        }
+        public new DialogResult ShowDialog()
+        {
             if (dgvContenido.Rows.Count == 0)
             {
                 Buscar();
-                if (dgvContenido.Rows.Count == 1 && dgvContenido.SelectedRows.Count == 1)
-                    Seleccionar();
+                if (dgvContenido.Rows.Count == 1)
+                {
+                    SelectedRow = GetSelectedRow();
+                    return DialogResult.OK;
+                }
             }
-
+            return base.ShowDialog();
         }
 
         private void tbBusqueda_TextChanged(object sender, EventArgs e)
