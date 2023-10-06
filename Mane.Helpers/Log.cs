@@ -12,7 +12,7 @@ namespace Mane.Helpers
             get
             {
                 if (string.IsNullOrWhiteSpace(RutaLogDef))
-                    return Path.Combine(Application.StartupPath, "Log");
+                    return "Log";
                 else return RutaLogDef;
             }
             set { RutaLogDef = value; }

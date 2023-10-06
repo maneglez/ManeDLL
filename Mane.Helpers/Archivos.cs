@@ -58,6 +58,8 @@ namespace Mane.Helpers
         /// <param name="carpeta"></param>
         public static void CrearCarpeta(string carpeta)
         {
+            if (string.IsNullOrWhiteSpace(carpeta))
+                return;
             try
             {
                 if (!Directory.Exists(carpeta))
