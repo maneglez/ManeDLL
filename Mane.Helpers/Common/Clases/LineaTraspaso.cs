@@ -5,6 +5,8 @@ namespace Mane.Helpers.Common
 {
     public class LineaTraspaso : VinculableConForm, ILineaDocumento
     {
+        private double quantity;
+
         public LineaTraspaso()
         {
             BinAllocations = new List<IBinAllocation>();
@@ -17,7 +19,14 @@ namespace Mane.Helpers.Common
         public string ItemCode { get; set; }
         public string ItemDescription { get; set; }
         public double Price { get; set; }
-        public double Quantity { get; set; }
+        public double Quantity
+        {
+            get => quantity; set
+            {
+                quantity = value;
+                NotifyChange();
+            }
+        }
         public List<ISerialNumbers> SerialNumbers { get; set; }
         public List<IBatchNumbers> BatchNumbers { get; set; }
         public List<IBinAllocation> BinAllocations { get; set; }

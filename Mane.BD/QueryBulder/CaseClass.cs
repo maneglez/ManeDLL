@@ -13,6 +13,7 @@ namespace Mane.BD.QueryBulder
         internal object ElseValue;
         internal string _ElseColumn;
         internal QueryBuilder ElseQuery;
+        internal CaseClass ElseSubCase;
 
         private void Construct()
         {
@@ -36,6 +37,7 @@ namespace Mane.BD.QueryBulder
             public string Operador { get; set; }
             public object Value { get; set; }
             public QueryBuilder Query { get; set; }
+            public CaseClass SubWhen {get; set;}
         }
         [Serializable]
         internal class ThenDataClass
@@ -44,6 +46,7 @@ namespace Mane.BD.QueryBulder
             public string Column { get; set; }
             public object Value { get; set; }
             public QueryBuilder Query { get; set; }
+            public CaseClass SubWhen { get; set; }
 
         }
         public CaseClass When(string column, object value)
@@ -140,6 +143,11 @@ namespace Mane.BD.QueryBulder
             ElseQuery = query;
             return this;
         }
+        public CaseClass Else(Func<CaseClass,CaseClass> subCase)
+        {
+            ElseSubCase = subCase.Invoke(new CaseClass());
+            return this;
+        }
         public CaseClass ElseColumn(string column)
         {
             _ElseColumn = column;
@@ -151,6 +159,24 @@ namespace Mane.BD.QueryBulder
             Alias = alias;
             return this;
         }
+        public CaseClass When(Func<CaseClass, CaseClass> subWhere)
+        {
+            WhenData.Add(new WhenDataClass
+            {
+                SubWhen = subWhere.Invoke(new CaseClass()),
+                TipoWhen = WhenThenType.SubCase
+            });
+            return this;
+        }
+        public CaseClass Then(Func<CaseClass, CaseClass> subWhere)
+        {
+            ThenData.Add(new ThenDataClass
+            {
+                SubWhen = subWhere.Invoke(new CaseClass()),
+                TipoThen = WhenThenType.SubCase
+            });
+            return this;
+        }
 
     }
     internal enum WhenThenType
@@ -158,7 +184,8 @@ namespace Mane.BD.QueryBulder
         Value,
         Column,
         Query,
-        Null
+        Null,
+        SubCase
     }
 
 

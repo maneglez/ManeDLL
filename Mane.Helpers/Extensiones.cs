@@ -59,7 +59,7 @@ namespace Mane.Helpers
             }
             itemsToRemove.Clear();
         }
-        public static void AbrirOpcion(this Panel PanelEjecucion, Form Mostrar) //Mostrar una forma en un panel
+        public static void AbrirOpcion(this Panel PanelEjecucion, Form Mostrar,bool mostrarBordes = true) //Mostrar una forma en un panel
         {
 
             if (PanelEjecucion.Controls.Count > 0)
@@ -82,6 +82,7 @@ namespace Mane.Helpers
                     return;
                 }
             }
+            if(!mostrarBordes)
             Mostrar.FormBorderStyle = FormBorderStyle.None;
             Mostrar.TopLevel = false; //Se le dice que no es un objeto de alto nivel
             Mostrar.Dock = DockStyle.Fill; //En el panel se llena completamente
@@ -116,7 +117,7 @@ namespace Mane.Helpers
                 var columns = "";
                 foreach (DataGridViewColumn c in dgv.Columns)
                 {
-                    columns += c.HeaderText + ",";
+                    columns += $"\"{c.HeaderText.Replace("\"","")}\",";
                 }
                 sw.WriteLine(columns.TrimEnd(','));
                 foreach (DataGridViewRow r in dgv.Rows)
@@ -125,7 +126,7 @@ namespace Mane.Helpers
                     foreach (DataGridViewCell c in r.Cells)
                     {
                         if (c.Value != null && c.Value != DBNull.Value)
-                            row += c.Value.ToString().Replace(",", "");
+                            row += $"\"{c.Value.ToString().Replace("\"", "")}\"";
                         row += ",";
                     }
                     sw.WriteLine(row.TrimEnd(','));

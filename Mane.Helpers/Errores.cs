@@ -5,7 +5,9 @@ namespace Mane.Helpers
 {
     public class Errores
     {
-        public static void ControlarExepciones(bool logException = true, bool showMessage = default)
+        public static void ControlarExepciones(bool logException) => ControlarExepciones(logException, false);
+        public static void ControlarExepciones() => ControlarExepciones(false, false);
+        public static void ControlarExepciones(bool logException, bool showMessage)
         {
             Application.ThreadException += (s, e) =>
             {
