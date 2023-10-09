@@ -70,7 +70,7 @@ namespace Mane.Sap
                 {
                     try
                     {
-                        if (exec.Company.Connect() != 0) throw new Exception(exec.Company.GetLastErrorDescription());
+                        if (exec.Connect() != 0) throw new Exception(exec.GetLastErrorDescription());
                     }
                     catch (Exception e)
                     {

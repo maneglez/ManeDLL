@@ -43,8 +43,11 @@ namespace Mane.BD.QueryBulder.Builders
                 if (columna.Contains(")"))//Funcion()
                 {
                     var splitFunc = columna.Split(')');
-                    if (splitFunc.Length == 1)//funcion( as )
-                        return columna;
+                    if (splitFunc.Length == 1)
+                        return columna;//funcion( as )
+                    else if (splitFunc.Length == 2)
+                        if (string.IsNullOrWhiteSpace(splitFunc[1]))
+                            return columna;//funcion( as )
                     funcion = splitFunc[0] + ")";
 
                     if (funcion.ToLower().Contains(" as "))//funcion( as ) as columna

@@ -59,7 +59,7 @@ namespace Mane.Helpers
             }
             itemsToRemove.Clear();
         }
-        public static void AbrirOpcion(this Panel PanelEjecucion, Form Mostrar,bool mostrarBordes = true) //Mostrar una forma en un panel
+        public static void AbrirOpcion(this Panel PanelEjecucion, Form Mostrar,bool mantenerVisible = true,bool mostrarBordes = true) //Mostrar una forma en un panel
         {
 
             if (PanelEjecucion.Controls.Count > 0)
@@ -72,9 +72,17 @@ namespace Mane.Helpers
                     {
                         item.Visible = true;
                         match = true;
+                        if (mantenerVisible)
+                        {
+                            item.BringToFront();
+                        }
                     }
                     else
+                    {
+                        if(!mantenerVisible)
                         item.Visible = false;
+                    }
+                        
                 }
                 if (match)//Si el control ya estaba inicializado
                 {
@@ -85,6 +93,8 @@ namespace Mane.Helpers
             if(!mostrarBordes)
             Mostrar.FormBorderStyle = FormBorderStyle.None;
             Mostrar.TopLevel = false; //Se le dice que no es un objeto de alto nivel
+            if (mostrarBordes)
+                Mostrar.WindowState = FormWindowState.Maximized;
             Mostrar.Dock = DockStyle.Fill; //En el panel se llena completamente
             PanelEjecucion.Controls.Add(Mostrar); //Se agrega el elemento al panel
 
@@ -240,6 +250,19 @@ namespace Mane.Helpers
                     tProp.SetValue(target, sPropValue);
                 }
             }
+        }
+        public static void CopyObject<T>(this IEnumerable<T> source, IEnumerable<T> target) where T : class,new()
+        {
+            if (target == null || source == null)
+                return;
+            var resultList = new List<T>();
+            foreach (var item in source)
+            {
+                var copy = new T();
+                item.CopyObject(copy);
+                resultList.Add(copy);
+            }
+            target = resultList.AsEnumerable();
         }
 
         private static void CopyObjectProperties<T>(this T target, object source)

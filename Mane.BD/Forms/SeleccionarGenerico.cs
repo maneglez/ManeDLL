@@ -50,6 +50,7 @@ namespace Mane.BD.Forms
         public DataRow SelectedRow { get; private set; }
 
         public DataTable FilterSource;
+        public bool ModoIncrustado { get; set; }
 
         public DataRow GetSelectedRow()
         {
@@ -64,6 +65,8 @@ namespace Mane.BD.Forms
         private Dictionary<string, string> queryColNames_DisplayColNames;
         private string[] FilterBy;
         private Dictionary<string, string> FilterByCustom;
+        private bool habilitarSeleccion;
+
         /// <summary>
         /// Seleccion de elementos generico
         /// </summary>
