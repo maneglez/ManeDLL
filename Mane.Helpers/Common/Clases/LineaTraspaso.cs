@@ -6,6 +6,8 @@ namespace Mane.Helpers.Common
     public class LineaTraspaso : VinculableConForm, ILineaDocumento
     {
         private double quantity;
+        private string itemCode;
+        private string itemDescription;
 
         public LineaTraspaso()
         {
@@ -16,8 +18,22 @@ namespace Mane.Helpers.Common
         public string FromWhs { get; set; }
         public string ToWhs { get; set; }
         public int LineNum { get; set; }
-        public string ItemCode { get; set; }
-        public string ItemDescription { get; set; }
+        public string ItemCode
+        {
+            get => itemCode; set
+            {
+                itemCode = value;
+                NotifyChange();
+            }
+        }
+        public string ItemDescription
+        {
+            get => itemDescription; set
+            {
+                itemDescription = value;
+                NotifyChange();
+            }
+        }
         public double Price { get; set; }
         public double Quantity
         {

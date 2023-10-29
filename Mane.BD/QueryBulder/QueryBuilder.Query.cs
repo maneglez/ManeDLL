@@ -276,6 +276,10 @@ namespace Mane.BD
 
         public QueryBuilder WhereIn(string columna, object[] valores)
         {
+            if (valores == null)
+                return this;
+            if (valores.Length == 0)
+                return this;
             return CommonWhere(columna, "IN", valores, "AND", TipoWhere.WhereIn);
         }
 
@@ -297,6 +301,10 @@ namespace Mane.BD
 
         public QueryBuilder WhereNotIn(string columna, object[] valores)
         {
+            if (valores == null)
+                return this;
+            if (valores.Length == 0)
+                return this;
             return CommonWhere(columna, "NOT IN", valores, "AND", TipoWhere.WhereIn);
         }
     }

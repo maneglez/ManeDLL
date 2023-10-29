@@ -94,6 +94,7 @@
     </Compile>
     <Compile Include="Forms\Helper.cs" />
     <Compile Include="Forms\SeleccionarGenericoAntesDeBuscarEventArgs.cs" />
+    <Compile Include="Helpers\QueriesSapb1.cs" />
     <Compile Include="Helpers\Crypto.cs" />
     <Compile Include="Helpers\Log.cs" />
     <Compile Include="Helpers\Utils.cs" />

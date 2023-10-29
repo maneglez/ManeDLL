@@ -230,9 +230,10 @@ namespace Mane.Helpers
         /// <param name="dgv">DataGrid a copiar</param>
         public static void CopiarTabla(DataGridView dgv)
         {
-            dgv.ClipboardCopyMode = DataGridViewClipboardCopyMode.EnableAlwaysIncludeHeaderText;
+            int orgClipcopymode = (int)dgv.ClipboardCopyMode;
             int orgSelMode = (int)dgv.SelectionMode;
             dgv.SelectionMode = DataGridViewSelectionMode.CellSelect;
+            dgv.ClipboardCopyMode = DataGridViewClipboardCopyMode.EnableAlwaysIncludeHeaderText;
             bool orgMultiSelect = dgv.MultiSelect;
             dgv.MultiSelect = true;
             dgv.SelectAll();
@@ -240,6 +241,7 @@ namespace Mane.Helpers
             if (obj != null)
                 Clipboard.SetDataObject(obj);
             dgv.SelectionMode = (DataGridViewSelectionMode)orgSelMode;
+            dgv.ClipboardCopyMode = (DataGridViewClipboardCopyMode)orgClipcopymode;
             dgv.MultiSelect = orgMultiSelect;
         }
 

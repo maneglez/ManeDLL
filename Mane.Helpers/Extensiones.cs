@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Mane.Helpers.Common;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Data;
 using System.IO;
 using System.Linq;
@@ -211,10 +213,11 @@ namespace Mane.Helpers
             return d.ToString("yyyy-MM-dd");
         }
 
-        public static void CopyObject<T>(this T source, T target) where T : class
+        public static T CopyObject<T>(this T source) where T : class,new()
         {
-            if (target == null || source == null)
-                return;
+            if ( source == null)
+                return null;
+           var target = new T();
             Type sourceType = source.GetType();
             Type targetType = target.GetType();
             var sourceProperties = sourceType.GetProperties();
@@ -231,43 +234,42 @@ namespace Mane.Helpers
                     continue;
                 }
                 var sPropValue = sProp.GetValue(source);
-                if (sProp.PropertyType.IsSerializable)
+                if (sProp.PropertyType.IsSerializable && !sProp.PropertyType.IsGenericType)
                 {
                     try
                     {
                         var sPropCloneValue = sPropValue.CloneSerializer();
                         tProp.SetValue(target, sPropCloneValue);
+                        continue;
                     }
                     catch
                     {
-                        var tPropValue = Activator.CreateInstance(sProp.PropertyType, true);
-                        tPropValue.CopyObjectProperties(sPropValue);
-                        tProp.SetValue(target, tPropValue);
+                        
                     }
                 }
-                else
-                {
-                    tProp.SetValue(target, sPropValue);
-                }
+
+                //if (sProp.PropertyType.IsEnumerable())
+                //{
+                //    var sValues = (IEnumerable<object>)sPropValue;
+                //    var tValues = (dynamic)Activator.CreateInstance(typeof(List<>).MakeGenericType(sProp.PropertyType.GenericTypeArguments.First()));
+                //    foreach (var item in sValues)
+                //    {
+                //        tValues.Add(item.CopyObject());
+                //    }
+                //    tProp.SetValue(target, Enumerable.AsEnumerable(tValues));
+                //}
+                
             }
-        }
-        public static void CopyObject<T>(this IEnumerable<T> source, IEnumerable<T> target) where T : class,new()
-        {
-            if (target == null || source == null)
-                return;
-            var resultList = new List<T>();
-            foreach (var item in source)
-            {
-                var copy = new T();
-                item.CopyObject(copy);
-                resultList.Add(copy);
-            }
-            target = resultList.AsEnumerable();
+            return target;
         }
 
-        private static void CopyObjectProperties<T>(this T target, object source)
+        public static bool IsEnumerable(this Type type)
         {
-
+            return type.GetInterfaces().Any(t => t.FullName == "System.Collections.IEnumerable") ;
+        }
+        public static bool IsCollection(this Type type)
+        {
+            return type.GetInterfaces().Any(t => t.FullName == "System.Collections.ICollection");
         }
 
         public static T CloneSerializer<T>(this T source) where T : class
@@ -288,11 +290,55 @@ namespace Mane.Helpers
             }
         }
 
-        public static T CloneObject<T>(this T source) where T : class, new()
+       
+
+        /// <summary>
+        /// Limpia la información de series lotes y ubicaciones
+        /// </summary>
+        /// <param name="ln"></param>
+        public static void ClearSubInfo(this ILineaDocumento ln)
         {
-            var value = new T();
-            value.CopyObject(source);
-            return (T)value;
+            ln.BinAllocations.Clear();
+            ln.SerialNumbers.Clear();
+            ln.BatchNumbers.Clear();
+        }
+        /// <summary>
+        /// DbNull safe converter
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public static int ToInt(this object obj)
+        {
+            if (obj == null) return 0;
+            if (obj.IsDbNull()) return 0;
+            return Convert.ToInt32(obj);
+        }
+        /// <summary>
+        /// DbNull safe converter
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public static double ToDbl(this object obj)
+        {
+            if (obj == null) return 0;
+            if (obj.IsDbNull()) return 0;
+            return Convert.ToDouble(obj);
+        }
+        /// <summary>
+        /// DbNull safe converter
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public static string ToStr(this object obj)
+        {
+            if (obj == null) return string.Empty;
+            if (obj.IsDbNull()) return string.Empty;
+            return Convert.ToString(obj);
+        }
+
+        public static bool IsDbNull(this object obj)
+        {
+            return obj == DBNull.Value;
         }
 
         #region Generic Binding

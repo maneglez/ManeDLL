@@ -17,6 +17,7 @@ namespace Mane.BD.Forms
         public string[] OcultarEstasColumas;
         public Dictionary<string, string> RenombrarEstasColumnas;
         public Dictionary<string, int> OrdenDeColumnas;
+        public string[] MostrarSoloEstasColumnas;
         /// <summary>
         /// Texto a buscar
         /// </summary>
@@ -280,6 +281,16 @@ namespace Mane.BD.Forms
                 }
                 catch (Exception)
                 {}
+            }
+            if(MostrarSoloEstasColumnas != null)
+            {
+                foreach (DataGridViewColumn item in dgvContenido.Columns)
+                {
+                    if(!string.IsNullOrWhiteSpace(item.DataPropertyName))
+                    {
+                        item.Visible = MostrarSoloEstasColumnas.Contains(item.DataPropertyName);
+                    }
+                }
             }
         }
 
