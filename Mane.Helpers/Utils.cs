@@ -327,5 +327,16 @@ namespace Mane.Helpers
     );
         }
 
+        public static T CrearInstanciaDesdeDLL<T>(string rutaDLL,string nombreDeLaClaseAinstanciar)
+        {
+            return (T)CrearInstanciaDesdeDLL(rutaDLL, nombreDeLaClaseAinstanciar);
+        }
+
+        public static dynamic CrearInstanciaDesdeDLL(string rutaDLL, string nombreDeLaClaseAinstanciar)
+        {
+            var assem = Assembly.LoadFile(rutaDLL);
+            return Activator.CreateInstance(assem.GetType(nombreDeLaClaseAinstanciar));
+        }
+
     }
 }
