@@ -237,7 +237,7 @@ namespace Mane.BD.Helpers
           ).Else(c1 =>
             c1.When("t0.ManBtchNum", "Y").ThenColumn("t8.OnHandQty")
             .When("t0.ManSerNum", "Y").ThenColumn("t10.OnHandQty")
-            .ElseColumn("t1.OnHand")
+            .ElseColumn("t2.OnHandQty")
           ).As("Quantity")
             );
             //SysNumber
@@ -475,6 +475,19 @@ namespace Mane.BD.Helpers
                   .Select("t0.ItemCode", "t3.UomCode", "t3.UomName", "t2.BaseQty", "t2.AltQty", "t0.UgpEntry")
                   .WhereIn("t0.ItemCode", itemCodes);
                   //.Where("t2.IsActive", "Y");
+        }
+
+        /// <summary>
+        /// Join en tablas para obtener articulos de lista de materiales
+        /// </summary>
+        /// <param name="articuloPadre"></param>
+        /// <returns>OITT t0, ITT1 t1, OITM t2</returns>
+        public static QueryBuilder ArticulosDeListaDeMateriales(string articuloPadre)
+        {
+            return Bd.Query("OITT t0")
+                .Join("ITT1 t1", "t1.Father", "t0.Code")
+                .Join("OITM t2", "t2.ItemCode", "t1.Code")
+                .Where("t0.Code", articuloPadre);
         }
     }
 }
