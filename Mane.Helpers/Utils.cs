@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
+using System.Xml.Linq;
 
 namespace Mane.Helpers
 {
@@ -336,6 +337,34 @@ namespace Mane.Helpers
         {
             var assem = Assembly.LoadFile(rutaDLL);
             return Activator.CreateInstance(assem.GetType(nombreDeLaClaseAinstanciar));
+        }
+
+        /// <summary>
+        /// Elimina los espacios de nombre de un XML
+        /// </summary>
+        /// <param name="xmlDocument"></param>
+        /// <returns></returns>
+        private static XElement RemoveAllNamespaces(XElement xmlDocument)
+        {
+            if (!xmlDocument.HasElements)
+            {
+                XElement xElement = new XElement(xmlDocument.Name.LocalName);
+                xElement.Value = xmlDocument.Value;
+
+                foreach (XAttribute attribute in xmlDocument.Attributes())
+                    xElement.Add(attribute);
+
+                return xElement;
+            }
+            else
+            {
+                var ele = new XElement(xmlDocument.Name.LocalName, xmlDocument.Elements().Select(el => RemoveAllNamespaces(el)));
+
+                foreach (XAttribute attribute in xmlDocument.Attributes())
+                    if (string.IsNullOrEmpty(attribute.Name.NamespaceName))
+                        ele.Add(attribute);
+                return ele;
+            }
         }
 
     }

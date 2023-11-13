@@ -12,7 +12,7 @@ namespace Mane.Helpers
             get
             {
                 if (string.IsNullOrWhiteSpace(RutaLogDef))
-                    return "Log";
+                    return Path.Combine(Archivos.DirectorioBase(),"Log");
                 else return RutaLogDef;
             }
             set { RutaLogDef = value; }

@@ -64,8 +64,10 @@ namespace Mane.Helpers
             XmlSerializer serializer = new XmlSerializer(objeto.GetType());
             using (StringWriter sw = new StringWriter())
             {
-                using (XmlWriter writer = XmlWriter.Create(sw))
+                using (var writer = new XmlTextWriter(sw))
                 {
+                    writer.Formatting = Formatting.Indented;
+                    writer.Indentation = 4;
                     serializer.Serialize(writer, objeto);
                     xml = sw.ToString();
                 }

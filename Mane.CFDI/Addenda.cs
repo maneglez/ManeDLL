@@ -6,6 +6,7 @@ using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
+using System.Xml.Linq;
 using System.Xml.Serialization;
 
 namespace Mane.CFDI
@@ -53,6 +54,13 @@ namespace Mane.CFDI
                     {
                         serializer.Serialize(writer, objetoAddenda);
                         xml = sw.ToString();
+                    }
+                    
+                    if (xml.StartsWith("<?xml"))
+                    {
+                        var aux = new XmlDocument();
+                        aux.LoadXml(xml);
+                        xml = aux.FirstChild.NextSibling.OuterXml;
                     }
                 }
             }
