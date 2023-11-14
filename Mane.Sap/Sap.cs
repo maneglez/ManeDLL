@@ -14,6 +14,7 @@ namespace Mane.Sap
         public static Company Company => comp;
         public static ConexionSapCollection Conexiones = new ConexionSapCollection();
         public static string LastError { get; private set; }
+        public static string EncryptPassword { get; set; }
         /// <summary>
         /// Inicia una conexión con SAP
         /// </summary>

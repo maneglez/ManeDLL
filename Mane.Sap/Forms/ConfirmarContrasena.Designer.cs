@@ -34,30 +34,33 @@
             // 
             // label1
             // 
-            this.label1.Location = new System.Drawing.Point(12, 9);
+            this.label1.Location = new System.Drawing.Point(16, 11);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(315, 34);
+            this.label1.Size = new System.Drawing.Size(420, 42);
             this.label1.TabIndex = 0;
-            this.label1.Text = "Está a punto de acceder a la configuración de conexiones a bases de datos, por fa" +
-    "vor, ingrese la contraseña de seguridad.";
+            this.label1.Text = "Está a punto de acceder a la configuración de conexiones SAP, por favor, ingrese " +
+    "la contraseña de seguridad.";
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(75, 46);
+            this.textBox1.Location = new System.Drawing.Point(100, 57);
+            this.textBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.textBox1.Name = "textBox1";
             this.textBox1.PasswordChar = '*';
-            this.textBox1.Size = new System.Drawing.Size(162, 20);
+            this.textBox1.Size = new System.Drawing.Size(215, 22);
             this.textBox1.TabIndex = 1;
             this.textBox1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox1_KeyDown);
             // 
             // ConfirmarContrasena
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(321, 83);
+            this.ClientSize = new System.Drawing.Size(428, 102);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "ConfirmarContrasena";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "ConfirmarContrasena";

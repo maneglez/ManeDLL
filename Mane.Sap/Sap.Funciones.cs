@@ -302,6 +302,14 @@ namespace Mane.Sap
             var aux = Serializacion.XMLToObject<List<ConexionSap>>(rutaConexiones);
             if (aux == null)
                 return new List<ConexionSap>();
+            if (!string.IsNullOrWhiteSpace(EncryptPassword))
+            {
+                foreach (var item in aux)
+                {
+                    item.Password = Crypto.Decriptar(item.Password, EncryptPassword);
+                    item.DbPassword = Crypto.Decriptar(item.DbPassword, EncryptPassword);
+                }
+            }
             return aux;
         }
         public static void GuardarConexiones(IEnumerable<ConexionSap> conexiones,string rutaConexiones = "")
@@ -310,6 +318,14 @@ namespace Mane.Sap
                 rutaConexiones = RutaConexiones;
             if (conexiones == null)
                 return;
+            if (!string.IsNullOrEmpty(EncryptPassword))
+            {
+                foreach (var item in conexiones)
+                {
+                    item.Password = Crypto.Encriptar(item.Password, EncryptPassword);
+                    item.DbPassword = Crypto.Encriptar(item.DbPassword, EncryptPassword);
+                }
+            }
             Serializacion.ObjectToXML(conexiones, rutaConexiones, true);
         }
 

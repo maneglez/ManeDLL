@@ -49,7 +49,7 @@ namespace Mane.Sap.Forms
             }
             Intentos = 0;
             var fm = new ConnectionManager(rutaArchivoConfig);
-            fm.Show();
+            fm.ShowDialog();
             Close();
             Dispose();
         }

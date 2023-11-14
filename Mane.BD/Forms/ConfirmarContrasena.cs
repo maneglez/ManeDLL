@@ -49,7 +49,7 @@ namespace Mane.BD.Forms
             }
             Intentos = 0;
             var fm = new GestionarConexiones(rutaArchivoConfig);
-            fm.Show();
+            fm.ShowDialog();
             Close();
             Dispose();
         }
