@@ -21,7 +21,7 @@ namespace Mane.Helpers
         /// </summary>
         /// <typeparam name="T">Tipo de objeto</typeparam>
         /// <param name="xmlPath">ruta del XML</param>
-        /// <returns>T objeto</returns>
+        /// <returns>T objeto o nulo si el archivo no existe o ocurrió un error al deserializar</returns>
         public static T XMLToObject<T>(string xmlPath) where T : class
         {
             try

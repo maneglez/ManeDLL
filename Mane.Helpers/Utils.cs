@@ -80,11 +80,11 @@ namespace Mane.Helpers
             {
                 switch (t.Name)
                 {
-                    case "String": return value == DBNull.Value ? "" : value.ToString();
-                    case "Boolean": return value == DBNull.Value ? false : (value.ToString() == "1" ? true : false);
+                    case "String": return value.ToStr();
+                    case "Boolean": return value.ToStr() == "1";
                     case "DateTime": return value == DBNull.Value ? DateTime.MinValue : DateTime.Parse(value.ToString());
-                    case "Double": return value == DBNull.Value ? 0 : double.Parse(value.ToString());
-                    case "Int32": return value == DBNull.Value ? 0 : int.Parse(value.ToString());
+                    case "Double": return value.ToDbl();
+                    case "Int32": return value.ToInt();
                     case "Decimal": return value == DBNull.Value ? 0 : decimal.Parse(value.ToString());
                 }
                 if (t.BaseType == typeof(Enum)) return int.Parse(value.ToString());

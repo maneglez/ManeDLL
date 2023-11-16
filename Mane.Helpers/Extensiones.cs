@@ -341,6 +341,25 @@ namespace Mane.Helpers
             return obj == DBNull.Value;
         }
 
+        public static List<T> ToObjectList<T>(this DataTable dt) where T : class, new()
+        {
+            var lst = new List<T>();
+            var obj = new T();
+            var dic = Utils.ObjectToKeyValue(obj);
+            var type = obj.GetType();
+            foreach (DataRow row in dt.Rows)
+            {
+                var newObj = new T();
+                foreach (DataColumn col in dt.Columns)
+                {
+                  var prop =  type.GetProperty(col.ColumnName);
+                    prop?.SetValue(newObj, Utils.ConvertirATipo(prop?.PropertyType, row[col.ColumnName]));
+                }
+                lst.Add(newObj);
+            }
+            return lst;
+        }
+
         #region Generic Binding
         public static List<Control> GetAllControls(this Control control)
         {

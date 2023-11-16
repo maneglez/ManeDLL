@@ -68,7 +68,7 @@ namespace Mane.BD.Helpers
         /// </summary>
         /// <param name="tipoDoc"></param>
         /// <param name="docEntry"></param>
-        /// <returns>"t0.ApplyLine", "t0.LocCode", "t0.ItemCode", "t0.Quantity"</returns>
+        /// <returns>"t0.ApplyLine", "t0.LocCode", "t0.ItemCode", "t0.Quantity",SysNumber,DistNumber</returns>
         public static QueryBuilder SeriesLotesDocumentoSinUbicacion(int tipoDoc, int docEntry = -1)
         {
             var query = Bd.Query("B1_InvPostListILWithoutBinView t0")
