@@ -2,6 +2,7 @@
 using SAPbobsCOM;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Mane.Sap
 {
@@ -13,6 +14,7 @@ namespace Mane.Sap
         public static Company Company => comp;
         public static ConexionSapCollection Conexiones = new ConexionSapCollection();
         public static string LastError { get; private set; }
+        public static string EncryptPassword { get; set; }
         /// <summary>
         /// Inicia una conexión con SAP
         /// </summary>
@@ -136,6 +138,8 @@ namespace Mane.Sap
             /// <returns>Obtine la primera conexion que coincide con el nombre proporcionado</returns>
             public ConexionSap Find(string nombreConexion)
             {
+                if (string.IsNullOrWhiteSpace(nombreConexion))
+                    return this.First();
                 return this.Find(c => c.Nombre == nombreConexion);
 
             }

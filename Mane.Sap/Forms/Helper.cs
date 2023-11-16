@@ -21,8 +21,12 @@ namespace Mane.Sap.Forms
             {
                 if (e.KeyCode == Keys.S && e.Shift && e.Control)
                 {
-                    using (var fm = new ConnectionManager(rutaConfig))
-                        fm.ShowDialog();
+                    if (string.IsNullOrWhiteSpace(Sap.EncryptPassword))
+                        using (var fm = new ConnectionManager(rutaConfig))
+                            fm.ShowDialog();
+                    else
+                        using (var fm = new ConfirmarContrasena(Sap.RutaConexiones))
+                            fm.ShowDialog();
                 }
 
             };

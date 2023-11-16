@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Windows.Forms;
 
-namespace Mane.BD.Forms
+namespace Mane.Sap.Forms
 {
     public partial class ConfirmarContrasena : Form
     {
@@ -48,7 +48,7 @@ namespace Mane.BD.Forms
                 return;
             }
             Intentos = 0;
-            var fm = new GestionarConexiones(rutaArchivoConfig);
+            var fm = new ConnectionManager(rutaArchivoConfig);
             fm.ShowDialog();
             Close();
             Dispose();

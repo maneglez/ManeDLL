@@ -63,7 +63,7 @@ namespace Mane.Helpers
         }
         public static void AbrirOpcion(this Panel PanelEjecucion, Form Mostrar,bool mantenerVisible = true,bool mostrarBordes = true) //Mostrar una forma en un panel
         {
-
+            Mostrar.WindowState = FormWindowState.Maximized;
             if (PanelEjecucion.Controls.Count > 0)
             {
                 bool match = false;
