@@ -52,6 +52,7 @@ namespace Mane.BD.Helpers
         /// </summary>
         /// <param name="docEntry">docEntry del documento</param>
         /// <returns>ItemCode,Quantity,DocLine,DistNumber,SysNumber,TipoManejo</returns>
+        [Obsolete("Utilizar los métodos SeriesLotesDocumento[Con/Sin]Ubicacion()")]
         public static QueryBuilder SeriesLotesDeDocumento(int docEntry, int tipoDoc)
         {
             return SeriesLotesDeDocumento(tipoDoc).Where("t0.DocEntry", docEntry);

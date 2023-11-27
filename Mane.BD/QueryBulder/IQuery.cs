@@ -34,6 +34,8 @@ namespace Mane.BD
         T LeftJoin(string tabla, string col1, string col2, Func<T, T> func, string operador = "=");
         T Limit(int limit);
         T OrderBy(string columna, OrderDireccion orden = OrderDireccion.Asendente);
+        T OrderBy(params string[] columnas);
+        T OrderByDesc(params string[] columnas);
         T OrWhere(Func<T, T> func);
         T OrWhere(string col, object valor);
         T OrWhere(string col1, string operador, object Valor);

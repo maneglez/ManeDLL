@@ -92,12 +92,14 @@ namespace Mane.BD
 
         public ModeloQuery<Tmodelo> Join(string tabla, string col1, string col2)
         {
-            throw new NotImplementedException();
+            query.Join(tabla, col1, col2);
+            return this;
         }
 
         public ModeloQuery<Tmodelo> Join(string tabla, string col1, string col2, string operador = "=")
         {
-            throw new NotImplementedException();
+            query.Join(tabla, col1, col2, operador);
+            return this;
         }
 
         public ModeloQuery<Tmodelo> Join(string tabla, string col1, string col2, Func<ModeloQuery<Tmodelo>, ModeloQuery<Tmodelo>> func, string operador = "=")
@@ -321,6 +323,18 @@ namespace Mane.BD
         public ModeloQuery<Tmodelo> SelectDistinct(params string[] columnas)
         {
             query.SelectDistinct(columnas);
+            return this;
+        }
+
+        public ModeloQuery<Tmodelo> OrderBy(params string[] columnas)
+        {
+            query.OrderBy(columnas);
+            return this;
+        }
+
+        public ModeloQuery<Tmodelo> OrderByDesc(params string[] columnas)
+        {
+            query.OrderByDesc(columnas);
             return this;
         }
     }

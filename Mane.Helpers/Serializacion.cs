@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Text;
 using System.Text.Json;
 using System.Xml;
 using System.Xml.Serialization;
@@ -38,6 +39,32 @@ namespace Mane.Helpers
             catch (Exception ex)
             {
                 MsgError = ex.Message;
+                ErrorSerializacion = ErrorSerializacion.ExepcionDesconocida;
+                return null;
+            }
+        }
+        /// <summary>
+        /// Convierte un Xml a un T objeto
+        /// </summary>
+        /// <typeparam name="T">Tipo de objeto</typeparam>
+        /// <param name="xmlPath">ruta del XML</param>
+        /// <returns>T objeto o nulo si el archivo no existe o ocurrió un error al deserializar</returns>
+        public static T XMLStringToObject<T>(string xmlString) where T : class
+        {
+            try
+            {
+                T returnVal = default;
+                using(var str = new MemoryStream(Encoding.Unicode.GetBytes(xmlString ?? "")))
+                {
+                    var serializer = new XmlSerializer(typeof(T));
+                    returnVal = (T)serializer.Deserialize(str);
+                }
+                return returnVal;
+            }
+            catch (Exception ex)
+            {
+                MsgError = ex.Message;
+                MsgBox.error(ex.ToString());
                 ErrorSerializacion = ErrorSerializacion.ExepcionDesconocida;
                 return null;
             }

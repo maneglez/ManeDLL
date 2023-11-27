@@ -53,6 +53,7 @@ namespace Mane.BD.Forms
         public DataTable FilterSource;
         public bool ModoIncrustado { get; set; }
         public static bool AutoSeleccion { get; set; } = true;
+        public bool AutoSeleccionar { get; set; } = true;
 
         public DataRow GetSelectedRow()
         {
@@ -130,6 +131,7 @@ namespace Mane.BD.Forms
                 query.Limit(300);
 
             HabilitarBusqueda = true;
+            AutoSeleccionar = AutoSeleccion;
             FilterSource = new DataTable();
             FilterSource.Columns.Add(new DataColumn("value"));
             FilterSource.Columns.Add(new DataColumn("name"));
@@ -320,7 +322,7 @@ namespace Mane.BD.Forms
             if (dgvContenido.Rows.Count == 0)
             {
                 Buscar();
-                if (dgvContenido.Rows.Count == 1 && AutoSeleccion)
+                if (dgvContenido.Rows.Count == 1 && AutoSeleccionar )
                 {
                     SelectedRow = GetSelectedRow();
                     return DialogResult.OK;

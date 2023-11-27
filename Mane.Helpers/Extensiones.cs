@@ -99,15 +99,8 @@ namespace Mane.Helpers
                 Mostrar.WindowState = FormWindowState.Maximized;
             Mostrar.Dock = DockStyle.Fill; //En el panel se llena completamente
             PanelEjecucion.Controls.Add(Mostrar); //Se agrega el elemento al panel
+            Mostrar.Show();
 
-            try
-            {
-                Mostrar.Show();
-            }
-            catch (Exception)
-            {
-
-            }
         }
         public static void ExportToCSV(this DataGridView dgv)
         {
@@ -345,7 +338,6 @@ namespace Mane.Helpers
         {
             var lst = new List<T>();
             var obj = new T();
-            var dic = Utils.ObjectToKeyValue(obj);
             var type = obj.GetType();
             foreach (DataRow row in dt.Rows)
             {

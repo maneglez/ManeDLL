@@ -116,8 +116,26 @@ namespace Mane.BD
         {
             Order = new OrderByClass()
             {
-                Columna = columna,
+                Columnas = new string[] {columna},
                 Orden = orden
+            };
+            return this;
+        }
+        public QueryBuilder OrderBy(params string[] columnas)
+        {
+            Order = new OrderByClass
+            {
+                Columnas = columnas,
+                Orden = OrderDireccion.Asendente
+            };
+            return this;
+        }
+        public QueryBuilder OrderByDesc(params string[] columnas)
+        {
+            Order = new OrderByClass
+            {
+                Columnas = columnas,
+                Orden = OrderDireccion.Descendente
             };
             return this;
         }

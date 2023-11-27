@@ -1,4 +1,6 @@
-﻿namespace Mane.BD.QueryBulder.Builders
+﻿using System.Collections.Generic;
+
+namespace Mane.BD.QueryBulder.Builders
 {
     internal class BuilderSQLite : BuilderSQL
     {
@@ -24,7 +26,12 @@
             {
                 var order = q.Order;
                 string orden = order.Orden == OrderDireccion.Asendente ? "ASC" : "DESC";
-                orderBy = $"ORDER BY {FormatColumn(order.Columna)} {orden}";
+                var cols = new List<string>();
+                foreach (var item in order.Columnas)
+                {
+                    cols.Add(FormatColumn(item));
+                }
+                orderBy = $"ORDER BY {string.Join(",", cols)} {orden}";
             }
             return orderBy;
         }

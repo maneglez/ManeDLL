@@ -243,7 +243,7 @@ namespace Mane.BD
         [Serializable]
         internal class OrderByClass
         {
-            public string Columna;
+            public string[] Columnas;
             public OrderDireccion Orden = OrderDireccion.Asendente;
         }
         [Serializable]

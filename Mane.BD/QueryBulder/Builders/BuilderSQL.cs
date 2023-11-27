@@ -63,7 +63,12 @@ namespace Mane.BD.QueryBulder.Builders
             {
                 var order = q.Order;
                 string orden = order.Orden == OrderDireccion.Asendente ? "ASC" : "DESC";
-                orderBy = $"ORDER BY {FormatColumn(order.Columna)} {orden}";
+                var cols = new List<string>();
+                foreach (var item in order.Columnas)
+                {
+                    cols.Add(FormatColumn(item));
+                }
+                orderBy = $"ORDER BY {string.Join(",",cols)} {orden}";
                 if (q.Pagination != null)
                 {
                     var p = q.Pagination;
