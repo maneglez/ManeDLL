@@ -1,4 +1,6 @@
-﻿namespace Mane.Sap
+﻿using System.Collections.Generic;
+
+namespace Mane.Sap
 {
     public interface IConexionSap
     {
@@ -11,6 +13,7 @@
         string Server { get; set; }
         string SLDServer { get; set; }
         string User { get; set; }
+        List<SapUser> AlternativeUsers { get; set; }
         TipoServidorSap TipoServidor { get; set; }
     }
 }

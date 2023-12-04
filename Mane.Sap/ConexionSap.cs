@@ -2,6 +2,8 @@
 using System.Xml.Serialization;
 using System;
 using System.Xml;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Mane.Sap
 {
@@ -22,6 +24,7 @@ namespace Mane.Sap
         {
             Nombre = Server = LicenseServer = SLDServer = DbUser = DbPassword = DbCompany = User = Password = "";
             tipoServidor = TipoServidorSap.dst_MSSQL;
+            AlternativeUsers = new List<SapUser>();
         }
         public ConexionSap Copy()
         {
@@ -36,7 +39,8 @@ namespace Mane.Sap
                 DbCompany = DbCompany,
                 User = User,
                 Password = Password,
-                TipoServidor = TipoServidor
+                TipoServidor = TipoServidor,
+                AlternativeUsers = AlternativeUsers.ToList()
             };
         }
         public string Nombre { get => nombre; set => nombre = value; }
@@ -50,6 +54,7 @@ namespace Mane.Sap
         public string Password { get => password; set => password = value; }
 
         public TipoServidorSap TipoServidor { get => tipoServidor; set => tipoServidor = value; }
+        public List<SapUser> AlternativeUsers { get; set; }
 
         public void Serialize(string xmlPath)
         {

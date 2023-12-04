@@ -329,6 +329,26 @@ namespace Mane.Helpers
             return Convert.ToString(obj);
         }
 
+        /// <summary>
+        /// Conversion a datetime null y dbnull safe
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public static DateTime ToDTime(this object obj)
+        {
+            if (obj == null) return DateTime.MinValue;
+            if (obj.IsDbNull()) return DateTime.MinValue;
+            try
+            {
+                return Convert.ToDateTime(obj);
+            }
+            catch (Exception)
+            {
+
+            }
+            return DateTime.MinValue;
+        }
+
         public static bool IsDbNull(this object obj)
         {
             return obj == DBNull.Value;

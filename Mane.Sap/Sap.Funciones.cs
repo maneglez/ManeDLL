@@ -4,12 +4,43 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Xml;
 
 namespace Mane.Sap
 {
     public static partial class Sap
     {
+        public const int ErrorCodeSesionDuplicada = 100000085;
+        /// <summary>
+        /// Establece una conexión con SAP utilizando el usuario de sap, de la configuración,
+        /// Si la conexión falla porque ya se inició sesión con ese usuario desde otra instancia de wms,
+        /// entonces utilizará cada uno de los otros usuarios disponibles en el config (UsuariosAlternativos) hasta que logre la conexión con alguno
+        /// </summary>
+        /// <param name="company">Objeto Company</param>
+        /// <returns>Devuelve 0 cuando se conecta correctamente o retorna el código de eeror de conexión</returns>
+        public static int Conectar(this Company company,string nombreConexion = "")
+        {
+            var con = Conexiones.Find(nombreConexion);
+            if (company.Connected) company.Disconnect();
+            int returnCode = company.Connect();
+            //balancear la conexión en caso de que ya se encuentre una sesión iniciada
+            if (returnCode == ErrorCodeSesionDuplicada)
+            {
+                var usuarios = con.AlternativeUsers;
+                foreach (var u in usuarios)
+                {
+                    company.UserName = u.UserName;
+                    company.Password = u.Password;
+                    returnCode = company.Connect();
+                    if (returnCode != ErrorCodeSesionDuplicada)
+                        break;
+                }
+            }
+            return returnCode;
+        }
         /// <summary>
         /// Muestra formulario para testear conexiones a SAP
         /// </summary>
@@ -329,7 +360,114 @@ namespace Mane.Sap
             Serializacion.ObjectToXML(conexiones, rutaConexiones, true);
         }
 
-       
+        /// <summary>
+        /// <para>
+        /// Ejecuta una función en otro hilo utilizando la conexión proporcionada, para recuperar los mensajes de error 
+        /// se deben de lanzar excepciones dentro del action y colocar el mensaje dentro de la propiedad Message de la excepción
+        /// </para>
+        /// </summary>
+        /// <param name="action">Funcion a realizar</param>
+        /// <param name="connName">nombre de conexion</param>
+        /// <returns>Verdadero si el action no lanzó ninguna excepción</returns>
+        public static bool ExecuteAsync(Action<Company> action, out string msgError, string connName = "")
+        {
+            var result = true;
+            var error = "";
+            var tarea = new Task(() =>
+            {
+                try
+                {
+                    using (var sap = new SapExecutor(connName))
+                    {
+                        
+                        try
+                        {
+                           if( sap.Connect() != 0)
+                            {
+                                throw new Exception("Error de conexión con SAP: " + sap.GetLastErrorDescription());
+                            }
+                            action.Invoke(sap.Company);
+                        }
+                        catch (Exception e)
+                        {
+                            error = e.Message;
+                            result = false;
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    error = e.Message;
+                    result = false;
+                }
+            });
+            using (tarea)
+            {
+                tarea.Start();
+                while (tarea.Status != TaskStatus.RanToCompletion && tarea.Status != TaskStatus.Faulted && tarea.Status != TaskStatus.Canceled)//esperar a que la tarea termine
+                {
+                    Thread.Sleep(500);
+                }
+            }
+            
+            msgError = error;
+            return result;
+        }
+
+        /// <summary>
+        /// <para>
+        /// Ejecuta una función en otro hilo utilizando la conexión proporcionada, para recuperar los mensajes de error 
+        /// se deben de lanzar excepciones dentro del action y colocar el mensaje dentro de la propiedad Message de la excepción
+        /// </para>
+        /// </summary>
+        /// <param name="action">Funcion a realizar</param>
+        /// <param name="connName">nombre de conexion</param>
+        /// <returns>Verdadero si el action no lanzó ninguna excepción</returns>
+        public static bool ExecuteAsync(Action<Company> action, out string msgError, ConexionSap conexion)
+        {
+            var result = true;
+            var error = "";
+            var tarea = new Task(() =>
+            {
+                try
+                {
+                    using (var sap = new SapExecutor(conexion))
+                    {
+
+                        try
+                        {
+                            if (sap.Connect() != 0)
+                            {
+                                throw new Exception("Error de conexión con SAP: " + sap.GetLastErrorDescription());
+                            }
+                            action.Invoke(sap.Company);
+                        }
+                        catch (Exception e)
+                        {
+                            error = e.Message;
+                            result = false;
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    error = e.Message;
+                    result = false;
+                }
+            });
+            using (tarea)
+            {
+                tarea.Start();
+                while (tarea.Status != TaskStatus.RanToCompletion && tarea.Status != TaskStatus.Faulted && tarea.Status != TaskStatus.Canceled)//esperar a que la tarea termine
+                {
+                    Thread.Sleep(500);
+                }
+            }
+
+            msgError = error;
+            return result;
+        }
+
     }
 
 

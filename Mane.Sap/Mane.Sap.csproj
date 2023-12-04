@@ -74,6 +74,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sap.Funciones.cs" />
     <Compile Include="SapExecutor.cs" />
+    <Compile Include="SapUser.cs" />
     <Compile Include="Serializacion.cs" />
     <Compile Include="Utils.cs" />
   </ItemGroup>

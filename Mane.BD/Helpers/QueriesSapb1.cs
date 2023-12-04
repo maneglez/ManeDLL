@@ -214,7 +214,7 @@ namespace Mane.BD.Helpers
         public static QueryBuilder Stock(string ubicacion = "", string almacen = "", string itemCode = "", string serieLote = "", bool mostrarStockVacio = false)
         {
             var query = Bd.Query("OITM t0")
-                .Select("t12.WhsCode", "t3.BinCode", "t2.BinAbs", "t0.ItemCode", "t0.ItemName")
+                .SelectDistinct("t12.WhsCode", "t3.BinCode", "t2.BinAbs", "t0.ItemCode", "t0.ItemName")
                 .Join("OITW t1", "t1.ItemCode", "t0.ItemCode")
                 .LeftJoin("OIBQ t2", "t2.ItemCode", "t1.ItemCode", q => q.WhereColumn("t2.WhsCode", "t1.WhsCode"))
                 .LeftJoin("OBIN t3", "t3.AbsEntry", "t2.BinAbs")
@@ -489,6 +489,21 @@ namespace Mane.BD.Helpers
                 .Join("ITT1 t1", "t1.Father", "t0.Code")
                 .Join("OITM t2", "t2.ItemCode", "t1.Code")
                 .Where("t0.Code", articuloPadre);
+        }
+
+        /// <summary>
+        /// Obtiene los valores válidos para un campo de usuario y tabla dados
+        /// </summary>
+        /// <param name="campoDeUsuario">nombre del campo de usuario, puede ser con o sin el prefijo U_</param>
+        /// <param name="tabla">Nombre de la tabla por ejemplo: ORDR,OINV,OPCH,OCRD</param>
+        /// <returns>Consulta con los valores válidos, Columnas: Code,Name </returns>
+        public static QueryBuilder ValoresValidosCampoDeUsuario(string campoDeUsuario,string tabla)
+        {
+            return Bd.Query("CUFD t0")
+                .Join("UFD1 t1", "t1.FieldID", "t0.FieldID", q => q.WhereColumn("t1.TableID", "t0.TableID"))
+                .Where("t0.TableID", tabla)
+                .Where("t0.AliasID", campoDeUsuario.StartsWith("U_") ? campoDeUsuario.Substring(2, campoDeUsuario.Length - 2) : campoDeUsuario)
+                .Select("t1.FldValue as Code", "t1.Descr as Name");
         }
     }
 }

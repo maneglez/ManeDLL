@@ -16,11 +16,10 @@ namespace Mane.Sap
                 throw new ArgumentNullException(nameof(conexion));
             conexionSap = conexion.Copy();
             Construct();
-           
         }
         public int Connect()
         {
-            return _company.Connect();
+            return _company.Conectar(conexionSap.Nombre);
         }
         public string GetLastErrorDescription()
         {
