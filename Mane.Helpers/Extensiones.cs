@@ -349,6 +349,37 @@ namespace Mane.Helpers
             return DateTime.MinValue;
         }
 
+        /// <summary>
+        /// Convertir objeto a booleano dbnull safe
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public static bool ToBool(this object obj)
+        {
+            if (obj == null)
+                return false;
+            if (obj.IsDbNull())
+                return false;
+            try
+            {
+                var strVal = obj.ToStr();
+                if (string.IsNullOrWhiteSpace(strVal))
+                    return false;
+
+                if (strVal == "1")
+                    return true;
+
+                if (strVal == "0")
+                    return false;
+
+                return Convert.ToBoolean(obj);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
         public static bool IsDbNull(this object obj)
         {
             return obj == DBNull.Value;

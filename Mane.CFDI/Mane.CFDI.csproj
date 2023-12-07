@@ -92,6 +92,7 @@
     <Compile Include="Complementos\TimbreFiscalDigital\TimbreFiscalDigital.cs" />
     <Compile Include="Traslado.cs" />
     <Compile Include="Utilidades.cs" />
+    <Compile Include="v3_3\Cfdi33.cs" />
     <Compile Include="v4\Catalogos.cs" />
     <Compile Include="v4\Comprobante.cs" />
     <Compile Include="Interfaces\ICfdi.cs" />

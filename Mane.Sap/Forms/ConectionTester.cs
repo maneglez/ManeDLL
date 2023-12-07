@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace Mane.Sap.Forms
@@ -39,6 +40,7 @@ namespace Mane.Sap.Forms
         public string SLDServer { get => tbSldServer.Text; set => tbSldServer.Text = value; }
         public string User { get => tbSapUser.Text; set => tbSapUser.Text = value; }
         public TipoServidorSap TipoServidor { get => (TipoServidorSap)cbTipoServidor.SelectedValue; set => cbTipoServidor.SelectedValue = value; }
+        public List<SapUser> AlternativeUsers { get; set; }
 
         private void ConectionTester_Load(object sender, EventArgs e)
         {

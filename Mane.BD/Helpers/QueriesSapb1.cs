@@ -496,7 +496,7 @@ namespace Mane.BD.Helpers
         /// </summary>
         /// <param name="campoDeUsuario">nombre del campo de usuario, puede ser con o sin el prefijo U_</param>
         /// <param name="tabla">Nombre de la tabla por ejemplo: ORDR,OINV,OPCH,OCRD</param>
-        /// <returns>Consulta con los valores válidos, Columnas: Code,Name </returns>
+        /// <returns>Consulta con los valores válidos, Columnas: Code,Name(t1.FldValue,t1.Descr)</returns>
         public static QueryBuilder ValoresValidosCampoDeUsuario(string campoDeUsuario,string tabla)
         {
             return Bd.Query("CUFD t0")

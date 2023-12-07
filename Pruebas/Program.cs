@@ -23,17 +23,9 @@ namespace Pruebas
 
         static void Prueba()
         {
-            var ruta = @"C:\Users\TIE\Desktop\mane\CAMPANARIO\05 Mayo Xml Egresos";
-            var archivos = Directory.GetFiles(ruta);
-            foreach (var archivo in archivos)
-            {
-                if(Cfdi.GetVersionCfdi(archivo) == CfdiVersion.Cfdi4_0)
-                {
-                    var cfdi = Mane.CFDI.Cfdi.Load(archivo);
-                    Console.Write(cfdi.Total.ToString("c"));
-                }
-            }
-            
+            var ruta = @"C:\Users\TIE\Documents\Mane\xsd33\cfdi3.xml";
+           var cfd = Mane.CFDI.Cfdi.Load(ruta);
+            Console.Write(cfd.Total);
         }
         
     }

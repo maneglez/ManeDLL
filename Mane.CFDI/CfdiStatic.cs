@@ -53,109 +53,220 @@ namespace Mane.CFDI
                 throw new Exception($"No se encontró el archivo: {xmlPath}");
             switch (GetVersionCfdi(xmlPath))
             {
+                case CfdiVersion.Cfdi3_3:
+                    return LoadCfdi33(xmlPath);
                 case CfdiVersion.Cfdi4_0:
-                    #region Convertir a CFDI4
-                    var c = new Cfdi();
-                    var c2 = Extensiones.CargarDesdeXml<v4.Comprobante>(xmlPath);
-                    if (c2 == null) throw new Exception("No se logró deserializar el archivo xml");
-                    c.CopiarValoresDePropiedades(c2);
-                    if(c2.Complemento != null)
-                    {
-                        c.Complemento.Any = c2.Complemento.Any;
-                        c.Complemento.CargarComplementos();
-                    }
-                    c.Emisor.CopiarValoresDePropiedades(c2.Emisor);
-                    c.Receptor.CopiarValoresDePropiedades(c2.Receptor);
-                    c.Version = CfdiVersion.Cfdi4_0;
+                    return LoadCfdi40(xmlPath);
+                default: throw new Exception("Versión de CFDI no soportada");
+            }
+        }
 
-                    if(c2.CfdiRelacionados != null)
-                    foreach (var cdr2 in c2.CfdiRelacionados)
-                    {
-                        var cdr = new CfdiRelacionados();
-                        cdr.TipoRelacion = cdr2.TipoRelacion;
-                        if(cdr2.CfdiRelacionado != null)
-                        foreach(var dr2 in cdr2.CfdiRelacionado)
+        private static ICfdi LoadCfdi40(string xmlPath)
+        {
+            #region Convertir a CFDI4
+            var c = new Cfdi();
+            var c2 = Extensiones.CargarDesdeXml<v4.Comprobante>(xmlPath);
+            if (c2 == null) throw new Exception("No se logró deserializar el archivo xml");
+            c.CopiarValoresDePropiedades(c2);
+            if (c2.Complemento != null)
+            {
+                c.Complemento.Any = c2.Complemento.Any;
+                c.Complemento.CargarComplementos();
+            }
+            c.Emisor.CopiarValoresDePropiedades(c2.Emisor);
+            c.Receptor.CopiarValoresDePropiedades(c2.Receptor);
+            c.Version = CfdiVersion.Cfdi4_0;
+
+            if (c2.CfdiRelacionados != null)
+                foreach (var cdr2 in c2.CfdiRelacionados)
+                {
+                    var cdr = new CfdiRelacionados();
+                    cdr.TipoRelacion = cdr2.TipoRelacion;
+                    if (cdr2.CfdiRelacionado != null)
+                        foreach (var dr2 in cdr2.CfdiRelacionado)
                         {
                             var dr = new CfdiRelacionado();
                             dr.UUID = dr2.UUID;
                             cdr.CfdiRelacionado.Add(dr);
                         }
-                        c.CfdiRelacionados.Add(cdr);
-                    }
-                    //Impuestos
-                    c.Impuestos.CopiarValoresDePropiedades(c2.Impuestos);
-                    if(c2.Impuestos?.Retenciones != null)
-                    foreach (var r2 in c2.Impuestos?.Retenciones)
-                    {
-                        var r = new Retencion();
-                        r.CopiarValoresDePropiedades(r2);
-                        c.Impuestos.Retenciones.Add(r);
-                    }
-                    if(c2.Impuestos?.Traslados != null)
-                    foreach (var t2 in c2.Impuestos.Traslados)
-                    {
-                        var t = new Traslado();
-                        t.CopiarValoresDePropiedades(t2);
-                        c.Impuestos.Traslados.Add(t);
-                    }
-                    //Conceptos
-                    if(c2.Conceptos != null)
-                    foreach(var con2 in c2.Conceptos)
-                    {
-                        var con = new Concepto();
-                        con.CopiarValoresDePropiedades(con2);
-                        con.ACuentaTerceros.CopiarValoresDePropiedades(con2.ACuentaTerceros);
-                        if(con2.CuentaPredial != null)
-                        foreach(var cp2 in con2.CuentaPredial)
+                    c.CfdiRelacionados.Add(cdr);
+                }
+            //Impuestos
+            c.Impuestos.CopiarValoresDePropiedades(c2.Impuestos);
+            if (c2.Impuestos?.Retenciones != null)
+                foreach (var r2 in c2.Impuestos?.Retenciones)
+                {
+                    var r = new Retencion();
+                    r.CopiarValoresDePropiedades(r2);
+                    c.Impuestos.Retenciones.Add(r);
+                }
+            if (c2.Impuestos?.Traslados != null)
+                foreach (var t2 in c2.Impuestos.Traslados)
+                {
+                    var t = new Traslado();
+                    t.CopiarValoresDePropiedades(t2);
+                    c.Impuestos.Traslados.Add(t);
+                }
+            //Conceptos
+            if (c2.Conceptos != null)
+                foreach (var con2 in c2.Conceptos)
+                {
+                    var con = new Concepto();
+                    con.CopiarValoresDePropiedades(con2);
+                    con.ACuentaTerceros.CopiarValoresDePropiedades(con2.ACuentaTerceros);
+                    if (con2.CuentaPredial != null)
+                        foreach (var cp2 in con2.CuentaPredial)
                         {
                             con.CuentaPredial.Add(new ConceptoCuentaPredial
                             {
                                 Numero = cp2.Numero
                             });
                         };
-                        if(con2.Impuestos?.Retenciones != null)
-                        foreach(var r2 in con2.Impuestos.Retenciones)
+                    if (con2.Impuestos?.Retenciones != null)
+                        foreach (var r2 in con2.Impuestos.Retenciones)
                         {
                             var r = new ConceptoRetencion();
                             r.CopiarValoresDePropiedades(r2);
                             con.Impuestos.Retenciones.Add(r);
                         }
-                        if(con2.Impuestos?.Traslados != null)
+                    if (con2.Impuestos?.Traslados != null)
                         foreach (var t2 in con2.Impuestos.Traslados)
                         {
                             var t = new ConceptoTraslado();
                             t.CopiarValoresDePropiedades(t2);
                             con.Impuestos.Traslados.Add(t);
                         }
-                        if(con2.InformacionAduanera != null)
-                        foreach(var ia2 in con2.InformacionAduanera)
+                    if (con2.InformacionAduanera != null)
+                        foreach (var ia2 in con2.InformacionAduanera)
                         {
                             con.InformacionAduanera.Add(new ConceptoInformacionAduanera
                             {
                                 NumeroPedimento = ia2.NumeroPedimento
                             });
                         }
-                        if(con2.Parte != null)
-                        foreach(var cp2 in con2.Parte)
+                    if (con2.Parte != null)
+                        foreach (var cp2 in con2.Parte)
                         {
                             var cp = new ConceptoParte();
                             cp.CopiarValoresDePropiedades(cp2);
-                            if(cp2.InformacionAduanera != null)
-                            foreach(var ia2 in cp2.InformacionAduanera)
-                            {
-                                cp.InformacionAduanera.Add(new ConceptoParteInformacionAduanera
+                            if (cp2.InformacionAduanera != null)
+                                foreach (var ia2 in cp2.InformacionAduanera)
                                 {
-                                    NumeroPedimento = ia2.NumeroPedimento
-                                });
-                            }
+                                    cp.InformacionAduanera.Add(new ConceptoParteInformacionAduanera
+                                    {
+                                        NumeroPedimento = ia2.NumeroPedimento
+                                    });
+                                }
                             con.Parte.Add(cp);
                         }
-                        c.Conceptos.Add(con);
-                    }
-                    return c;
-                #endregion
-                default: throw new Exception("Versión de CFDI no soportada");
+                    c.Conceptos.Add(con);
+                }
+            return c;
+            #endregion
+        }
+
+        private static ICfdi LoadCfdi33(string xmlPath)
+        {
+          
+            var c = new Cfdi();
+            var c2 = Extensiones.CargarDesdeXml<v3_3.Comprobante>(xmlPath);
+            if (c2 == null) throw new Exception("No se logró deserializar el archivo xml");
+            c.CopiarValoresDePropiedades(c2);
+            if (c2.Complemento != null)
+            {
+                c.Complemento.Any = new XmlElement[] {}; 
+                c.Complemento.CargarComplementos();
             }
+            c.Emisor.CopiarValoresDePropiedades(c2.Emisor);
+            c.Receptor.CopiarValoresDePropiedades(c2.Receptor);
+            c.Version = CfdiVersion.Cfdi4_0;
+
+            if (c2.CfdiRelacionados != null)
+                foreach (var cdr2 in c2.CfdiRelacionados.CfdiRelacionado)
+                {
+                    //var cdr = new CfdiRelacionados();
+                    //cdr.CfdiRelacionado.
+                    //if (cdr2.CfdiRelacionado != null)
+                    //    foreach (var dr2 in cdr2.CfdiRelacionado)
+                    //    {
+                    //        var dr = new CfdiRelacionado();
+                    //        dr.UUID = dr2.UUID;
+                    //        cdr.CfdiRelacionado.Add(dr);
+                    //    }
+                    //c.CfdiRelacionados.Add(cdr);
+                }
+            //Impuestos
+            c.Impuestos.CopiarValoresDePropiedades(c2.Impuestos);
+            if (c2.Impuestos?.Retenciones != null)
+                foreach (var r2 in c2.Impuestos?.Retenciones)
+                {
+                    var r = new Retencion();
+                    r.CopiarValoresDePropiedades(r2);
+                    c.Impuestos.Retenciones.Add(r);
+                }
+            if (c2.Impuestos?.Traslados != null)
+                foreach (var t2 in c2.Impuestos.Traslados)
+                {
+                    var t = new Traslado();
+                    t.CopiarValoresDePropiedades(t2);
+                    c.Impuestos.Traslados.Add(t);
+                }
+            //Conceptos
+            if (c2.Conceptos != null)
+                foreach (var con2 in c2.Conceptos)
+                {
+                    var con = new Concepto();
+                    con.CopiarValoresDePropiedades(con2);
+                    //con.ACuentaTerceros.CopiarValoresDePropiedades(con2.ACuentaTerceros);
+                    //if (con2.CuentaPredial != null)
+                    //    foreach (var cp2 in con2.CuentaPredial)
+                    //    {
+                    //        con.CuentaPredial.Add(new ConceptoCuentaPredial
+                    //        {
+                    //            Numero = cp2.Numero
+                    //        });
+                    //    };
+                    if (con2.Impuestos?.Retenciones != null)
+                        foreach (var r2 in con2.Impuestos.Retenciones)
+                        {
+                            var r = new ConceptoRetencion();
+                            r.CopiarValoresDePropiedades(r2);
+                            con.Impuestos.Retenciones.Add(r);
+                        }
+                    if (con2.Impuestos?.Traslados != null)
+                        foreach (var t2 in con2.Impuestos.Traslados)
+                        {
+                            var t = new ConceptoTraslado();
+                            t.CopiarValoresDePropiedades(t2);
+                            con.Impuestos.Traslados.Add(t);
+                        }
+                    if (con2.InformacionAduanera != null)
+                        foreach (var ia2 in con2.InformacionAduanera)
+                        {
+                            con.InformacionAduanera.Add(new ConceptoInformacionAduanera
+                            {
+                                NumeroPedimento = ia2.NumeroPedimento
+                            });
+                        }
+                    if (con2.Parte != null)
+                        foreach (var cp2 in con2.Parte)
+                        {
+                            var cp = new ConceptoParte();
+                            cp.CopiarValoresDePropiedades(cp2);
+                            if (cp2.InformacionAduanera != null)
+                                foreach (var ia2 in cp2.InformacionAduanera)
+                                {
+                                    cp.InformacionAduanera.Add(new ConceptoParteInformacionAduanera
+                                    {
+                                        NumeroPedimento = ia2.NumeroPedimento
+                                    });
+                                }
+                            con.Parte.Add(cp);
+                        }
+                    c.Conceptos.Add(con);
+                }
+            return c;
+          
         }
     }
 }
