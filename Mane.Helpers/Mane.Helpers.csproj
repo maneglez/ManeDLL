@@ -64,6 +64,12 @@
     <Compile Include="Crypto.cs" />
     <Compile Include="Extensiones.cs" />
     <Compile Include="Errores.cs" />
+    <Compile Include="Forms\CapturarDato.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\CapturarDato.Designer.cs">
+      <DependentUpon>CapturarDato.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\EstablecerValoresADataGridView.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -85,6 +91,9 @@
     <Compile Include="Serializacion.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Forms\CapturarDato.resx">
+      <DependentUpon>CapturarDato.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\EstablecerValoresADataGridView.resx">
       <DependentUpon>EstablecerValoresADataGridView.cs</DependentUpon>
     </EmbeddedResource>
