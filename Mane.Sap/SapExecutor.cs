@@ -70,8 +70,9 @@ namespace Mane.Sap
                 {
                     _company.Disconnect();
                 }
-                
+            _company = null;
             Disposer.Dispose();
+            GC.SuppressFinalize(this);
         }
     }
 }

@@ -369,28 +369,31 @@ namespace Mane.Sap
         /// <param name="action">Funcion a realizar</param>
         /// <param name="connName">nombre de conexion</param>
         /// <returns>Verdadero si el action no lanzó ninguna excepción</returns>
-        public static bool ExecuteAsync(Action<Company> action, out string msgError, string connName = "")
+        public static bool ExecuteAsync(Action<SapExecutor> action, out string msgError, string connName = "")
         {
             var result = true;
             var error = "";
-            var tarea = new Task(() =>
+            var action2 = new Action(() =>
             {
                 try
                 {
                     using (var sap = new SapExecutor(connName))
                     {
-                        
+
                         try
                         {
-                           if( sap.Connect() != 0)
+                            if (sap.Connect() != 0)
                             {
                                 throw new Exception("Error de conexión con SAP: " + sap.GetLastErrorDescription());
                             }
-                            action.Invoke(sap.Company);
+                            action.Invoke(sap);
                         }
                         catch (Exception e)
                         {
                             error = e.Message;
+                            if (sap.Company.InTransaction)
+                                sap.Company.EndTransaction(BoWfTransOpt.wf_RollBack);
+
                             result = false;
                         }
                     }
@@ -401,7 +404,9 @@ namespace Mane.Sap
                     result = false;
                 }
             });
-            using (tarea)
+            
+           
+            using (var tarea = new Task(action2))
             {
                 tarea.Start();
                 while (tarea.Status != TaskStatus.RanToCompletion && tarea.Status != TaskStatus.Faulted && tarea.Status != TaskStatus.Canceled)//esperar a que la tarea termine
@@ -423,7 +428,7 @@ namespace Mane.Sap
         /// <param name="action">Funcion a realizar</param>
         /// <param name="connName">nombre de conexion</param>
         /// <returns>Verdadero si el action no lanzó ninguna excepción</returns>
-        public static bool ExecuteAsync(Action<Company> action, out string msgError, ConexionSap conexion)
+        public static bool ExecuteAsync(Action<SapExecutor> action, out string msgError, ConexionSap conexion)
         {
             var result = true;
             var error = "";
@@ -440,7 +445,7 @@ namespace Mane.Sap
                             {
                                 throw new Exception("Error de conexión con SAP: " + sap.GetLastErrorDescription());
                             }
-                            action.Invoke(sap.Company);
+                            action.Invoke(sap);
                         }
                         catch (Exception e)
                         {

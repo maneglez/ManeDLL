@@ -89,7 +89,7 @@ namespace Mane.Sap.Helpers
                 if (t.BaseType == typeof(Enum)) return int.Parse(value.ToString());
 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 //Log.Add("Conversor de tipo \r\n" + ex.StackTrace);
             }
@@ -299,7 +299,7 @@ namespace Mane.Sap.Helpers
                 }
                 sw.Close();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 //Log.Add(ex);
             }
