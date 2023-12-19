@@ -145,5 +145,10 @@ namespace Mane.BD.Executors
             Disconnect();
             return true;
         }
+        public void Dispose()
+        {
+            Disconnect();
+            GC.SuppressFinalize(this);
+        }
     }
 }

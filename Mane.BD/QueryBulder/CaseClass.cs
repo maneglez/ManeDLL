@@ -87,6 +87,15 @@ namespace Mane.BD.QueryBulder
                 TipoWhen = WhenThenType.Null
             });
             return this;
+        } 
+        public CaseClass WhenNotNull(string column)
+        {
+            WhenData.Add(new WhenDataClass
+            {
+                Column = column,
+                TipoWhen = WhenThenType.NotNull
+            });
+            return this;
         }
         public CaseClass WhenColumn(string column, string column2)
         {
@@ -185,6 +194,7 @@ namespace Mane.BD.QueryBulder
         Column,
         Query,
         Null,
+        NotNull,
         SubCase
     }
 

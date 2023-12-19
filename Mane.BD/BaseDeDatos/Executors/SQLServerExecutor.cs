@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 using System.Data.SqlClient;
 
 namespace Mane.BD.Executors
@@ -118,6 +119,12 @@ namespace Mane.BD.Executors
                 return false;
             }
             return true;
+        }
+
+        public void Dispose()
+        {
+            Disconnect();
+            GC.SuppressFinalize(this);
         }
     }
 }

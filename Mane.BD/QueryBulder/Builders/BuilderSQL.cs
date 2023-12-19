@@ -122,6 +122,9 @@ namespace Mane.BD.QueryBulder.Builders
                     case WhenThenType.Null:
                         result += $"{FormatColumn(w.Column)} IS NULL" + Environment.NewLine;
                         break;
+                    case WhenThenType.NotNull:
+                        result += $"{FormatColumn(w.Column)} IS NOT NULL" + Environment.NewLine;
+                        break;
                     default:
                         break;
                 }

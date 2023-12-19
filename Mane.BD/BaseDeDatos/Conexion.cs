@@ -10,44 +10,51 @@ namespace Mane.BD
 {
     public class Conexion
     {
-        private IBdExecutor executor;
+        private IBdExecutor _executor;
         private string servidor;
         private string nombre;
         private string nombreBD;
         private string usuario;
         private string contrasena;
         private string driver;
+
+        public IBdExecutor NewExecutor()
+        {
+            IBdExecutor executor = null;
+            switch (TipoDeBaseDeDatos)
+            {
+                case TipoDeBd.SqlServer:
+                    executor = new SQLServerExecutor(CadenaDeConexion, Bd.AutoDisconnect);
+                    break;
+                case TipoDeBd.SQLite:
+                    executor = new SQLiteExecutor(CadenaDeConexion, Bd.AutoDisconnect);
+                    break;
+                case TipoDeBd.Hana:
+                    executor = new HanaExecutor(CadenaDeConexion, Bd.AutoDisconnect);
+                    break;
+                case TipoDeBd.ApiWeb:
+                    executor = new WebApiExecutor(this);
+                    break;
+                default:
+                    break;
+            }
+            return executor;
+        }
         [JsonIgnore]
         public IBdExecutor Executor
         {
             get
             {
-                if (executor == null)
+                if (_executor == null)
                 {
-                    switch (TipoDeBaseDeDatos)
-                    {
-                        case TipoDeBd.SqlServer:
-                            executor = new SQLServerExecutor(CadenaDeConexion, Bd.AutoDisconnect);
-                            break;
-                        case TipoDeBd.SQLite:
-                            executor = new SQLiteExecutor(CadenaDeConexion, Bd.AutoDisconnect);
-                            break;
-                        case TipoDeBd.Hana:
-                            executor = new HanaExecutor(CadenaDeConexion, Bd.AutoDisconnect);
-                            break;
-                        case TipoDeBd.ApiWeb:
-                            executor = new WebApiExecutor(this);
-                            break;
-                        default:
-                            break;
-                    }
+                    _executor = NewExecutor();
                 }
                 else
                 {
-                    executor.ConnString = CadenaDeConexion;
+                    _executor.ConnString = CadenaDeConexion;
                 }
 
-                return executor;
+                return _executor;
             }
         }
         /// <summary>

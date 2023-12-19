@@ -1,8 +1,9 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 
 namespace Mane.BD.Executors
 {
-    public interface IBdExecutor
+    public interface IBdExecutor : IDisposable
     {
         /// <summary>
         /// Consulta a ejecutar

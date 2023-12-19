@@ -1,4 +1,5 @@
 ﻿
+using System;
 using System.Data;
 using System.Data.SQLite;
 
@@ -128,6 +129,11 @@ namespace Mane.BD.Executors
                 return false;
             }
             return true;
+        }
+        public void Dispose()
+        {
+            Disconnect();
+            GC.SuppressFinalize(this);
         }
     }
 }

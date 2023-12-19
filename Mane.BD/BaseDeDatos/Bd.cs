@@ -73,7 +73,7 @@ namespace Mane.BD
         /// El ultimo error de BD
         /// </summary>
         public static string LastErrorDescription;
-        private static bool autoDisconnect;
+        private static bool autoDisconnect = true;
 
         /// <summary>
         /// Ejecuta una consulta en la BD SAP o satelite
@@ -83,15 +83,16 @@ namespace Mane.BD
         /// <returns>DataTable con el resultado de la consulta</returns>
         public static DataTable ExecuteQuery(string query, string nombreConexion = "")
         {
-            return GetExecutor(nombreConexion, query).ExecuteQuery();
+            DataTable dt = null;
+            using(var executor = GetExecutor(nombreConexion, query))
+            {
+                dt = executor.ExecuteQuery();
+            }
+            return dt ?? new DataTable();
         }
         private static IBdExecutor GetExecutor(string nombreConexion, string query = "")
         {
-            var ex = Conexiones.Find(nombreConexion)?.Executor;
-            if (ex == null)
-            {
-                throw new BdException($"La conexion {nombreConexion} no existe");
-            }
+            var ex = (Conexiones.Find(nombreConexion)?.NewExecutor()) ?? throw new BdException($"La conexion {nombreConexion} no existe");
             ex.Query = query;
             return ex;
         }
@@ -124,7 +125,12 @@ namespace Mane.BD
         /// <returns></returns>
         public static int ExecuteNonQuery(string query, string nombreConexion = "")
         {
-            return GetExecutor(nombreConexion, query).ExecuteNonQuery();
+            int result = 0;
+            using(var executor = GetExecutor(nombreConexion, query))
+            {
+                result = executor.ExecuteNonQuery();
+            }
+            return result;
         }
         /// <summary>
         /// Retorna el primer valor de la tabla resultante de ejecutar una consulta
@@ -134,7 +140,9 @@ namespace Mane.BD
         /// <returns>Retorna nulo si no encuentra un valor</returns>
         public static object ExecuteEscalar(string query, string nombreConexion = "")
         {
-            var val = GetExecutor(nombreConexion, query).ExecuteEscalar();
+            object val = null;
+            using (var exec = GetExecutor(nombreConexion, query))
+                val = exec.ExecuteEscalar();
             if (val == DBNull.Value)
                 return null;
             return val;
@@ -159,13 +167,13 @@ namespace Mane.BD
         /// </summary>
         /// <param name="d"></param>
         /// <returns></returns>
-        public static string ToDateTimeSqlFormat(DateTime d) => d.ToString("yyyy-MM-dd HH:mm:ss.fff");
+        public static string ToDateTimeSqlFormat(this DateTime d) => d.ToString("yyyy-MM-dd HH:mm:ss.fff");
         /// <summary>
         /// 
         /// </summary>
         /// <param name="d"></param>
         /// <returns></returns>
-        public static string ToDateSqlFormat(DateTime d) => d.ToString("yyyy-MM-dd");
+        public static string ToDateSqlFormat(this DateTime d) => d.ToString("yyyy-MM-dd");
 
 
         /// <summary>

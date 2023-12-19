@@ -108,5 +108,10 @@ namespace Mane.BD.BaseDeDatos.Executors.WebApiExecutor
                 return (T)resp.Data;
             else throw new Exception($"{(int)resp.EstatusCode} - {resp.Message}");
         }
+        public void Dispose()
+        {
+            Disconnect();
+            GC.SuppressFinalize(this);
+        }
     }
 }
