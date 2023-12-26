@@ -38,14 +38,11 @@ namespace Mane.BD.Executors
 
         public void Connect()
         {
-            if (!ConnIsDisposed)
                 if (conn?.State == ConnectionState.Open)
                     Disconnect();
             try
             {
                 conn = new SQLiteConnection(ConnString);
-                ConnIsDisposed = false;
-                conn.Disposed += (s, e) => ConnIsDisposed = true;
                 cmd = conn.CreateCommand();
                 cmd.CommandText = Query;
                 conn.Open();
@@ -58,11 +55,13 @@ namespace Mane.BD.Executors
 
         public void Disconnect()
         {
-            //if (!AutoDisconnect) return;
             reader?.Close();
             cmd?.Dispose();
             conn?.Close();
             conn?.Dispose();
+            reader = null;
+            cmd = null;
+            conn = null;
         }
 
         public object ExecuteEscalar()

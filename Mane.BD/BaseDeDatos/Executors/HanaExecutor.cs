@@ -58,6 +58,9 @@ namespace Mane.BD.Executors
             cmd?.Dispose();
             conn?.Close();
             conn?.Dispose();
+            reader = null;
+            cmd = null;
+            conn = null;
         }
 
         public object ExecuteEscalar()

@@ -1,9 +1,8 @@
-﻿using Mane.Sap.ServiceLayer;
-using System;
+﻿using System;
 using System.Windows.Forms;
 using System.Collections.Generic;
 using System.IO;
-using Mane.CFDI;
+using Mane.Security;
 
 namespace Pruebas
 {
@@ -20,12 +19,12 @@ namespace Pruebas
                 Console.ReadLine();
             } while (true);
         }
-
+        static void Writeln(string text) => Console.WriteLine(text);
+        static void Write(string text) => Console.Write(text);
         static void Prueba()
         {
-            var ruta = @"C:\Users\TIE\Documents\Mane\xsd33\cfdi3.xml";
-           var cfd = Mane.CFDI.Cfdi.Load(ruta);
-            Console.Write(cfd.Total);
+            TokenGenerator.CreateToken(1, out string msg);
+            Writeln(msg);
         }
         
     }
