@@ -353,8 +353,12 @@ namespace Mane.BD
         /// <returns>Arreglo con las columnas del modelo incluyendo ID</returns>
         public static string[] ColumnasDelModelo(Modelo m, bool incluirNombreTabla = false)
         {
-            List<string> columnasDelModelo = new List<string>();
-            columnasDelModelo.AddRange(Common.ObjectToKeyValue(m).Keys);
+            var columnasDelModelo = new HashSet<string>();
+            var keys = Common.ObjectToKeyValue(m).Keys;
+            foreach (var item in keys)
+            {
+                columnasDelModelo.Add(item);
+            }
             if (!string.IsNullOrWhiteSpace(m.idName))
                 columnasDelModelo.Add(m.idName);
             if (incluirNombreTabla)
