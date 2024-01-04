@@ -11,5 +11,10 @@ namespace Mane.Helpers.Forms
             Text = caption;
             StartPosition = FormStartPosition.CenterScreen;
         }
+
+        private void button1_Click(object sender, System.EventArgs e)
+        {
+
+        }
     }
 }

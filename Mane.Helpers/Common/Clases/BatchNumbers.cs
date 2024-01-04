@@ -18,5 +18,15 @@ namespace Mane.Helpers.Common
         public int SystemSerialNumber { get; set; }
         public int TrackingNote { get; set; }
         public int TrackingNoteLine { get; set; }
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+        public override bool Equals(object obj)
+        {
+            if (obj is BatchNumbers b)
+                return b.BatchNumber == BatchNumber && SystemSerialNumber == b.SystemSerialNumber;
+            return false;
+        }
     }
 }

@@ -88,7 +88,7 @@ namespace Mane.BD
             {
                 dt = executor.ExecuteQuery();
             }
-            return dt ?? new DataTable();
+            return dt ?? new DataTable() { TableName = "tabla"};
         }
         private static IBdExecutor GetExecutor(string nombreConexion, string query = "")
         {

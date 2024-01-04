@@ -8,7 +8,6 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
-using System.Text.Json;
 using System.Windows.Forms;
 
 namespace Mane.Helpers
@@ -157,7 +156,7 @@ namespace Mane.Helpers
         {
             try
             {
-                return JsonSerializer.Serialize(obj);
+                return Serializacion.ObjectToJson(obj);
             }
             catch (Exception)
             {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Mane.Helpers.Forms;
+using System;
 using System.Windows.Forms;
 
 namespace Mane.Helpers
@@ -15,5 +16,10 @@ namespace Mane.Helpers
         public static bool confirm(string msg, string titulo = "Confirmar") => MessageBox.Show(msg, titulo, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes;
         public static DialogResult abortRetryIngnore(string msg, string titulo = "") => MessageBox.Show(msg, titulo, MessageBoxButtons.AbortRetryIgnore, MessageBoxIcon.Question);
         public static DialogResult retryCancel(string msg, string titulo = "") => MessageBox.Show(msg, titulo, MessageBoxButtons.RetryCancel, MessageBoxIcon.Question);
+        public static void scrollable(string msg, string titulo = "Info")
+        {
+            using (var frm = new LongMsgBox(msg, titulo))
+                frm.ShowDialog();
+        }
     }
 }
