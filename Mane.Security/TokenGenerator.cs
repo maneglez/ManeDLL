@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -30,7 +31,7 @@ namespace Mane.Security
                 .Where("LastUse", "<=", minDate)
                 .Update(new { Active = false }, TokenConfig.TokenConnectionName);
         }
-        public static bool ValidateToken(string token,object userId)
+        public static bool ValidateToken(string token)
         {
             RevocarTokens();
             var t = Token.FindByToken(token);
@@ -38,11 +39,27 @@ namespace Mane.Security
             {
                 return false;
             }
-            if (!t.Active || t.User_id != userId.ToString())
+            if (!t.Active)
                 return false; 
             t.LastUse = DateTime.Now;
             t.Save();
             return true;
+        }
+
+        /// <summary>
+        /// Invalida un token de sesion
+        /// </summary>
+        /// <param name="token">Token</param>
+        /// <param name="userid">Id del usuario</param>
+        public static void InvalidateToken(string token)
+        {
+            if (ValidateToken(token))
+            {
+                var tk = Token.FindByToken(token);
+                tk.Active = false;
+                tk.Save();
+            }
+           
         }
 
         /// <summary>
@@ -71,14 +88,42 @@ namespace Mane.Security
             {
                 CreatedDate = DateTime.Now,
                 LastUse = DateTime.Now,
-                TokenText = Crypto.GetMD5(user_id + DateTime.Now.ToString("dd MM yyyy mm ss fff")),
+                TokenText = NewToken(),
                 Active = true,
                 User_id = user_id.ToString()
             };
             token.Save();
             outMessage = token.TokenText;
+            
             return true;
-           
+        }
+
+        /// <summary>
+        /// Obtiene el id del usuario relacionado al token proporcionado
+        /// </summary>
+        /// <param name="token">token</param>
+        /// <returns>-1 si el token no es valido Object si es valido</returns>
+        public static object GetUserId(string token)
+        {
+            RevocarTokens();
+            var tk = Token.FindByToken(token);
+            if (tk == null)
+                return -1;
+            if (tk.Active)
+            {
+                tk.LastUse = DateTime.Now;
+                tk.Save();
+                return tk.User_id;
+            }
+                
+            return -1;
+        }
+
+        
+
+        private static string NewToken()
+        {
+            return Crypto.GetMD5(DateTime.Now.ToString("dd MM yyyy mm ss fff") + new Random().Next());
         }
     }
 }

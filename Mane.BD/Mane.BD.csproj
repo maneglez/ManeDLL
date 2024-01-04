@@ -113,6 +113,10 @@
     <Compile Include="Forms\MostrarDatosGenerico.Designer.cs">
       <DependentUpon>MostrarDatosGenerico.cs</DependentUpon>
     </Compile>
+    <Compile Include="Modelo\Web\Modelo.cs" />
+    <Compile Include="Modelo\Web\Modelo.Generic.cs" />
+    <Compile Include="Modelo\Web\Modelo.Generic.ModeloCollection.cs" />
+    <Compile Include="Modelo\Web\Modelo.Query.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueryBulder\Builders\BuilderHana.cs" />
     <Compile Include="QueryBulder\Builders\BuilderSQL.cs" />
@@ -158,6 +162,7 @@
       <DependentUpon>SeleccionarGenerico.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

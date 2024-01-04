@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.Remoting.Metadata.W3cXsd2001;
+
 
 namespace Mane.BD
 {
@@ -83,7 +83,7 @@ namespace Mane.BD
                     case "Int32": return value == DBNull.Value ? 0 : Convert.ToInt32(value);
                     case "Int16": return value == DBNull.Value ? 0 : Convert.ToInt16(value);//aqui bota error cuando se le asigna a una propiedad del tipo Short
                     case "Decimal": return value == DBNull.Value ? 0 : decimal.Parse(value.ToString());
-                    case "Byte[]": return value == DBNull.Value ? new byte[] { } : SoapHexBinary.Parse(value.ToString()).Value;
+                    case "Byte[]": return value == DBNull.Value ? new byte[] { } : StringToByteArray(value.ToString());
                 }
                 if (t.BaseType == typeof(Enum)) return Convert.ToInt16(value == DBNull.Value ? null : value);
 
@@ -111,6 +111,20 @@ namespace Mane.BD
         @"(\p{Ll})(\P{Ll})",
         "$1 $2"
     );
+        }
+
+        public static byte[] StringToByteArray(string hex)
+        {
+            int cnt = hex.Length;
+            if (hex.StartsWith("0x"))
+                hex = hex.Substring(2, hex.Length - 2);
+
+            byte[] bytes = new byte[cnt / 2];
+
+            for (int i = 0; i < cnt; i += 2)
+                bytes[i / 2] = Convert.ToByte(hex.Substring(i, 2), 16);
+
+            return bytes;
         }
     }
 }

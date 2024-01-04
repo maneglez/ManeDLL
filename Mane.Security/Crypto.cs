@@ -113,7 +113,7 @@ namespace Mane.Security
         public static string HashText(string text) {
             return BCrypt.Net.BCrypt.HashPassword(text);
         }
-        public static bool ValidateHash(string text,string hashedText)
+        public static bool HashCheck(string text,string hashedText)
         {
             return BCrypt.Net.BCrypt.Verify(text, hashedText);
         }

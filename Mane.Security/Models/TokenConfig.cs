@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Mane.Security.Models
 {
-    public class TokenConfig : Modelo<TokenConfig>
+    public class TokenConfig : WebModel<TokenConfig>
     {
         public static string TokenConnectionName = "Mane.Security.TokenGenerator";
         public static string TokenDbFileName = "db_tokens.db";

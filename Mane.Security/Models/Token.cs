@@ -8,7 +8,7 @@ using Mane.BD;
 
 namespace Mane.Security.Models
 {
-    public class Token : Modelo<Token>
+    public class Token : WebModel<Token>
     {
         protected override string ConnName => TokenConfig.TokenConnectionName;
         protected override string NombreTabla => "Tokens";
