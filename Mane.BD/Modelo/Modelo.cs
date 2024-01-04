@@ -118,7 +118,10 @@ namespace Mane.BD
         private object Add()
         {
             var q = new QueryBuilder(NombreTabla);
-            idValue = q.Insert(Common.ObjectToKeyValue(this), ConnName);
+            var dic = Common.ObjectToKeyValue(this);
+            if (dic.ContainsKey(idName))
+                dic.Remove(idName);
+            idValue = q.Insert(dic, ConnName);
             RegistredOnDataBase = true;
             return idValue;
         }

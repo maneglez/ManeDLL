@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Text;
-using System.Text.Json;
 using System.Xml;
 using System.Xml.Serialization;
 
@@ -103,12 +102,12 @@ namespace Mane.Helpers
         }
         public static string ObjectToJson(object obj)
         {
-            return JsonSerializer.Serialize(obj, new JsonSerializerOptions { WriteIndented = true });
+            return Newtonsoft.Json.JsonConvert.SerializeObject(obj, Newtonsoft.Json.Formatting.Indented);
         }
 
         public static T JsonToObject<T>(string jsonString)
         {
-            return JsonSerializer.Deserialize<T>(jsonString);
+            return (T)Newtonsoft.Json.JsonConvert.DeserializeObject(jsonString,typeof(T));
         }
     }
 }

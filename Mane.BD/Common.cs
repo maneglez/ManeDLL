@@ -32,6 +32,25 @@ namespace Mane.BD
             return dic;
         }
         /// <summary>
+        /// Convierte objeto a Clave valor
+        /// </summary>
+        /// <param name="obj">ovjeto</param>
+        /// <returns></returns>
+        //public static Dictionary<string, object> ObjectToKeyValue(Modelo obj)
+        //{
+        //    if (obj == null) throw new Exception("El objeto es nulo");
+        //    var dic = new Dictionary<string, object>();
+        //    var props = obj.GetType().GetProperties();
+        //    var idName = obj.getIdName();
+        //    foreach (var prop in props)
+        //    {
+                
+        //        if (!prop.IsDefined(typeof(ManeBdIgnorarPropAttribute), false) && prop.Name != idName)
+        //            dic.Add(prop.Name, prop.GetValue(obj));
+        //    }
+        //    return dic;
+        //}
+        /// <summary>
         /// 
         /// </summary>
         /// <typeparam name="T"></typeparam>
