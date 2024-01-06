@@ -24,6 +24,9 @@ namespace Mane.BD.QueryBulder.Builders
         string Count();
         string BuildQuery();
         string BuildExecProcedure(string ProcedureName, object[] ProcParameters = null);
+        string BuildTableDefinition<T>(Modelo<T> model) where T : Modelo, new();
+        string BuildTableDefinition<T>(WebModel<T> model) where T : WebModel, new();
+
 
     }
 }

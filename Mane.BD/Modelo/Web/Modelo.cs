@@ -35,6 +35,7 @@ namespace Mane.BD
         /// Nombre de la columna de clave primaria
         /// </summary>
         protected virtual string idName { get => "id"; }
+
         /// <summary>
         /// Nombre de la conexión que utilizará la tabla
         /// </summary>
@@ -175,13 +176,13 @@ namespace Mane.BD
                     if (OriginalModel[key] != CurrModel[key])
                         propsActualizadas.Add(key, CurrModel[key]);
                 }
-                if (id().ToString() != originalIdValue.ToString())
-                    propsActualizadas.Add(getIdName(), id());
+                if (Id().ToString() != originalIdValue.ToString())
+                    propsActualizadas.Add(getIdName(), Id());
                 if (propsActualizadas.Count > 0)
                 {
                     q.Update(propsActualizadas, ConnName);
                     OriginalModel = CurrModel;
-                    originalIdValue = id();
+                    originalIdValue = Id();
                 }
 
             }
@@ -213,7 +214,7 @@ namespace Mane.BD
         /// Identificador del objeto actual
         /// </summary>
         /// <returns>Devuelve el identificador del objeto actual</returns>
-        public object id() => idValue;
+        public object Id() => idValue;
         public int IntId()
         {
             try
@@ -264,7 +265,7 @@ namespace Mane.BD
         {
             try
             {
-                string idRelacionado = ColumnaIdLocal == idName ? id()?.ToString() : Common.GetPropValueByName(this, ColumnaIdLocal).ToString();
+                string idRelacionado = ColumnaIdLocal == idName ? Id()?.ToString() : Common.GetPropValueByName(this, ColumnaIdLocal).ToString();
                 if (string.IsNullOrWhiteSpace(idRelacionado)) return new WebModel<Tmodelo>.WebModelCollection();
                 Tmodelo m = new Tmodelo();
                 DataTable dt = Bd.Query(m.getNombreTabla()).Select(ColumnasDelModelo<Tmodelo>())
@@ -284,8 +285,8 @@ namespace Mane.BD
         public bool IsDirty()
         {
             if (!exists()) return false;
-            if (originalIdValue != null && id() != null)
-                if (originalIdValue.ToString() != id().ToString()) return true;
+            if (originalIdValue != null && Id() != null)
+                if (originalIdValue.ToString() != Id().ToString()) return true;
             if (OriginalModel == null) return true;
             var CurrModel = Common.ObjectToKeyValue(this);
             if (CurrModel != OriginalModel) return true;
@@ -316,7 +317,7 @@ namespace Mane.BD
                 string localKeyValue;
                 if (localKey != "")
                     localKeyValue = Common.GetPropValueByName(this, localKey).ToString();
-                else localKeyValue = id()?.ToString();
+                else localKeyValue = Id()?.ToString();
 
                 return WebModel<TmodeloResultante>.Query().Where($"{modelo.NombreTabla}.{foreginKey}", q =>
                   q.From(modeloIntermedio.NombreTabla)

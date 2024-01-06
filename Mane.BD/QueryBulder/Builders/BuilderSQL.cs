@@ -336,5 +336,15 @@ namespace Mane.BD.QueryBulder.Builders
                 return q.BuildQuery(Tipo);
             else return q.GetBuilder(QueryBuilder.NombreConexion).BuildQuery();
         }
+
+        public virtual string BuildTableDefinition<T>(Modelo<T> model) where T : Modelo, new()
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual string BuildTableDefinition<T>(WebModel<T> model) where T : WebModel, new()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

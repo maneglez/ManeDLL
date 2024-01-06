@@ -34,7 +34,7 @@ namespace Mane.BD
                 foreach (T m in this)
                 {
                     if (m.exists())
-                        ids.Add(m.id()?.ToString());
+                        ids.Add(m.Id()?.ToString());
                 }
                 if (ids.Count == 0) return;
                 T modelo = this[0];
@@ -111,7 +111,7 @@ namespace Mane.BD
             /// <returns></returns>
             public T Find(object id)
             {
-                return Find(m => m.id() == id);
+                return Find(m => m.Id() == id);
             }
             /// <summary>
             /// 

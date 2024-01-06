@@ -36,6 +36,7 @@ namespace Mane.BD
         /// Nombre de la columna de clave primaria
         /// </summary>
         protected virtual string idName { get => "id"; }
+
         /// <summary>
         /// Nombre de la conexión que utilizará la tabla
         /// </summary>
@@ -436,26 +437,7 @@ namespace Mane.BD
         #endregion
 
         #region Equals
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="left"></param>
-        /// <param name="right"></param>
-        /// <returns></returns>
-        public static bool operator ==(Modelo left, Modelo right)
-        {
-            return EqualityComparer<Modelo>.Default.Equals(left, right);
-        }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="left"></param>
-        /// <param name="right"></param>
-        /// <returns></returns>
-        public static bool operator !=(Modelo left, Modelo right)
-        {
-            return !(left == right);
-        }
+
         /// <summary>
         /// 
         /// </summary>

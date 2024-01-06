@@ -9,7 +9,6 @@ namespace Mane.BD.QueryBulder.Builders
         public override string SelectLastInsertedIndexQuery => "";//$"select current_identity_value() FROM {FormatTable(QueryBuilder.Tabla)}";
         public BuilderHana(QueryBuilder queryBuilder, string DataBaseName = "") : base(queryBuilder)
         {
-            ColumnDelimiters = new char[] { '"', '"' };
             this.DataBaseName = DataBaseName;
         }
 

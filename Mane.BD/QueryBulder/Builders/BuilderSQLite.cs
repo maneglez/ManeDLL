@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Reflection;
+using System.Text;
 
 namespace Mane.BD.QueryBulder.Builders
 {
@@ -8,6 +11,7 @@ namespace Mane.BD.QueryBulder.Builders
         public override string SelectLastInsertedIndexQuery => "SELECT last_insert_rowid()";
         public BuilderSQLite(QueryBuilder queryBuilder) : base(queryBuilder)
         {
+            ColumnDelimiters = new char[] { '"', '"' };
         }
         override public string BuildLimit()
         {
@@ -50,6 +54,41 @@ namespace Mane.BD.QueryBulder.Builders
             string query = $"SELECT {distinct} {select} FROM {FormatTable(q.Tabla)} {joins} {where} {orderBy} {groupBy} {limit}";
             return query;
             //return System.Text.RegularExpressions.Regex.Replace(query, @"\s+", " ");
+        }
+
+        public override string BuildTableDefinition<T>(Modelo<T> model)
+        {
+            var m = new T();
+            var idName = FormatColumn(m.getIdName());
+            var tableName = FormatColumn(m.getNombreTabla());
+            var tableDef = new StringBuilder();
+            tableDef.AppendLine($"CREATE TABLE {tableName} (");
+            tableDef.AppendLine($"{idName} INTEGER NOT NULL,");
+            var props = m.GetType().GetProperties();
+            foreach (var prop in props)
+            {
+                tableDef.AppendLine($"{FormatColumn(prop.Name)} {Common.GetColumnType(prop, TipoDeBd.SQLite)},");
+            }
+            tableDef.AppendLine($"PRIMARY KEY ({idName} AUTOINCREMENT)")
+                .Append(")");
+            return tableDef.ToString();
+        }
+        public override string BuildTableDefinition<T>(WebModel<T> model)
+        {
+            var m = new T();
+            var idName = FormatColumn(m.getIdName());
+            var tableName = FormatColumn(m.getNombreTabla());
+            var tableDef = new StringBuilder();
+            tableDef.AppendLine($"CREATE TABLE {tableName} (");
+            tableDef.AppendLine($"{idName} INTEGER NOT NULL,");
+            var props = m.GetType().GetProperties();
+            foreach (var prop in props)
+            {
+                tableDef.AppendLine($"{FormatColumn(prop.Name)} {Common.GetColumnType(prop, TipoDeBd.SQLite)},");
+            }
+            tableDef.AppendLine($"PRIMARY KEY ({idName} AUTOINCREMENT)")
+                .Append(")");
+            return tableDef.ToString();
         }
     }
 }

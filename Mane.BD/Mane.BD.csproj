@@ -100,6 +100,14 @@
     <Compile Include="Helpers\Log.cs" />
     <Compile Include="Helpers\Utils.cs" />
     <Compile Include="IgnorarPropAttribute.cs" />
+    <Compile Include="Modelo\Attributes\DateAttribute.cs" />
+    <Compile Include="Modelo\Attributes\DateTimeAttribute.cs" />
+    <Compile Include="Modelo\Attributes\DecimalAttribute.cs" />
+    <Compile Include="Modelo\Attributes\DefaultAttribute.cs" />
+    <Compile Include="Modelo\Attributes\IntAttribute.cs" />
+    <Compile Include="Modelo\Attributes\NotNullAttribute.cs" />
+    <Compile Include="Modelo\Attributes\TextAttribute.cs" />
+    <Compile Include="Modelo\Attributes\VarcharAttribute.cs" />
     <Compile Include="Modelo\Modelo.cs" />
     <Compile Include="Modelo\Modelo.FormsBinding.cs" />
     <Compile Include="Modelo\Modelo.Query.cs" />
