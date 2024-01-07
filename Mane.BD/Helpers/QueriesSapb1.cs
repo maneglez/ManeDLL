@@ -43,7 +43,7 @@ namespace Mane.BD.Helpers
                 .Else(0).As("SysNumber"))
 
                 .Case(c => c.When("t1.SnBType", SnbTypeLote).ThenColumn("t3.DistNumber")
-                .When("t1.SnBType", SnbTypeSerie).Then("t4.DistNumber")
+                .When("t1.SnBType", SnbTypeSerie).ThenColumn("t4.DistNumber")
                 .Else("").As("DistNumber"));
         }
 
@@ -504,6 +504,28 @@ namespace Mane.BD.Helpers
                 .Where("t0.TableID", tabla)
                 .Where("t0.AliasID", campoDeUsuario.StartsWith("U_") ? campoDeUsuario.Substring(2, campoDeUsuario.Length - 2) : campoDeUsuario)
                 .Select("t1.FldValue as Code", "t1.Descr as Name");
+/*
+            CREATE FUNCTION GetUdfDescription
+(
+	-- Add the parameters for the function here
+	@userFieldName varchar(100),
+	@tableName varchar(100),
+	@value varchar(100)
+)
+RETURNS varchar(100)
+AS
+BEGIN
+	
+
+	-- Return the result of the function
+	RETURN (select top 1 cast(t1.Descr as varchar(100)) from CUFD t0
+	join UFD1 t1 on t1.FieldID = t0.FieldID and t1.TableID = t0.TableID
+	where t0.TableID = @tableName
+	and t0.AliasID = @userFieldName
+	and t1.FldValue = @value)
+
+END
+GO*/
         }
     }
 }

@@ -217,7 +217,7 @@ namespace Mane.BD.Forms
                     if (!args.HandleFilter)
                         args.Query.Where(cbFiltro.SelectedValue.ToString(), "LIKE", $"%{Busqueda}%");
                     dt = args.Query.Get(ConnName);
-                    Clipboard.SetText(args.Query.GetQuery(TipoDeBd.SqlServer));
+                    
 
                 }else if (string.IsNullOrWhiteSpace(Busqueda))
                 {
@@ -228,7 +228,7 @@ namespace Mane.BD.Forms
                     var q = query.Copy();
                         q.Where(cbFiltro.SelectedValue.ToString(), "LIKE", $"%{Busqueda}%");
                         dt = q.Get(ConnName);
-                        Clipboard.SetText(q.GetQuery(TipoDeBd.SqlServer));
+                     
                 }
                 dgvContenido.DataSource = dt;
                 CustomizarColumnas();
