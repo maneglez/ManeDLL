@@ -527,5 +527,11 @@ BEGIN
 END
 GO*/
         }
+
+        public static int GetDocNumber(object docEntry, string tabla, string nombreConexion = "")
+        {
+            return (int)Bd.Query(tabla).Select("DocNum").Where("DocEntry", docEntry)
+                 .GetScalar(nombreConexion, 0);
+        }
     }
 }

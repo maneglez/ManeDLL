@@ -62,8 +62,13 @@ namespace Mane.BD
             var props = obj.GetType().GetProperties();
             foreach (var prop in props)
             {
+              
                 if (prop.CanWrite && !prop.IsDefined(typeof(ManeBdIgnorarPropAttribute), false))
-                    prop.SetValue(obj, ConvertirATipo(prop.PropertyType, dic[prop.Name]));
+                {
+                    if(dic.TryGetValue(prop.Name,out object value))
+                     prop.SetValue(obj, ConvertirATipo(prop.PropertyType,value));
+                }
+                    
             }
             return obj;
         }
@@ -87,6 +92,8 @@ namespace Mane.BD
         public static dynamic ConvertirATipo(Type t, object value)
         {
             if (value == null) return value;
+            if (value.GetType().FullName == "Microsoft.Extensions.Primitives.StringValues")
+                value = value.ToString();
             try
             {
                 switch (t.Name)
@@ -107,9 +114,9 @@ namespace Mane.BD
                 if (t.BaseType == typeof(Enum)) return Convert.ToInt16(value == DBNull.Value ? null : value);
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
+                var msg = ex.Message;
             }
             return value;
         }

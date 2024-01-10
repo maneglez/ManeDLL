@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.IO;
+using System.Reflection;
 
 namespace Mane.BD
 {
@@ -235,6 +236,9 @@ namespace Mane.BD
                 return true;
             }
 
+      
+            
+
         }
         #region Persistencia de conexiones en archivo json
         /// <summary>
@@ -305,6 +309,8 @@ namespace Mane.BD
         {
             SaveConnectionsToFile(Conexiones, DefaultConectionsFileName);
         }
+
+
         private static string defaultConectionsFileName;
         public static string DefaultConectionsFileName
         {
@@ -318,6 +324,21 @@ namespace Mane.BD
         }
 
         #endregion
+
+        public static void CrearTabla<T>(Modelo<T> model, string nombreConexion) where T : Modelo<T>, new()
+        {
+            var conexion = Conexiones.Find(nombreConexion) ?? throw new Exception($"La conexión {nombreConexion} no existe");
+            var queryBuilder = new QueryBuilder();
+            var builder = queryBuilder.GetBuilder(conexion);
+            ExecuteNonQuery(builder.BuildTableDefinition(model), nombreConexion);
+        }
+        public static void CrearTabla<T>(WebModel<T> model, string nombreConexion) where T : WebModel<T>, new()
+        {
+            var conexion = Conexiones.Find(nombreConexion) ?? throw new Exception($"La conexión {nombreConexion} no existe");
+            var queryBuilder = new QueryBuilder();
+            var builder = queryBuilder.GetBuilder(conexion);
+            ExecuteNonQuery(builder.BuildTableDefinition(model), nombreConexion);
+        }
 
     }
 

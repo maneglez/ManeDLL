@@ -58,13 +58,12 @@ namespace Mane.BD.QueryBulder.Builders
 
         public override string BuildTableDefinition<T>(Modelo<T> model)
         {
-            var m = new T();
-            var idName = FormatColumn(m.getIdName());
-            var tableName = FormatColumn(m.getNombreTabla());
+            var idName = FormatColumn(model.getIdName());
+            var tableName = FormatColumn(model.getNombreTabla());
             var tableDef = new StringBuilder();
             tableDef.AppendLine($"CREATE TABLE {tableName} (");
             tableDef.AppendLine($"{idName} INTEGER NOT NULL,");
-            var props = m.GetType().GetProperties();
+            var props = model.GetType().GetProperties();
             foreach (var prop in props)
             {
                 tableDef.AppendLine($"{FormatColumn(prop.Name)} {Common.GetColumnType(prop, TipoDeBd.SQLite)},");
@@ -75,13 +74,12 @@ namespace Mane.BD.QueryBulder.Builders
         }
         public override string BuildTableDefinition<T>(WebModel<T> model)
         {
-            var m = new T();
-            var idName = FormatColumn(m.getIdName());
-            var tableName = FormatColumn(m.getNombreTabla());
+            var idName = FormatColumn(model.getIdName());
+            var tableName = FormatColumn(model.getNombreTabla());
             var tableDef = new StringBuilder();
             tableDef.AppendLine($"CREATE TABLE {tableName} (");
             tableDef.AppendLine($"{idName} INTEGER NOT NULL,");
-            var props = m.GetType().GetProperties();
+            var props = model.GetType().GetProperties();
             foreach (var prop in props)
             {
                 tableDef.AppendLine($"{FormatColumn(prop.Name)} {Common.GetColumnType(prop, TipoDeBd.SQLite)},");

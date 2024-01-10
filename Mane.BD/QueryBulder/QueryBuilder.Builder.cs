@@ -137,5 +137,15 @@ namespace Mane.BD
             return "";
 
         }
+
+        public string BuildTableDefinition<T>(Modelo<T> model) where T : Modelo, new()
+        {
+            throw new NotImplementedException();
+        }
+
+        public string BuildTableDefinition<T>(WebModel<T> model) where T : WebModel, new()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

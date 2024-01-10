@@ -153,22 +153,39 @@ namespace Mane.BD.QueryBulder.Builders
                 {TipoDeBd.SQLite,"INTEGER" }
             }); 
             basicTypeMap.Add("Mane.BD.IntAttribute", basicTypeMap["System.Int32"]);
-            basicTypeMap.Add("System.Int16", basicTypeMap["System.Int32"]);
-            
-            
+            basicTypeMap.Add("System.Int16", new Dictionary<TipoDeBd, string>
+            {
+                {TipoDeBd.SqlServer,"SMALLINT" },
+                {TipoDeBd.Hana,"SMALLINT" },
+                {TipoDeBd.SQLite,"INTEGER" }
+            });
+
+
             basicTypeMap.Add("System.Double", new Dictionary<TipoDeBd, string>
             {
                 {TipoDeBd.SqlServer,"DECIMAL(19,6)" },
                 {TipoDeBd.Hana,"DECIMAL(19,6)" },
                 {TipoDeBd.SQLite,"NUMERIC" }
             });
-            
+            basicTypeMap.Add("System.Boolean", new Dictionary<TipoDeBd, string>
+            {
+                {TipoDeBd.SqlServer,"BIT" },
+                {TipoDeBd.Hana,"TINYINY" },
+                {TipoDeBd.SQLite,"NUMERIC" }
+            });
+
             basicTypeMap.Add("System.Decimal", basicTypeMap["System.Double"]);
+            basicTypeMap.Add("System.Byte", new Dictionary<TipoDeBd, string>
+            {
+                {TipoDeBd.SqlServer,"TINYINT" },
+                {TipoDeBd.Hana,"TINYINT" },
+                {TipoDeBd.SQLite,"NUMERIC" }
+            });
 
             basicTypeMap.Add("System.Byte[]", new Dictionary<TipoDeBd, string>
             {
                 {TipoDeBd.SqlServer,"VARBINARY" },
-                {TipoDeBd.Hana,"BLOB" },
+                {TipoDeBd.Hana,"VARBINARY" },
                 {TipoDeBd.SQLite,"BLOB" }
             });
             basicTypeMap.Add("System.DateTime", new Dictionary<TipoDeBd, string>

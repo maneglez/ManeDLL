@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.NetworkInformation;
+using System.Text;
 
 namespace Mane.BD.QueryBulder.Builders
 {
@@ -339,12 +340,42 @@ namespace Mane.BD.QueryBulder.Builders
 
         public virtual string BuildTableDefinition<T>(Modelo<T> model) where T : Modelo, new()
         {
-            throw new NotImplementedException();
+            var idName = FormatColumn(model.getIdName());
+            var tableName = FormatTable(model.getNombreTabla());
+            var tableDef = new StringBuilder();
+            tableDef.AppendLine($"CREATE TABLE {tableName} (");
+            tableDef.AppendLine($"{idName} IDENTITY(1,1) NOT NULL,");
+            var props = model.GetType().GetProperties();
+            foreach (var prop in props)
+            {
+                tableDef.AppendLine($"{FormatColumn(prop.Name)} {Common.GetColumnType(prop, TipoDeBd.SqlServer)},");
+            }
+            tableDef.AppendLine($"CONSTRAINT {FormatTable($"PK_{model.getNombreTabla().Replace('.', '_')}")} PRIMARY KEY")
+                .AppendLine("(")
+                .AppendLine($"{idName} ASC")
+                .AppendLine(") ON PRIMARY")
+                .Append(")");
+            return tableDef.ToString();
         }
 
         public virtual string BuildTableDefinition<T>(WebModel<T> model) where T : WebModel, new()
         {
-            throw new NotImplementedException();
+            var idName = FormatColumn(model.getIdName());
+            var tableName = FormatTable(model.getNombreTabla());
+            var tableDef = new StringBuilder();
+            tableDef.AppendLine($"CREATE TABLE {tableName} (");
+            tableDef.AppendLine($"{idName} INT IDENTITY(1,1) NOT NULL,");
+            var props = model.GetType().GetProperties();
+            foreach (var prop in props)
+            {
+                tableDef.AppendLine($"{FormatColumn(prop.Name)} {Common.GetColumnType(prop, TipoDeBd.SqlServer)},");
+            }
+            tableDef.AppendLine($"CONSTRAINT {FormatTable($"PK_{model.getNombreTabla().Replace('.', '_')}")} PRIMARY KEY")
+                .AppendLine(" (")
+                .AppendLine($"  {idName} ASC")
+                .AppendLine(" )")
+                .Append(")");
+            return tableDef.ToString();
         }
     }
 }
