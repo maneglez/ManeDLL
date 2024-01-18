@@ -123,6 +123,13 @@ namespace Mane.BD
             if (dic.ContainsKey(idName))
                 dic.Remove(idName);
             idValue = q.Insert(dic, ConnName);
+            if (Bd.GetTipoBd(ConnName) == TipoDeBd.Hana)
+            {
+                idValue = Bd.Query(NombreTabla).Select(idName)
+                    .OrderBy(idName,OrderDireccion.Descendente)
+                    .Limit(1)
+                    .GetScalar(ConnName);
+            }
             RegistredOnDataBase = true;
             return idValue;
         }
