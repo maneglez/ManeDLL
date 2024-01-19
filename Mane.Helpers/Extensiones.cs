@@ -148,6 +148,22 @@ namespace Mane.Helpers
 
             if (grid.ContextMenuStrip == null)
                 grid.ContextMenuStrip = new ContextMenuStrip();
+            var contieneCopyItem = false;
+            foreach (ToolStripItem item in grid.ContextMenuStrip.Items)
+            {
+                if (item.Text == "Copiar")
+                    contieneCopyItem = true;
+            }
+            if (!contieneCopyItem)
+            {
+                var copyItem = grid.ContextMenuStrip.Items.Add("Copiar");
+                copyItem.Click += (s, e) =>
+                {
+                    if (grid.CurrentCell != null)
+                        if (grid.CurrentCell.Value != null)
+                            Clipboard.SetText(grid.CurrentCell.Value.ToStr());
+                };
+            }
             var i = grid.ContextMenuStrip.Items.Add("Copiar Tabla");
             i.Click += (s, e) => grid.CopiarTabla();
 

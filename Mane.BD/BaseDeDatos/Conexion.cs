@@ -190,8 +190,9 @@ namespace Mane.BD
         public override bool Equals(object obj)
         {
             if (obj is Conexion c)
-                return c.Nombre == Nombre && c.ServerName() == ServerName()
-                    && c.NombreBD == NombreBD && c.TipoDeBaseDeDatos == TipoDeBaseDeDatos;
+                return c.Nombre == Nombre;
+            //&& c.ServerName() == ServerName()
+            //&& c.NombreBD == NombreBD && c.TipoDeBaseDeDatos == TipoDeBaseDeDatos;
             else return false;
         }
         public override int GetHashCode()

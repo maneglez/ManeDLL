@@ -138,11 +138,10 @@ namespace Mane.Sap
             /// <returns>Obtine la primera conexion que coincide con el nombre proporcionado</returns>
             public ConexionSap Find(string nombreConexion)
             {
-                if (Count == 0)
-                    throw new Exception("No existen conexiones");
+
                 if (string.IsNullOrWhiteSpace(nombreConexion))
                     return this.First();
-                return this.Find(c => c.Nombre == nombreConexion) ?? throw new Exception("No se econtró la conexión especificada " + nombreConexion);
+                return this.Find(c => c.Nombre == nombreConexion);
 
             }
 

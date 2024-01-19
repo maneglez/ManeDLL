@@ -2,7 +2,8 @@
 using System.Windows.Forms;
 using System.Collections.Generic;
 using System.IO;
-using Mane.Security;
+using Mane.CommonModules;
+using Mane.CommonModules.WMS;
 
 namespace Pruebas
 {
@@ -23,8 +24,19 @@ namespace Pruebas
         static void Write(string text) => Console.Write(text);
         static void Prueba()
         {
-            TokenGenerator.CreateToken(1, out string msg);
-            Writeln(msg);
+            var conf = new Mane.CommonModules.Conection();
+            conf.ServerNameSap = "TIE-LAP1";
+            conf.ServerNameSql = "TIE-LAP1";
+            conf.SapUser = "manager";
+            conf.SapPassword = "1234";
+            conf.DbUser = "sa";
+            conf.DbPassword = "Passw0rd";
+            conf.SapSqlServerType = "dst_MSSQL2017";
+            conf.DbName = "SBODemoMX";
+            Configuration.SetConnection(conf);
+            Application.EnableVisualStyles();
+            using (var fm = new Conteo())
+                fm.ShowDialog();
         }
         
     }

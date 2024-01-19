@@ -64,9 +64,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Mane.Security\Mane.Security.csproj">
-      <Project>{f9e96d11-c1d1-47b7-a664-b2540ba26e01}</Project>
-      <Name>Mane.Security</Name>
+    <ProjectReference Include="..\Mane.CommonModules\Mane.CommonModules.csproj">
+      <Project>{cca4f9e0-e5a4-463f-9701-91b4cd816ebb}</Project>
+      <Name>Mane.CommonModules</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

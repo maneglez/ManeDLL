@@ -96,6 +96,16 @@ namespace Mane.Sap
             return con;
         }
 
+        public override bool Equals(object obj)
+        {
+            if (obj is ConexionSap c)
+                return c.Nombre == Nombre;
+            return false;
+        }
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
     }
 
 
