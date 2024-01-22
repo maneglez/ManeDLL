@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Security;
 using System.Windows.Forms;
 using Mane.BD;
 using Mane.BD.Forms;
@@ -213,20 +214,171 @@ namespace Mane.BD.Helpers
         /// <returns>t12.WhsCode, t3.BinCode, t2.BinAbs, t0.ItemCode, t0.ItemName,Quantity,SysNumber,DistNumber,InDate,ExpDate,TipoManejo</returns>
         public static QueryBuilder Stock(string ubicacion = "", string almacen = "", string itemCode = "", string serieLote = "", bool mostrarStockVacio = false)
         {
+
+            var query = QueryStock(mostrarStockVacio);
+            //Filtrar en base a parámetros
+            if (!string.IsNullOrEmpty(ubicacion))
+            {
+                if (ubicacion.Contains(','))
+                {
+                    ubicacion = ubicacion.Trim();
+                    ubicacion = ubicacion.TrimEnd(',');
+                    var ubis = ubicacion.Split(',');
+                    query.WhereIn("t3.BinCode", ubis);
+                }
+                else
+                    query.Where("t3.BinCode", ubicacion);
+            }
+
+            if (!string.IsNullOrEmpty(almacen))
+            {
+                if (almacen.Contains(','))
+                {
+                    almacen = almacen.Trim();
+                    almacen = almacen.TrimEnd(',');
+                    var alms = almacen.Split(',');
+                    query.OrWhereIn("t1.WhsCode", alms);
+                }
+                else
+                    query.Where("t1.WhsCode", almacen);
+            }
+
+            if (!string.IsNullOrEmpty(itemCode))
+            {
+                if (itemCode.Contains(','))
+                {
+                    itemCode = itemCode.Trim();
+                    itemCode = itemCode.TrimEnd(',');
+                    var items = itemCode.Split(',');
+                    query.WhereIn("t0.ItemCode", items);
+                }
+                else
+                    query.Where("t0.ItemCode", itemCode);
+            }
+          
+
+            if (!string.IsNullOrWhiteSpace(serieLote))
+            {
+                if (serieLote.Contains(","))
+                {
+                    serieLote = serieLote.Trim().TrimEnd(',');
+                    var lotes = serieLote.Split(',');
+                    query.Where(q =>
+                    q.WhereIn("t5.DistNumber", lotes)
+                    .OrWhereIn("t7.DistNumber", lotes)
+                    .OrWhereIn("t9.DistNumber", lotes)
+                    .OrWhereIn("t11.DistNumber", lotes)
+                    );
+                }
+                else
+                {
+                    query.Where(q =>
+                   q.Where("t5.DistNumber", serieLote)
+                   .OrWhere("t7.DistNumber", serieLote)
+                   .OrWhere("t9.DistNumber", serieLote)
+                   .OrWhere("t11.DistNumber", serieLote)
+                   );
+                }
+            }
+            return query;
+        }
+
+
+        /// <summary>
+        /// Obtiene un estatus de stock general todos los parámetros son nullables, excepto el de mostrar stock vacio
+        /// </summary>
+        /// <param name="ubicaciones">Códigos de Ubicaciones</param>
+        /// <param name="almacenes">Códigos de almacenes</param>
+        /// <param name="articulos">Códigos de Artículos</param>
+        /// <param name="seriesOLotes">Series o lotes</param>
+        /// <param name="mostrarStockVacio">Indica si se debe de mostrar articulos sin stock, por defecto no se muestran</param>
+        /// <returns>t12.WhsCode, t3.BinCode, t2.BinAbs, t0.ItemCode, t0.ItemName,Quantity,SysNumber,DistNumber,InDate,ExpDate,TipoManejo</returns>
+        public static QueryBuilder Stock(string[] ubicaciones, string[] almacenes,string[] articulos, string[] seriesOLotes,bool mostrarStockVacio = false)
+        {
+            var query = QueryStock(mostrarStockVacio);
+            //Filtrar en base a parámetros
+            if(ubicaciones != null)
+            {
+                if(ubicaciones.Length > 0)
+                {
+                    if(ubicaciones.Length == 1)
+                        query.Where("t3.BinCode", ubicaciones[0]);
+                    else
+                        query.WhereIn("t3.BinCode", ubicaciones);
+                }
+            }
+
+            if (almacenes != null)
+            {
+                if (almacenes.Length > 0)
+                {
+                    if (almacenes.Length == 1)
+                        query.Where("t1.WhsCode", almacenes[0]);
+                    else
+                        query.WhereIn("t1.WhsCode", almacenes);
+                }
+            }
+
+            if (articulos != null)
+            {
+                if (articulos.Length > 0)
+                {
+                    if (articulos.Length == 1)
+                        query.Where("t0.ItemCode", articulos[0]);
+                    else
+                        query.WhereIn("t0.ItemCode", articulos);
+                }
+            }
+
+            if (seriesOLotes != null)
+            {
+                if (seriesOLotes.Length > 0)
+                {
+                    if (seriesOLotes.Length == 1)
+                    {
+                        var serieLote = seriesOLotes[0];
+                        query.Where(q =>
+                   q.Where("t5.DistNumber", serieLote)
+                   .OrWhere("t7.DistNumber", serieLote)
+                   .OrWhere("t9.DistNumber", serieLote)
+                   .OrWhere("t11.DistNumber", serieLote)
+                   );
+                    }
+                    else
+                    {
+                        query.Where(q =>
+                   q.WhereIn("t5.DistNumber", seriesOLotes)
+                   .OrWhereIn("t7.DistNumber", seriesOLotes)
+                   .OrWhereIn("t9.DistNumber", seriesOLotes)
+                   .OrWhereIn("t11.DistNumber", seriesOLotes)
+                   );
+                    }
+
+                }
+            }
+            return query;
+        }
+        /// <summary>
+        /// Devuelve consulta de stock
+        /// </summary>
+        /// <param name="mostrarStockVacio"></param>
+        /// <returns>t12.WhsCode, t3.BinCode, t2.BinAbs, t0.ItemCode, t0.ItemName,Quantity,SysNumber,DistNumber,InDate,ExpDate,TipoManejo</returns>
+        public static QueryBuilder QueryStock(bool mostrarStockVacio = false)
+        {
             var query = Bd.Query("OITM t0")
-                .SelectDistinct("t12.WhsCode", "t3.BinCode", "t2.BinAbs", "t0.ItemCode", "t0.ItemName")
-                .Join("OITW t1", "t1.ItemCode", "t0.ItemCode")
-                .LeftJoin("OIBQ t2", "t2.ItemCode", "t1.ItemCode", q => q.WhereColumn("t2.WhsCode", "t1.WhsCode"))
-                .LeftJoin("OBIN t3", "t3.AbsEntry", "t2.BinAbs")
-                .LeftJoin("OBTQ t4", "t4.ItemCode", "t1.ItemCode", q => q.WhereColumn("t4.WhsCode", "t1.WhsCode").WhereIsNull("t3.BinCode"))
-                .LeftJoin("OBTN t5", "t5.AbsEntry", "t4.MdAbsEntry")
-                .LeftJoin("OSRQ t6", "t6.ItemCode", "t1.ItemCode", q => q.WhereColumn("t6.WhsCode", "t1.WhsCode").WhereIsNull("t3.BinCode"))
-                .LeftJoin("OSRN t7", "t7.AbsEntry", "t6.MdAbsEntry")
-                .LeftJoin("OBBQ t8", "t8.ItemCode", "t1.ItemCode", q => q.WhereColumn("t8.BinAbs", "t2.BinAbs"))
-                .LeftJoin("OBTN t9", "t9.AbsEntry", "t8.SnBMDAbs")
-                .LeftJoin("OSBQ t10", "t10.ItemCode", "t1.ItemCode", q => q.WhereColumn("t10.BinAbs", "t2.BinAbs"))
-                .LeftJoin("OSRN t11", "t11.AbsEntry", "t10.SnBMDAbs")
-                .Join("OWHS t12", "t12.WhsCode", "t1.WhsCode");
+               .SelectDistinct("t12.WhsCode", "t3.BinCode", "t2.BinAbs", "t0.ItemCode", "t0.ItemName")
+               .Join("OITW t1", "t1.ItemCode", "t0.ItemCode")
+               .LeftJoin("OIBQ t2", "t2.ItemCode", "t1.ItemCode", q => q.WhereColumn("t2.WhsCode", "t1.WhsCode"))
+               .LeftJoin("OBIN t3", "t3.AbsEntry", "t2.BinAbs")
+               .LeftJoin("OBTQ t4", "t4.ItemCode", "t1.ItemCode", q => q.WhereColumn("t4.WhsCode", "t1.WhsCode").WhereIsNull("t3.BinCode"))
+               .LeftJoin("OBTN t5", "t5.AbsEntry", "t4.MdAbsEntry")
+               .LeftJoin("OSRQ t6", "t6.ItemCode", "t1.ItemCode", q => q.WhereColumn("t6.WhsCode", "t1.WhsCode").WhereIsNull("t3.BinCode"))
+               .LeftJoin("OSRN t7", "t7.AbsEntry", "t6.MdAbsEntry")
+               .LeftJoin("OBBQ t8", "t8.ItemCode", "t1.ItemCode", q => q.WhereColumn("t8.BinAbs", "t2.BinAbs"))
+               .LeftJoin("OBTN t9", "t9.AbsEntry", "t8.SnBMDAbs")
+               .LeftJoin("OSBQ t10", "t10.ItemCode", "t1.ItemCode", q => q.WhereColumn("t10.BinAbs", "t2.BinAbs"))
+               .LeftJoin("OSRN t11", "t11.AbsEntry", "t10.SnBMDAbs")
+               .Join("OWHS t12", "t12.WhsCode", "t1.WhsCode");
             //ahora los case
             //Stock
             query.Case(c =>
@@ -291,45 +443,6 @@ namespace Mane.BD.Helpers
              .When("t0.ManSerNum", "Y").Then(TipoManejoSerie)
              .Else(TipoManejoNinguno).As("TipoManejo"));
 
-            //Filtrar en base a parámetros
-            if (!string.IsNullOrEmpty(ubicacion))
-            {
-                if (ubicacion.Contains(','))
-                {
-                    ubicacion = ubicacion.Trim();
-                    ubicacion = ubicacion.TrimEnd(',');
-                    var ubis = ubicacion.Split(',');
-                    query.WhereIn("t3.BinCode", ubis);
-                }
-                else
-                    query.Where("t3.BinCode", ubicacion);
-            }
-
-            if (!string.IsNullOrEmpty(almacen))
-            {
-                if (almacen.Contains(','))
-                {
-                    almacen = almacen.Trim();
-                    almacen = almacen.TrimEnd(',');
-                    var alms = almacen.Split(',');
-                    query.OrWhereIn("t1.WhsCode", alms);
-                }
-                else
-                    query.Where("t1.WhsCode", almacen);
-            }
-
-            if (!string.IsNullOrEmpty(itemCode))
-            {
-                if (itemCode.Contains(','))
-                {
-                    itemCode = itemCode.Trim();
-                    itemCode = itemCode.TrimEnd(',');
-                    var items = itemCode.Split(',');
-                    query.WhereIn("t0.ItemCode", items);
-                }
-                else
-                    query.Where("t0.ItemCode", itemCode);
-            }
             if (!mostrarStockVacio)
             {
                 query.Where(q =>
@@ -360,32 +473,8 @@ namespace Mane.BD.Helpers
                 ));
             }
 
-            if (!string.IsNullOrWhiteSpace(serieLote))
-            {
-                if (serieLote.Contains(","))
-                {
-                    serieLote = serieLote.Trim().TrimEnd(',');
-                    var lotes = serieLote.Split(',');
-                    query.Where(q =>
-                    q.WhereIn("t5.DistNumber", lotes)
-                    .OrWhereIn("t7.DistNumber", lotes)
-                    .OrWhereIn("t9.DistNumber", lotes)
-                    .OrWhereIn("t11.DistNumber", lotes)
-                    );
-                }
-                else
-                {
-                    query.Where(q =>
-                   q.Where("t5.DistNumber", serieLote)
-                   .OrWhere("t7.DistNumber", serieLote)
-                   .OrWhere("t9.DistNumber", serieLote)
-                   .OrWhere("t11.DistNumber", serieLote)
-                   );
-                }
-            }
             return query;
         }
-
         public static bool BuscarArticulo(out string itemCode, string busqueda = "",string nombreConexion = "")
         {
             itemCode = "";
