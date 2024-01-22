@@ -161,7 +161,7 @@ namespace Mane.BD
         /// <summary>
         /// Actualiza en base de datos
         /// </summary>
-        private void Update()
+        public void Update()
         {
             if (!IsDirty()) return;
             var q = new QueryBuilder(NombreTabla);

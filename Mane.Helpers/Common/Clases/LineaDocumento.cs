@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Mane.Helpers.Common.Clases
+namespace Mane.Helpers.Common
 {
     public class LineaDocumento : ILineaDocumento
     {
@@ -20,6 +20,7 @@ namespace Mane.Helpers.Common.Clases
         public string ItemCode { get; set; }
         public string ItemDescription { get; set; }
         public double Price { get; set; }
+        public double DiscPrcnt { get; set; }
         public double Quantity { get; set; }
         public List<ISerialNumbers> SerialNumbers { get; set; }
         public List<IBatchNumbers> BatchNumbers { get; set; }
@@ -28,6 +29,9 @@ namespace Mane.Helpers.Common.Clases
         public int BaseEntry { get; set; }
         public int BaseLine { get; set; }
         public int BaseType { get; set; }
+        public string TaxCode { get; set; }
+        public string Currency { get; set; }
+
         public override int GetHashCode()
         {
             return base.GetHashCode();
@@ -35,7 +39,7 @@ namespace Mane.Helpers.Common.Clases
         public override bool Equals(object obj)
         {
             if (obj is LineaDocumento ln)
-                return ln.ItemCode == ItemCode && ln.LineNum == LineNum && ln.Quantity == Quantity;
+                return ln.ItemCode == ItemCode && ln.LineNum == LineNum;
             return false;
         }
     }

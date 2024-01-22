@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-
-
-namespace Mane.Helpers.Common
+namespace Mane.Helpers.Common.Clases
 {
-    public class Traspaso : ITraspaso
+    public class Documento : IDocumento
     {
-        public string FromWhs { get; set; }
-        public string ToWhs { get; set; }
+        public Documento()
+        {
+            Lines = new List<ILineaDocumento>();
+        }
         public int DocEntry { get; set; }
         public int DocNum { get; set; }
         public string CardCode { get; set; }
@@ -18,9 +21,9 @@ namespace Mane.Helpers.Common
         public List<ILineaDocumento> Lines { get; set; }
         public string ShipToCode { get; set; }
         public string PayToCode { get; set; }
+        public DateTime DocDueDate { get; set; }
         public string Currency { get; set; }
         public double DocTotal { get; set; }
         public double VatSum { get; set; }
-        public DateTime DocDueDate { get; set; }
     }
 }

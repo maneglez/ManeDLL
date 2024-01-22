@@ -50,5 +50,8 @@ namespace Mane.Helpers.Common
         public int BaseEntry { get; set; }
         public int BaseLine { get; set; }
         public int BaseType { get; set; }
+        public string TaxCode { get; set; }
+        public string Currency { get; set; }
+        public double DiscPrcnt { get; set; }
     }
 }

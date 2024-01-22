@@ -9,7 +9,10 @@ namespace Mane.Helpers.Common
         int LineNum { get; set; }
         string ItemCode { get; set; }
         string ItemDescription { get; set; }
+        string TaxCode { get; set; }
+        string Currency { get; set; }
         double Price { get; set; }
+        double DiscPrcnt { get; set; }
         double Quantity { get; set; }
         List<ISerialNumbers> SerialNumbers { get; set; }
         List<IBatchNumbers> BatchNumbers { get; set; }

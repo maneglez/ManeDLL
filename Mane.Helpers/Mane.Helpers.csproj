@@ -51,6 +51,7 @@
     <Compile Include="Asincrono.cs" />
     <Compile Include="Common\Clases\BatchNumbers.cs" />
     <Compile Include="Common\Clases\BinAllocations.cs" />
+    <Compile Include="Common\Clases\Documento.cs" />
     <Compile Include="Common\Clases\LineaDocumento.cs" />
     <Compile Include="Common\Clases\LineaTraspaso.cs" />
     <Compile Include="Common\Clases\SerialNumbers.cs" />
