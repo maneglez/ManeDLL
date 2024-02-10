@@ -366,6 +366,124 @@ namespace Mane.Helpers
                 return ele;
             }
         }
+        /// <summary>
+        /// Genera una lista de cadenas consecutivas
+        /// </summary>
+        /// <param name="desde">Cadena inicial</param>
+        /// <param name="cantidad">Cantidad de series a generar</param>
+        /// <returns></returns>
+        public static string[] GenerarSeries(string desde, int cantidad)
+        {
+            var series = new List<string>();
+            bool isLastChar(char c)
+            {
+                if (char.IsNumber(c))
+                    return c == '9';
+                if (char.IsLower(c))
+                {
+                    return c == 'z';
+                }
 
+                return c == 'Z';
+
+            }
+            char firstChar(char c)
+            {
+                if (char.IsNumber(c))
+                    return '0';
+                if (char.IsLower(c))
+                {
+                    return 'a';
+                }
+
+                return 'A';
+            }
+            bool isValidChar(char c)
+            {
+                return char.IsDigit(c) || char.IsLetter(c);
+            }
+            char getNextChar(char c)
+            {
+                if (isLastChar(c))
+                    return firstChar(c);
+                return (char)(c + 1);
+            }
+            var serie = desde;
+            var serieLen = serie.Length;
+            bool limiteAlcanzado = false;
+            series.Add(desde);
+            while (series.Count < cantidad && !limiteAlcanzado)
+            {
+
+                for (int i = serieLen - 1; i > 0; i--)
+                {
+                    var arr = serie.ToCharArray();
+                    var c = arr[i];
+                    if (!isValidChar(c))
+                        continue;
+                    if (!isLastChar(c))
+                    {
+                        c = getNextChar(c);
+                        arr[i] = c;
+                        serie = new string(arr);
+                        series.Add(serie);
+                        break;
+                    }
+                    else
+                    {
+                        if (i == 0)
+                        {
+                            limiteAlcanzado = true;
+                        }
+                        else
+                        {
+                            var nextCharidx = i - 1;
+                            var nextChar = arr[nextCharidx];
+                            while (!isValidChar(nextChar))
+                            {
+                                nextCharidx--;
+                                if (nextCharidx < 0)
+                                {
+                                    limiteAlcanzado = true;
+                                    break;
+                                }
+                                nextChar = arr[nextCharidx];
+                            }
+                            if (!isLastChar(nextChar) && !limiteAlcanzado)
+                            {
+                                arr[i] = getNextChar(c);
+                                arr[nextCharidx] = getNextChar(nextChar);
+                                serie = new string(arr);
+                                series.Add(serie);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            return series.ToArray();
+        }
+
+        public static Dictionary<string,string> ArgsToDictionary(string[] args)
+        {
+            var charParamName = '-';
+            var dic = new Dictionary<string, string>();
+
+            try
+            {
+                for (int i = 0; i < args.Length; i++)
+                {
+                    string item = args[i];
+                    if (item[0] == charParamName)
+                        dic.Add(item, args[i + 1]);
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return dic;
+        }
     }
 }

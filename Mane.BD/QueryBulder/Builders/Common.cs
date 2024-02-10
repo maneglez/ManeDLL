@@ -233,7 +233,7 @@ namespace Mane.BD.QueryBulder.Builders
                         columnType = "TEXT";
                     else
                     {
-                        var len = (int)attributes["Mane.BD.DecimalAttribute"].ConstructorArguments[0].Value;
+                        var len = (int)attributes["Mane.BD.VarcharAttribute"].ConstructorArguments[0].Value;
                         columnType = $"VARCHAR({(len == 0 ? "MAX" : len.ToString())})";
                     }
                 }

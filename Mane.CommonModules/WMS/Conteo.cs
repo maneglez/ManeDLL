@@ -945,13 +945,14 @@ namespace Mane.CommonModules.WMS
                 var todasLasLineas = Lineas.ToList();
                 //Crear otra lista para no alterar la lista original
                 //Borrar las lineas nuevas de la lista de lineas
-                foreach (var item in LineasNuevas)
-                {
-                    todasLasLineas.RemoveWhere(l => l.ItemCode == item.ItemCode
-                    && l.SerieLote == item.SerieLote
-                    && item.FromWhs == l.FromWhs
-                    && l.BinCode == item.BinCode);
-                }
+                if (EditandoConteo)
+                    foreach (var item in LineasNuevas)
+                    {
+                        todasLasLineas.RemoveWhere(l => l.ItemCode == item.ItemCode
+                        && l.SerieLote == item.SerieLote
+                        && item.FromWhs == l.FromWhs
+                        && l.BinCode == item.BinCode);
+                    }
 
                 dtBins = Bd.Query("OBIN").Select("AbsEntry", "BinCode")
                    .WhereIn("BinCode", binCodes)

@@ -77,6 +77,10 @@ namespace Mane.BD.QueryBulder.Builders
         {
             return new BuilderHana(q, DataBaseName).BuildQuery();
         }
+        public override string Count()
+        {
+            return $"SELECT COUNT(*) AS \"Count\" FROM ({BuildQuery()}) AS \"QueryBuilder_Count\"";
+        }
 
     }
 }

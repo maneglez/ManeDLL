@@ -332,6 +332,14 @@ namespace Mane.BD
             var builder = queryBuilder.GetBuilder(conexion);
             ExecuteNonQuery(builder.BuildTableDefinition(model), nombreConexion);
         }
+        public static void CrearTabla<T>(Modelo<T> model) where T : Modelo<T>, new()
+        {
+            var nombreConexion = model.getConnName();
+            var conexion = Conexiones.Find(nombreConexion) ?? throw new Exception($"La conexión {nombreConexion} no existe");
+            var queryBuilder = new QueryBuilder();
+            var builder = queryBuilder.GetBuilder(conexion);
+            ExecuteNonQuery(builder.BuildTableDefinition(model), nombreConexion);
+        }
         public static void CrearTabla<T>(WebModel<T> model) where T : WebModel<T>, new()
         {
             var nombreConexion = model.getConnName();

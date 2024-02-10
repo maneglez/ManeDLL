@@ -68,6 +68,10 @@
       <Project>{cca4f9e0-e5a4-463f-9701-91b4cd816ebb}</Project>
       <Name>Mane.CommonModules</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Mane.Helpers\Mane.Helpers.csproj">
+      <Project>{6344b9e2-f825-4165-b506-ab3e2f822a49}</Project>
+      <Name>Mane.Helpers</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

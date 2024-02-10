@@ -1,0 +1,15 @@
+[
+  {
+    "TipoDeBaseDeDatos": 0,
+    "SubTipoDeBD": 0,
+    "Nombre": "pos",
+    "Servidor": "svrwinmnjauto",
+    "NombreBD": "POSCAJA2",
+    "Usuario": "sa",
+    "Contrasena": "ejRo+2X0ggWRDSjzIJ+LjA==",
+    "Driver": "HDBODBC",
+    "TimeOut": 10,
+    "Puerto": 0,
+    "UseSSL": false
+  }
+]

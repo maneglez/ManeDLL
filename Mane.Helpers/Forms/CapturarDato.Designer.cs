@@ -82,6 +82,7 @@
             this.Controls.Add(this.lbTextoPeticion);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "CapturarDato";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Ingresar Dato";
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -91,8 +92,8 @@
         #endregion
 
         private System.Windows.Forms.Label lbTextoPeticion;
-        private System.Windows.Forms.TextBox tbDato;
         private System.Windows.Forms.Button btnOk;
         private System.Windows.Forms.Button btnCancel;
+        public System.Windows.Forms.TextBox tbDato;
     }
 }

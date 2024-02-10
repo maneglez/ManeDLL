@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Security;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Security;
@@ -621,6 +622,31 @@ GO*/
         {
             return (int)Bd.Query(tabla).Select("DocNum").Where("DocEntry", docEntry)
                  .GetScalar(nombreConexion, 0);
+        }
+
+        /// <summary>
+        /// Obteiene el artículo basado en un código de barras
+        /// </summary>
+        /// <param name="codeBars">Código de barras</param>
+        /// <param name="itemCode">Código de artículo</param>
+        /// <param name="codeBarsQuantity">Cantidad de piezas de la unidad relacionada al código de barras</param>
+        /// <param name="nombreConexion">Nombre de la conexión</param>
+        /// <returns>Verdadero si el código de barras existe, contrario retorna falso</returns>
+        public static bool FindItemCodeByCodeBars(string codeBars, out string itemCode, out double codeBarsQuantity, string nombreConexion)
+        {
+            codeBarsQuantity = 0;
+            itemCode = string.Empty;
+            var dt = Bd.Query("OBCD t0")
+                .Join("UGP1 t1", "t1.UomEntry", "t0.UomEntry")
+                .Where("t0.BcdCode", codeBars)
+                .Select("t1.AltQty", "t1.BaseQty","t0.ItemCode").Get(nombreConexion);
+            if (dt.Rows.Count == 0)
+                return false;
+            var cantidadUm = Convert.ToDouble(dt.Rows[0]["AltQty"]);
+            var cantidadUmBase = Convert.ToDouble(dt.Rows[0]["BaseQty"]);
+            itemCode = Convert.ToString(dt.Rows[0]["ItemCode"]);
+            codeBarsQuantity = cantidadUmBase / cantidadUm;
+            return true;
         }
     }
 }

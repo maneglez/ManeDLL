@@ -259,7 +259,7 @@ namespace Mane.BD.QueryBulder.Builders
             return where;
         }
 
-        public string Count()
+        public virtual string Count()
         {
             return $"SELECT COUNT(*) AS [Count] FROM ({BuildQuery()}) AS [QueryBuilder_Count]";
         }
@@ -344,16 +344,16 @@ namespace Mane.BD.QueryBulder.Builders
             var tableName = FormatTable(model.getNombreTabla());
             var tableDef = new StringBuilder();
             tableDef.AppendLine($"CREATE TABLE {tableName} (");
-            tableDef.AppendLine($"{idName} IDENTITY(1,1) NOT NULL,");
+            tableDef.AppendLine($"{idName} INT IDENTITY(1,1) NOT NULL,");
             var props = model.GetType().GetProperties();
             foreach (var prop in props)
             {
                 tableDef.AppendLine($"{FormatColumn(prop.Name)} {Common.GetColumnType(prop, TipoDeBd.SqlServer)},");
             }
             tableDef.AppendLine($"CONSTRAINT {FormatTable($"PK_{model.getNombreTabla().Replace('.', '_')}")} PRIMARY KEY")
-                .AppendLine("(")
-                .AppendLine($"{idName} ASC")
-                .AppendLine(") ON PRIMARY")
+                .AppendLine(" (")
+                .AppendLine($"  {idName} ASC")
+                .AppendLine(" )")
                 .Append(")");
             return tableDef.ToString();
         }

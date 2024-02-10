@@ -24,19 +24,32 @@ namespace Pruebas
         static void Write(string text) => Console.Write(text);
         static void Prueba()
         {
-            var conf = new Mane.CommonModules.Conection();
-            conf.ServerNameSap = "TIE-LAP1";
-            conf.ServerNameSql = "TIE-LAP1";
-            conf.SapUser = "manager";
-            conf.SapPassword = "1234";
-            conf.DbUser = "sa";
-            conf.DbPassword = "Passw0rd";
-            conf.SapSqlServerType = "dst_MSSQL2017";
-            conf.DbName = "SBODemoMX";
-            Configuration.SetConnection(conf);
-            Application.EnableVisualStyles();
-            using (var fm = new Conteo())
-                fm.ShowDialog();
+            Write("Ingrese la serie de inicio: ");
+            var serie = Console.ReadLine();
+            Write("Cantidad de series: ");
+            var cantidad = int.Parse(Console.ReadLine());
+            var series = Mane.Helpers.Utils.GenerarSeries(serie, cantidad);
+            if(cantidad < series.Length)
+            {
+                Writeln("No se logró generar suficientes series");
+            }
+            foreach (var item in series)
+            {
+                Writeln(item);
+            }
+            //var conf = new Mane.CommonModules.Conection();
+            //conf.ServerNameSap = "TIE-LAP1";
+            //conf.ServerNameSql = "TIE-LAP1";
+            //conf.SapUser = "manager";
+            //conf.SapPassword = "1234";
+            //conf.DbUser = "sa";
+            //conf.DbPassword = "Passw0rd";
+            //conf.SapSqlServerType = "dst_MSSQL2017";
+            //conf.DbName = "SBODemoMX";
+            //Configuration.SetConnection(conf);
+            //Application.EnableVisualStyles();
+            //using (var fm = new Conteo())
+            //    fm.ShowDialog();
         }
         
     }
