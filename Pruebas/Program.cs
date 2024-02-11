@@ -24,19 +24,8 @@ namespace Pruebas
         static void Write(string text) => Console.Write(text);
         static void Prueba()
         {
-            Write("Ingrese la serie de inicio: ");
-            var serie = Console.ReadLine();
-            Write("Cantidad de series: ");
-            var cantidad = int.Parse(Console.ReadLine());
-            var series = Mane.Helpers.Utils.GenerarSeries(serie, cantidad);
-            if(cantidad < series.Length)
-            {
-                Writeln("No se logró generar suficientes series");
-            }
-            foreach (var item in series)
-            {
-                Writeln(item);
-            }
+            using (var frm = new Mane.Helpers.Forms.EncryptTool())
+                frm.ShowDialog();
             //var conf = new Mane.CommonModules.Conection();
             //conf.ServerNameSap = "TIE-LAP1";
             //conf.ServerNameSql = "TIE-LAP1";
