@@ -479,12 +479,14 @@ namespace Mane.BD.Helpers
         public static bool BuscarArticulo(out string itemCode, string busqueda = "",string nombreConexion = "")
         {
             itemCode = "";
-            if(!string.IsNullOrWhiteSpace(busqueda))
-            if (Bd.Query("OITM").Where("ItemCode", busqueda).Where("validFor", "Y").Exists(nombreConexion))
-            {
-                itemCode = busqueda;
-                return true;
-            }
+            if (!string.IsNullOrWhiteSpace(busqueda))
+                if (Bd.Query("OITM").Where("ItemCode", busqueda).Where("validFor", "Y").Exists(nombreConexion))
+                {
+                    itemCode = busqueda;
+                    return true;
+                }
+                
+
             var retVal = false;
             var query = Bd.Query("OITM").Where("validFor", "Y");
             var dic = new Dictionary<string, string>
@@ -634,8 +636,10 @@ GO*/
         /// <returns>Verdadero si el código de barras existe, contrario retorna falso</returns>
         public static bool FindItemCodeByCodeBars(string codeBars, out string itemCode, out double codeBarsQuantity, string nombreConexion)
         {
-            codeBarsQuantity = 0;
             itemCode = string.Empty;
+            codeBarsQuantity = 0;
+            if (string.IsNullOrWhiteSpace(codeBars))
+                return false;
             var dt = Bd.Query("OBCD t0")
                 .Join("UGP1 t1", "t1.UomEntry", "t0.UomEntry")
                 .Where("t0.BcdCode", codeBars)

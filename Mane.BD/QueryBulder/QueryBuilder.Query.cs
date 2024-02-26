@@ -220,7 +220,11 @@ namespace Mane.BD
             Columnas = columnas;
             return this;
         }
-
+        public QueryBuilder Distinct()
+        {
+            _Distinct = true;
+            return this;
+        }
         public QueryBuilder SelectRaw(string RawQuery, string alias)
         {
             _SelectSubquery.Add(alias, RawQuery);
