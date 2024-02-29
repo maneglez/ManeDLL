@@ -68,7 +68,7 @@ namespace Mane.Helpers
             {
                 //  MessageBox.Show($"Error al editar o crear el archivo {Path.GetDirectoryName(path)}, por favor ejecute el programa con privilegios de administrador y vuelva a intentarlo.");
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 //  MessageBox.Show(e.Message);
             }

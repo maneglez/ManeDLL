@@ -5,7 +5,6 @@ using System.Linq;
 using System.Security;
 using System.Text;
 using System.Threading.Tasks;
-using System.Web.Security;
 using System.Windows.Forms;
 using Mane.BD;
 using Mane.BD.Forms;
@@ -633,23 +632,43 @@ GO*/
         /// <param name="itemCode">Código de artículo</param>
         /// <param name="codeBarsQuantity">Cantidad de piezas de la unidad relacionada al código de barras</param>
         /// <param name="nombreConexion">Nombre de la conexión</param>
+        /// <param name="strategy">Numero o codigo de estrategia (0 para obtener la cantidad desde el nombre OBCD.BcdName, 1 para obtener desde unidades de medida UGP1.BaseQty / UGP1.AltQty)</param>
         /// <returns>Verdadero si el código de barras existe, contrario retorna falso</returns>
-        public static bool FindItemCodeByCodeBars(string codeBars, out string itemCode, out double codeBarsQuantity, string nombreConexion)
+        public static bool FindItemCodeByCodeBars(string codeBars, out string itemCode, out double codeBarsQuantity, string nombreConexion,int strategy = default)
         {
             itemCode = string.Empty;
-            codeBarsQuantity = 0;
+            codeBarsQuantity = 1;
             if (string.IsNullOrWhiteSpace(codeBars))
                 return false;
-            var dt = Bd.Query("OBCD t0")
-                .Join("UGP1 t1", "t1.UomEntry", "t0.UomEntry")
-                .Where("t0.BcdCode", codeBars)
-                .Select("t1.AltQty", "t1.BaseQty","t0.ItemCode").Get(nombreConexion);
-            if (dt.Rows.Count == 0)
-                return false;
-            var cantidadUm = Convert.ToDouble(dt.Rows[0]["AltQty"]);
-            var cantidadUmBase = Convert.ToDouble(dt.Rows[0]["BaseQty"]);
-            itemCode = Convert.ToString(dt.Rows[0]["ItemCode"]);
-            codeBarsQuantity = cantidadUmBase / cantidadUm;
+            DataTable dt;
+            switch (strategy)
+            {
+                case 1:
+                    dt = Bd.Query("OBCD t0")
+               .Join("UGP1 t1", "t1.UomEntry", "t0.UomEntry")
+               .Where("t0.BcdCode", codeBars)
+               .Select("t1.AltQty", "t1.BaseQty", "t0.ItemCode").Get(nombreConexion);
+                    if (dt.Rows.Count == 0)
+                        return false;
+                    var cantidadUm = Convert.ToDouble(dt.Rows[0]["AltQty"]);
+                    var cantidadUmBase = Convert.ToDouble(dt.Rows[0]["BaseQty"]);
+                    itemCode = Convert.ToString(dt.Rows[0]["ItemCode"]);
+                    codeBarsQuantity = cantidadUmBase / cantidadUm;
+                    break;
+                default:
+                    dt = Bd.Query("OBCD").Where("BcdCode", codeBars)
+                        .Select("ItemCode", "BcdName")
+                        .Get(nombreConexion);
+                    if (dt.Rows.Count == 0)
+                        return false;
+                    itemCode = (string)dt.Rows[0]["ItemCode"];
+                    var qty = dt.Rows[0]["BcdName"];
+                    if (qty != DBNull.Value)
+                        if (double.TryParse(qty.ToString(), out double dqty))
+                            codeBarsQuantity = dqty;
+                    break;
+            }
+           
             return true;
         }
     }

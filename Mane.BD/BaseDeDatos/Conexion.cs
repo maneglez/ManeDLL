@@ -1,5 +1,4 @@
-﻿using Mane.BD.BaseDeDatos.Executors.WebApiExecutor;
-using Mane.BD.Executors;
+﻿using Mane.BD.Executors;
 using Newtonsoft.Json;
 using System;
 using System.Data.Odbc;
@@ -31,9 +30,6 @@ namespace Mane.BD
                     break;
                 case TipoDeBd.Hana:
                     executor = new HanaExecutor(CadenaDeConexion, Bd.AutoDisconnect);
-                    break;
-                case TipoDeBd.ApiWeb:
-                    executor = new WebApiExecutor(this);
                     break;
                 default:
                     break;
