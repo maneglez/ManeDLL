@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Mane.BD.QueryBulder
 {
-    [Serializable]
     public class CaseClass
     {
         internal List<WhenDataClass> WhenData;
@@ -20,6 +20,22 @@ namespace Mane.BD.QueryBulder
             WhenData = new List<WhenDataClass>();
             ThenData = new List<ThenDataClass>();
         }
+        public CaseClass Copy()
+        {
+            var copy = new CaseClass
+            {
+                Alias = Alias,
+                CaseColumn = CaseColumn,
+                ElseValue = ElseValue,
+                _ElseColumn = _ElseColumn,
+                ElseQuery = ElseQuery?.Copy(),
+                ElseSubCase = ElseSubCase?.Copy()
+            };
+
+            copy.WhenData.AddRange(from w in WhenData select w.Copy());
+            copy.ThenData.AddRange(from t in ThenData select t.Copy());
+            return copy;
+        }
         public CaseClass()
         {
             Construct();
@@ -29,7 +45,6 @@ namespace Mane.BD.QueryBulder
             Construct();
             CaseColumn = caseColumn;
         }
-        [Serializable]
         internal class WhenDataClass
         {
             public WhenThenType TipoWhen;
@@ -38,8 +53,19 @@ namespace Mane.BD.QueryBulder
             public object Value { get; set; }
             public QueryBuilder Query { get; set; }
             public CaseClass SubWhen {get; set;}
+            public WhenDataClass Copy()
+            {
+                return new WhenDataClass
+                {
+                    TipoWhen = TipoWhen,
+                    Column = Column,
+                    Operador = Operador,
+                    Value = Value,
+                    Query = Query?.Copy(),
+                    SubWhen = SubWhen?.Copy()
+                };
+            }
         }
-        [Serializable]
         internal class ThenDataClass
         {
             public WhenThenType TipoThen;
@@ -47,6 +73,17 @@ namespace Mane.BD.QueryBulder
             public object Value { get; set; }
             public QueryBuilder Query { get; set; }
             public CaseClass SubWhen { get; set; }
+            public ThenDataClass Copy()
+            {
+                return new ThenDataClass
+                {
+                    TipoThen = TipoThen,
+                    Column = Column,
+                    Value = Value,
+                    Query = Query?.Copy(),
+                    SubWhen = SubWhen?.Copy()
+                };
+            }
 
         }
         public CaseClass When(string column, object value)

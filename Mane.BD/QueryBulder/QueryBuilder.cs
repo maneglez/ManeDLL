@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 
 namespace Mane.BD
 {
@@ -13,13 +14,14 @@ namespace Mane.BD
     /// <item>SQL Server</item>
     /// </list>
     /// </remarks>
-    [Serializable]
+   
     public partial class QueryBuilder
     {
         #region Atributos de la clase
         internal string[] Columnas;
         internal List<JoinClass> Joins;
         internal List<WhereClass> Wheres;
+        internal List<CaseClass> _SelectCase;
         internal Dictionary<string, object> _SelectSubquery;
         internal string Tabla;
         internal string _RawQuery;
@@ -28,7 +30,6 @@ namespace Mane.BD
         internal int _Limit;
         internal string NombreConexion;
         internal PaginateClass Pagination;
-        internal List<CaseClass> _SelectCase;
         internal bool _Distinct;
         #endregion
 
@@ -226,7 +227,7 @@ namespace Mane.BD
         #endregion
 
         #region SubClases y Enums
-        [Serializable]
+       
         internal class WhereClass
         {
             public string Columna, Operador, Boleano;
@@ -238,15 +239,33 @@ namespace Mane.BD
                 Columna = Operador = Boleano = "";
                 Tipo = TipoWhere.Where;
             }
+            public WhereClass Copy()
+            {
+                return new WhereClass
+                {
+                    Columna = Columna,
+                    Operador = Operador,
+                    Boleano = Boleano,
+                    Valor = Valor,
+                    Tipo = Tipo,
+                    Query = Query?.Copy()
+                };
+            }
 
         }
-        [Serializable]
         internal class OrderByClass
         {
             public string[] Columnas;
             public OrderDireccion Orden = OrderDireccion.Asendente;
+            public OrderByClass Copy()
+            {
+                return new OrderByClass
+                {
+                    Columnas = Columnas?.ToArray(),
+                    Orden = Orden
+                };
+            }
         }
-        [Serializable]
         internal class PaginateClass
         {
             public PaginateClass(int page, int paginate)
@@ -257,6 +276,10 @@ namespace Mane.BD
 
             public int Page { get; set; }
             public int Paginate { get; set; }
+            public PaginateClass Copy()
+            {
+                return new PaginateClass(Page, Paginate);
+            }
         }
         internal enum TipoWhere
         {
@@ -267,7 +290,6 @@ namespace Mane.BD
             WhereColumn,
             WhereBetween
         }
-        [Serializable]
         internal class JoinClass
         {
             public string Tabla, Columna1, Columna2, Operador, Tipo, AliasDeConsulta;
@@ -276,6 +298,20 @@ namespace Mane.BD
             public JoinClass()
             {
                 Tabla = Columna1 = Columna2 = Operador = Tipo = AliasDeConsulta = "";
+            }
+            public JoinClass Copy()
+            {
+                return new JoinClass()
+                {
+                    Tabla = Tabla,
+                    Columna1 = Columna1,
+                    Columna2 = Columna2,
+                    Operador = Operador,
+                    Tipo = Tipo,
+                    AliasDeConsulta = AliasDeConsulta,
+                    ExtraCondicion = ExtraCondicion?.Copy(),
+                    Consulta = Consulta?.Copy()
+                };
             }
         }
         #endregion
@@ -306,15 +342,37 @@ namespace Mane.BD
         /// <returns></returns>
         public QueryBuilder Copy()
         {
-            QueryBuilder q;
-            using (var ms = new System.IO.MemoryStream())
+            QueryBuilder q = new QueryBuilder
             {
-                System.Runtime.Serialization.IFormatter formatter =
-                    new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
-                formatter.Serialize(ms, this);
-                ms.Seek(0, System.IO.SeekOrigin.Begin);
-                q = (QueryBuilder)formatter.Deserialize(ms);
+                Tabla = Tabla,
+                _Distinct = _Distinct,
+                _Limit = _Limit,
+                _RawQuery = _RawQuery,
+                NombreConexion = NombreConexion,
+                Columnas = Columnas?.ToArray(),
+                _GroupBy = _GroupBy?.ToArray(),
+                Pagination = Pagination?.Copy(),
+                Order = Order?.Copy()
+            };
+            q.Joins.AddRange(from x in Joins select x.Copy());
+            q.Wheres.AddRange(from x in Wheres select x.Copy());
+            q._SelectCase.AddRange(from x in _SelectCase select x.Copy());
+            foreach (var item in _SelectSubquery)
+            {
+                if (item.Value is QueryBuilder qb)
+                    q._SelectSubquery.Add(item.Key, qb?.Copy());
+                else q._SelectSubquery.Add(item.Key, item.Value);
             }
+            
+            //Esto es lo que creo que hace que truene(creo)
+            //using (var ms = new System.IO.MemoryStream())
+            //{
+            //    System.Runtime.Serialization.IFormatter formatter =
+            //        new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+            //    formatter.Serialize(ms, this);
+            //    ms.Seek(0, System.IO.SeekOrigin.Begin);
+            //    q = (QueryBuilder)formatter.Deserialize(ms);
+            //}
             return q;
         }
         /// <summary>

@@ -92,7 +92,7 @@ namespace Mane.BD.QueryBulder.Builders
                 groupBy = BuildGroupBy(),
                 distinct = q._Distinct ? "DISTINCT" : "";
             if (where != "") where = "WHERE " + where;
-            string query = $"SELECT {distinct} {limit} {select} FROM {FormatTable(q.Tabla)} {joins} {where} {orderBy} {groupBy}";
+            string query = $"SELECT {distinct} {limit} {select} FROM {FormatTable(q.Tabla)} {joins} {where} {groupBy} {orderBy}";
             return query;
             // return System.Text.RegularExpressions.Regex.Replace(query, @"\s+", " ");
         }
