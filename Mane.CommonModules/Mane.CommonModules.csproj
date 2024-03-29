@@ -35,6 +35,10 @@
       <HintPath>..\..\..\..\..\Desktop\mane\DLLS\Sap DI API\9.0\Interop.SAPbobsCOM.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
+    <Reference Include="Mane.Sap, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Mane.Sap\bin\Debug\DI API 9\Mane.Sap.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -83,6 +87,10 @@
     <ProjectReference Include="..\Mane.BD\Mane.BD.csproj">
       <Project>{1698b67f-99ac-4a51-a19c-000c170b54b5}</Project>
       <Name>Mane.BD</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Mane.Helpers\Mane.Helpers.csproj">
+      <Project>{6344b9e2-f825-4165-b506-ab3e2f822a49}</Project>
+      <Name>Mane.Helpers</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

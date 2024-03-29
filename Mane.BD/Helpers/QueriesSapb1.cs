@@ -104,7 +104,7 @@ namespace Mane.BD.Helpers
         /// </summary>
         /// <param name="tipoDoc"></param>
         /// <param name="docEntry"></param>
-        /// <returns>"t0.ApplyLine", "t0.LocCode", "t0.ItemCode", "t1.Quantity", "t0.BinAbs", "t2.BinCode", "t1.DocAction"</returns>
+        /// <returns>"t0.ApplyLine", "t0.LocCode", "t0.ItemCode", "t0.Quantity", "t0.BinAbs", "t2.BinCode", "t1.DocAction",DistNumber</returns>
         public static QueryBuilder SeriesLotesDocumentoConUbicacion(int tipoDoc,int docEntry = -1)
         {
             
@@ -126,7 +126,7 @@ namespace Mane.BD.Helpers
                 .When("t0.ManagedBy", SnbTypeSerie).ThenColumn("t4.DistNumber")
                 .Else("").As("DistNumber"))
                 .Where("t0.ApplyType", (int)tipoDoc)
-                .Select("t0.ApplyLine", "t0.LocCode", "t0.ItemCode","t5.ItemName", "t1.Quantity", "t0.BinAbs", "t2.BinCode", "t1.DocAction");
+                .Select("t0.ApplyLine", "t0.LocCode", "t0.ItemCode","t5.ItemName", "t0.Quantity", "t0.BinAbs", "t2.BinCode", "t1.DocAction");
             if (docEntry > 0)
                 query.Where("t0.ApplyEntry", docEntry);
 
@@ -634,22 +634,41 @@ GO*/
         /// <param name="codeBarsQuantity">Cantidad de piezas de la unidad relacionada al código de barras</param>
         /// <param name="nombreConexion">Nombre de la conexión</param>
         /// <returns>Verdadero si el código de barras existe, contrario retorna falso</returns>
-        public static bool FindItemCodeByCodeBars(string codeBars, out string itemCode, out double codeBarsQuantity, string nombreConexion)
+        public static bool FindItemCodeByCodeBars(string codeBars, out string itemCode, out double codeBarsQuantity, string nombreConexion,int strategy = 0)
         {
             itemCode = string.Empty;
-            codeBarsQuantity = 0;
+            codeBarsQuantity = 1;
             if (string.IsNullOrWhiteSpace(codeBars))
                 return false;
-            var dt = Bd.Query("OBCD t0")
-                .Join("UGP1 t1", "t1.UomEntry", "t0.UomEntry")
-                .Where("t0.BcdCode", codeBars)
-                .Select("t1.AltQty", "t1.BaseQty","t0.ItemCode").Get(nombreConexion);
-            if (dt.Rows.Count == 0)
-                return false;
-            var cantidadUm = Convert.ToDouble(dt.Rows[0]["AltQty"]);
-            var cantidadUmBase = Convert.ToDouble(dt.Rows[0]["BaseQty"]);
-            itemCode = Convert.ToString(dt.Rows[0]["ItemCode"]);
-            codeBarsQuantity = cantidadUmBase / cantidadUm;
+            DataTable dt;
+            switch (strategy)
+            {
+                case 1:
+                    dt = Bd.Query("OBCD t0")
+               .Join("UGP1 t1", "t1.UomEntry", "t0.UomEntry")
+               .Where("t0.BcdCode", codeBars)
+               .Select("t1.AltQty", "t1.BaseQty", "t0.ItemCode").Get(nombreConexion);
+                    if (dt.Rows.Count == 0)
+                        return false;
+                    var cantidadUm = Convert.ToDouble(dt.Rows[0]["AltQty"]);
+                    var cantidadUmBase = Convert.ToDouble(dt.Rows[0]["BaseQty"]);
+                    itemCode = Convert.ToString(dt.Rows[0]["ItemCode"]);
+                    codeBarsQuantity = cantidadUmBase / cantidadUm;
+                    break;
+                default:
+                    dt = Bd.Query("OBCD").Where("BcdCode", codeBars)
+                        .Select("ItemCode", "BcdName")
+                        .Get(nombreConexion);
+                    if (dt.Rows.Count == 0)
+                        return false;
+                    itemCode = (string)dt.Rows[0]["ItemCode"];
+                    var qty = dt.Rows[0]["BcdName"];
+                    if (qty != DBNull.Value)
+                        if (double.TryParse(qty.ToString(), out double dqty))
+                            codeBarsQuantity = dqty;
+                    break;
+            }
+
             return true;
         }
     }

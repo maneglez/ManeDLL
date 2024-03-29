@@ -282,7 +282,7 @@ namespace Mane.BD.QueryBulder.Builders
 
         public string FormatValue(object value)
         {
-            return Common.FormatValue(value, ValueDelimiters);
+            return Common.FormatValue(value, ValueDelimiters,Tipo);
         }
 
         public string Insert(object objeto)

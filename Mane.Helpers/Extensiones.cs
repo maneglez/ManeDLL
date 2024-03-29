@@ -418,6 +418,57 @@ namespace Mane.Helpers
             return lst;
         }
 
+        public static void CopyPropsTo<T, Ttarget>(this T source, Ttarget target) where T : class, new()
+     where Ttarget : class, new()
+        {
+            if (source == null)
+                return;
+            ;
+            Type sourceType = source.GetType();
+            Type targetType = target.GetType();
+            var sourceProperties = sourceType.GetProperties();
+            foreach (var sProp in sourceProperties)
+            {
+                var tProp = targetType.GetProperty(sProp.Name);
+                if (tProp == null)
+                    continue;
+                if (!sProp.CanRead || !tProp.CanWrite)
+                    continue;
+                if (sProp.PropertyType.IsValueType || sProp.PropertyType.IsPrimitive)
+                {
+                    tProp.SetValue(target, sProp.GetValue(source));
+                    continue;
+                }
+                var sPropValue = sProp.GetValue(source);
+                if (sProp.PropertyType.IsSerializable && !sProp.PropertyType.IsGenericType)
+                {
+                    try
+                    {
+                        var sPropCloneValue = sPropValue.CloneSerializer();
+                        tProp.SetValue(target, sPropCloneValue);
+                        continue;
+                    }
+                    catch
+                    {
+
+                    }
+                }
+
+                //if (sProp.PropertyType.IsEnumerable())
+                //{
+                //    var sValues = (IEnumerable<object>)sPropValue;
+                //    var tValues = (dynamic)Activator.CreateInstance(typeof(List<>).MakeGenericType(sProp.PropertyType.GenericTypeArguments.First()));
+                //    foreach (var item in sValues)
+                //    {
+                //        tValues.Add(item.CopyObject());
+                //    }
+                //    tProp.SetValue(target, Enumerable.AsEnumerable(tValues));
+                //}
+
+            }
+
+        }
+
         #region Generic Binding
         public static List<Control> GetAllControls(this Control control)
         {

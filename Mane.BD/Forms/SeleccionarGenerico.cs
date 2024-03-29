@@ -315,7 +315,8 @@ namespace Mane.BD.Forms
 
         private void SeleccionarGenerico_Load(object sender, EventArgs e)
         {
-
+            tbBusqueda.SelectAll();
+            tbBusqueda.Focus();
         }
         public new DialogResult ShowDialog()
         {
@@ -423,6 +424,26 @@ namespace Mane.BD.Forms
         {
             if (dgvContenido.SelectedRows.Count == 1 && e.KeyCode == Keys.Enter)
                 Seleccionar();
+            else if(e.KeyCode == Keys.Up && dgvContenido.SelectedRows.Count == 1)
+            {
+                if (dgvContenido.SelectedRows[0].Index == 0)
+                {
+                    tbBusqueda.SelectAll();
+                    tbBusqueda.Focus();
+                }
+            }
+
+        }
+
+        private void tbBusqueda_KeyDown(object sender, KeyEventArgs e)
+        {
+            if(e.KeyCode == Keys.Down)
+            {
+                dgvContenido.Focus();
+            }else if(e.KeyCode == Keys.Enter && dgvContenido.Rows.Count == 1)
+            {
+                Seleccionar();
+            }
         }
     }
 }

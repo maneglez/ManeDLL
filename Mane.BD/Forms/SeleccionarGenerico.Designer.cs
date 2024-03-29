@@ -103,6 +103,7 @@
             this.tbBusqueda.Size = new System.Drawing.Size(202, 20);
             this.tbBusqueda.TabIndex = 3;
             this.tbBusqueda.TextChanged += new System.EventHandler(this.tbBusqueda_TextChanged);
+            this.tbBusqueda.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tbBusqueda_KeyDown);
             // 
             // SeleccionarGenerico
             // 

@@ -6,9 +6,9 @@ using System.Text;
 
 namespace Mane.BD.QueryBulder.Builders
 {
-    internal static class Common
+    public static class Common
     {
-        public static string FormatValue(object value, char[] delimiters = null)
+        public static string FormatValue(object value, char[] delimiters = null,TipoDeBd tipoBd = TipoDeBd.SqlServer)
         {
             if (delimiters == null) delimiters = new char[] { '\'', '\'' };
             if (value == null) return Delimit("", delimiters);
@@ -21,7 +21,12 @@ namespace Mane.BD.QueryBulder.Builders
                 return Delimit(val, delimiters);
             }
             if (value is bool)
+            {
+                if (tipoBd == TipoDeBd.Hana)
+                    return (bool)value ? "true" : "false";
                 return (bool)value ? Delimit("1", delimiters) : Delimit("0", delimiters);
+            }
+                
             if (value is DateTime)
                 return Delimit(Bd.ToDateTimeSqlFormat((DateTime)value), delimiters);
             if (value.GetType().IsEnum)
