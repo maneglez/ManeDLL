@@ -346,7 +346,11 @@ namespace Mane.BD.Forms
 
         private void Seleccionar()
         {
-            if (dgvContenido.SelectedRows.Count == 0) MessageBox.Show("No se seleccionó nada");
+            if (dgvContenido.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("No se seleccionó nada");
+                return;
+            }
             SelectedRow = GetSelectedRow();
             if (!CerrarAlSeleccionar) return;
             DialogResult = DialogResult.OK;
