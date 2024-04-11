@@ -119,7 +119,7 @@ namespace Mane.BD.Helpers
             {
                 r = dt.NewRow();
                 r[0] = (int)value;
-                r[1] = value.GetDescriptionAttr();
+                r[1] = value.GetDescriptionAttribute();
                 dt.Rows.Add(r);
             }
             return dt;
@@ -131,7 +131,7 @@ namespace Mane.BD.Helpers
             var values = Enum.GetValues(tipo);
             foreach (var value in values)
             {
-                list.Add(new EnumObj(value, value.GetDescriptionAttr()));
+                list.Add(new EnumObj(value, value.GetDescriptionAttribute()));
 
             }
             return list;
@@ -163,7 +163,7 @@ namespace Mane.BD.Helpers
         /// <typeparam name="T"></typeparam>
         /// <param name="source"></param>
         /// <returns></returns>
-        public static string GetDescriptionAttr<T>(this T source)
+        public static string GetDescriptionAttribute<T>(this T source)
         {
             FieldInfo fi = source.GetType().GetField(source.ToString());
 

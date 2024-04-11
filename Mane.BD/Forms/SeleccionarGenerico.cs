@@ -18,6 +18,7 @@ namespace Mane.BD.Forms
         public Dictionary<string, string> RenombrarEstasColumnas;
         public Dictionary<string, int> OrdenDeColumnas;
         public string[] MostrarSoloEstasColumnas;
+        public bool MultiSeleccion { get => dgvContenido.MultiSelect; set => dgvContenido.MultiSelect = value; }
         /// <summary>
         /// Texto a buscar
         /// </summary>
@@ -49,6 +50,7 @@ namespace Mane.BD.Forms
         private bool habilitarBusqueda;
 
         public DataRow SelectedRow { get; private set; }
+        public DataRow[] SelectedRows { get; private set; }
 
         public DataTable FilterSource;
         public bool ModoIncrustado { get; set; }
@@ -65,6 +67,17 @@ namespace Mane.BD.Forms
             return dgvContenido.SelectedRows.Count == 0  ? dtSource.Rows[0] : dtSource.Rows[dgvContenido.SelectedRows[0].Index];
 
         }
+        public DataRow[] GetSelectedRows()
+        {
+            if (dgvContenido.SelectedRows.Count == 0 && dgvContenido.Rows.Count == 0)
+            {
+                return new DataRow[] {};
+            }
+
+            return (from DataGridViewRow row in dgvContenido.SelectedRows
+                    select (row.DataBoundItem as DataRowView).Row).ToArray();
+        }
+
         private Dictionary<string, string> queryColNames_DisplayColNames;
         private string[] FilterBy;
         private Dictionary<string, string> FilterByCustom;
@@ -219,14 +232,14 @@ namespace Mane.BD.Forms
                     dt = args.Query.Get(ConnName);
                     
 
-                }else if (string.IsNullOrWhiteSpace(Busqueda))
+                }else if (string.IsNullOrWhiteSpace(Busqueda) || Busqueda?.Trim() == "*")
                 {
                     dt = query.Get(ConnName);
                 }
                 else
                 {
                     var q = query.Copy();
-                        q.Where(cbFiltro.SelectedValue.ToString(), "LIKE", $"%{Busqueda}%");
+                        q.Where(cbFiltro.SelectedValue.ToString(), "LIKE",Busqueda.Contains("*") ? Busqueda.Replace("*","%") : $"%{Busqueda}%");
                         dt = q.Get(ConnName);
                      
                 }
@@ -352,6 +365,7 @@ namespace Mane.BD.Forms
                 return;
             }
             SelectedRow = GetSelectedRow();
+            SelectedRows = GetSelectedRows();
             if (!CerrarAlSeleccionar) return;
             DialogResult = DialogResult.OK;
             Close();
@@ -426,7 +440,7 @@ namespace Mane.BD.Forms
 
         private void dgvContenido_KeyDown(object sender, KeyEventArgs e)
         {
-            if (dgvContenido.SelectedRows.Count == 1 && e.KeyCode == Keys.Enter)
+            if (dgvContenido.SelectedRows.Count > 0 && e.KeyCode == Keys.Enter)
                 Seleccionar();
             else if(e.KeyCode == Keys.Up && dgvContenido.SelectedRows.Count == 1)
             {
@@ -444,7 +458,7 @@ namespace Mane.BD.Forms
             if(e.KeyCode == Keys.Down)
             {
                 dgvContenido.Focus();
-            }else if(e.KeyCode == Keys.Enter && dgvContenido.Rows.Count == 1)
+            }else if(e.KeyCode == Keys.Enter && dgvContenido.SelectedRows.Count > 0)
             {
                 Seleccionar();
             }
