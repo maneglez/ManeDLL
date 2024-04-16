@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
+using System.Reflection;
 using System.Windows.Forms;
 
 namespace Mane.BD
@@ -54,6 +56,7 @@ namespace Mane.BD
             {
                 m.PropertyChanged += new PropertyChangedEventHandler(this.NotifyChangeSubscription);
                 base.Add(m);
+                bindingList?.Add(m);
                 NotifyChange();
             }
 
@@ -68,6 +71,14 @@ namespace Mane.BD
                     item.PropertyChanged += new PropertyChangedEventHandler(this.NotifyChangeSubscription);
                 }
                 base.AddRange(modelos);
+                if(bindingList != null)
+                {
+                    foreach (var item in modelos)
+                    {
+                        bindingList.Add(item);
+                    }
+                    
+                }
                 NotifyChange();
             }
             public bool IsDirty()
@@ -87,6 +98,7 @@ namespace Mane.BD
                 if (modelo == null) return false;
                 if (withDelete) modelo.Delete();
                 var res = base.Remove(modelo);
+                bindingList?.Remove(modelo);
                 NotifyChange();
                 return res;
             }
@@ -99,6 +111,7 @@ namespace Mane.BD
             {
                 if (modelo == null) return false;
                 var res = base.Remove(modelo);
+                bindingList?.Remove(modelo);
                 NotifyChange();
                 return res;
             }
@@ -109,6 +122,7 @@ namespace Mane.BD
             new public void RemoveAt(int index)
             {
                 base.RemoveAt(index);
+                bindingList?.RemoveAt(index);
                 NotifyChange();
             }
             /// <summary>
@@ -126,6 +140,7 @@ namespace Mane.BD
             new public void Clear()
             {
                 base.Clear();
+                bindingList?.Clear();
                 NotifyChange();
             }
 
@@ -135,11 +150,14 @@ namespace Mane.BD
             {
                 if (bindedGrid == null) return;
                 if (bindedGrid.IsDisposed) return;
-                bindedGrid.DataSource = ToArray();
+                if (bindedGrid?.DataSource != null) return;
+                bindingList = new BindingList<T>(this.ToList());
+                bindedGrid.DataSource = bindingList;
 
             }
 
             private DataGridView bindedGrid;
+            private BindingList<T> bindingList;
 
             /// <summary>
             /// Vincula la coleccion a un datagrid
@@ -149,6 +167,7 @@ namespace Mane.BD
             {
                 bindedGrid = grid;
                 bindedGrid.DataBindings.Clear();
+                bindedGrid.DataSource = null;
                 if (soloColumnasControladas) bindedGrid.AutoGenerateColumns = false;
                 UpdateBind();
             }
@@ -174,17 +193,19 @@ namespace Mane.BD
             {
                 if (bindSuspended) return;
                 PropertyChanged?.Invoke(sender, e);
-                bindedGrid?.Refresh();
+               // bindedGrid?.Refresh();
             }
             private bool bindSuspended;
             public void SuspendBind()
             {
                 bindSuspended = true;
+                bindedGrid?.SuspendLayout();
             }
 
             public void ResumeBind()
             {
                 bindSuspended = false;
+                bindedGrid?.ResumeLayout();
                 NotifyChange();
             }
 
